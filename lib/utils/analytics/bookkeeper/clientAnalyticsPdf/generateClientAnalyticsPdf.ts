@@ -2,9 +2,9 @@ import { jsPDF } from "jspdf";
 import autoTable from "jspdf-autotable";
 
 import type {
-  ClientAnalyticsPdfData,
   GenerateClientAnalyticsPdfParams,
   RiskLevel,
+  ClientAnalyticsMonth,
 } from "./types";
 
 /* ================= I18N (EN) ================= */
@@ -50,38 +50,55 @@ const T = {
     late: "Late",
     health: "Health",
   },
-  riskLevels: {
-    low: "Low",
-    medium: "Medium",
-    high: "High",
-  },
 } as const;
+
+const RISK_LABELS: Record<RiskLevel, string> = {
+  low: "Low",
+  medium: "Medium",
+  high: "High",
+};
+
+type InsightItem = NonNullable<
+  GenerateClientAnalyticsPdfParams["data"]["insights"]
+>[number];
+
+type JsPdfWithAutoTable = jsPDF & {
+  lastAutoTable?: {
+    finalY?: number;
+  };
+};
 
 /* ================= HELPERS ================= */
 
-const clamp = (n: number, a: number, b: number) => Math.max(a, Math.min(b, n));
+const clamp = (n: number, a: number, b: number) =>
+  Math.max(a, Math.min(b, n));
 
-function eur(n: number) {
+function eur(n: number): string {
   const v = Number.isFinite(n) ? n : 0;
   return `€${v.toFixed(2)}`;
 }
 
-function safeText(v: unknown, fallback = "—") {
+function safeText(v: unknown, fallback = "—"): string {
   const s = String(v ?? "").trim();
   return s ? s : fallback;
 }
 
-function riskColor(level: RiskLevel) {
-  // RGB
-  if (level === "high") return { r: 239, g: 68, b: 68 }; // red
-  if (level === "medium") return { r: 245, g: 158, b: 11 }; // amber
-  return { r: 34, g: 197, b: 94 }; // green
+function riskColor(level: RiskLevel): { r: number; g: number; b: number } {
+  if (level === "high") return { r: 239, g: 68, b: 68 };
+  if (level === "medium") return { r: 245, g: 158, b: 11 };
+  return { r: 34, g: 197, b: 94 };
 }
 
-function fmtGenerated(iso?: string) {
+function fmtGenerated(iso?: string): string {
   const d = iso ? new Date(iso) : new Date();
-  if (Number.isNaN(d.getTime())) return new Date().toLocaleString("en-GB");
+  if (Number.isNaN(d.getTime())) {
+    return new Date().toLocaleString("en-GB");
+  }
   return d.toLocaleString("en-GB");
+}
+
+function getLastAutoTableY(doc: jsPDF, fallback: number): number {
+  return (doc as JsPdfWithAutoTable).lastAutoTable?.finalY ?? fallback;
 }
 
 /* ================= MAIN ================= */
@@ -92,7 +109,6 @@ export async function generateClientAnalyticsPdf({
 }: GenerateClientAnalyticsPdfParams): Promise<Blob> {
   const doc = new jsPDF({ unit: "mm", format: "a4" });
 
-  // Layout constants
   const L = 14;
   const R = 196;
   const PAGE_BOTTOM = 287;
@@ -141,13 +157,13 @@ export async function generateClientAnalyticsPdf({
   const business = data.business;
   const client = data.client;
 
-  const businessLines = [
+  const businessLines: string[] = [
     safeText(business?.name, "—"),
     business?.email ? `${T.fields.email}: ${business.email}` : "",
     business?.address ? `${T.fields.address}: ${business.address}` : "",
   ].filter(Boolean);
 
-  const clientLines = [
+  const clientLines: string[] = [
     safeText(client.name, "—"),
     client.email ? `${T.fields.email}: ${client.email}` : "",
     client.phone ? `${T.fields.phone}: ${client.phone}` : "",
@@ -155,8 +171,8 @@ export async function generateClientAnalyticsPdf({
   ].filter(Boolean);
 
   doc.setTextColor(60);
-  doc.text(businessLines as string[], L, y + 6);
-  doc.text(clientLines as string[], 110, y + 6);
+  doc.text(businessLines, L, y + 6);
+  doc.text(clientLines, 110, y + 6);
 
   y += 28;
 
@@ -175,27 +191,17 @@ export async function generateClientAnalyticsPdf({
     styles: { fontSize: 10, cellPadding: 2.2 },
     headStyles: { fillColor: [37, 99, 235], textColor: 255 },
     head: [[T.fields.totalIncome, T.fields.totalVat, T.fields.invoicesCount]],
-    body: [
-      [
-        eur(s.totalIncome),
-        eur(s.totalVat ?? 0),
-        String(s.invoicesCount ?? 0),
-      ],
-    ],
+    body: [[eur(s.totalIncome), eur(s.totalVat ?? 0), String(s.invoicesCount)]],
     margin: { left: L, right: L },
   });
 
-  const lastY1 =
-    (doc as unknown as { lastAutoTable?: { finalY?: number } }).lastAutoTable
-      ?.finalY ?? y + 2;
-
-  y = lastY1 + 8;
+  y = getLastAutoTableY(doc, y + 2) + 8;
 
   autoTable(doc, {
     startY: y,
     theme: "grid",
     styles: { fontSize: 10, cellPadding: 2.2 },
-    headStyles: { fillColor: [15, 23, 42], textColor: 255 }, // slate
+    headStyles: { fillColor: [15, 23, 42], textColor: 255 },
     head: [
       [
         T.fields.paidTotal,
@@ -215,11 +221,7 @@ export async function generateClientAnalyticsPdf({
     margin: { left: L, right: L },
   });
 
-  const lastY2 =
-    (doc as unknown as { lastAutoTable?: { finalY?: number } }).lastAutoTable
-      ?.finalY ?? y;
-
-  y = lastY2 + 10;
+  y = getLastAutoTableY(doc, y) + 10;
 
   /* ===== RISK + HEALTH BADGES ===== */
   doc.setFont("helvetica", "bold");
@@ -228,25 +230,21 @@ export async function generateClientAnalyticsPdf({
   doc.text(T.sections.risk, L, y);
   y += 6;
 
-  // Risk badge
   const rc = riskColor(s.riskLevel);
   doc.setFillColor(rc.r, rc.g, rc.b);
   doc.roundedRect(L, y, 70, 10, 2, 2, "F");
   doc.setTextColor(255);
   doc.setFontSize(10);
   doc.text(
-    `${T.fields.riskLevel}: ${T.riskLevels[s.riskLevel]}   •   ${T.fields.riskScore}: ${clamp(
-      Math.round(s.riskScore),
-      0,
-      100
-    )}/100`,
+    `${T.fields.riskLevel}: ${RISK_LABELS[s.riskLevel]}   •   ${
+      T.fields.riskScore
+    }: ${clamp(Math.round(s.riskScore), 0, 100)}/100`,
     L + 3,
     y + 7
   );
 
-  // Health badge
   const hs = clamp(Math.round(s.healthScore), 0, 100);
-  doc.setFillColor(2, 132, 199); // sky
+  doc.setFillColor(2, 132, 199);
   doc.roundedRect(L + 76, y, 70, 10, 2, 2, "F");
   doc.setTextColor(255);
   doc.text(`${T.fields.healthScore}: ${hs}/100`, L + 79, y + 7);
@@ -262,11 +260,10 @@ export async function generateClientAnalyticsPdf({
       doc.text("Chart", L, y);
       y += 4;
 
-      // fit chart into 180x70
       doc.addImage(data.chartImageDataUrl, "PNG", L, y + 2, 180, 70);
       y += 78;
     } catch {
-      // ignore chart errors (не валимо PDF)
+      // ignore chart rendering errors
     }
   }
 
@@ -299,7 +296,7 @@ export async function generateClientAnalyticsPdf({
         T.historyCols.health,
       ],
     ],
-    body: (data.history ?? []).map((m) => [
+    body: (data.history ?? []).map((m: ClientAnalyticsMonth) => [
       safeText(m.month),
       eur(m.income),
       String(m.invoicesCount ?? 0),
@@ -307,19 +304,16 @@ export async function generateClientAnalyticsPdf({
       String(m.unpaidInvoicesCount ?? 0),
       String(Math.round(m.avgPaymentDays ?? 0)),
       String(m.lateInvoicesCount ?? 0),
-      `${clamp(Math.round(m.healthScore ?? 0), 0, 100)}`,
+      String(clamp(Math.round(m.healthScore ?? 0), 0, 100)),
     ]),
     margin: { left: L, right: L },
   });
 
-  const lastY3 =
-    (doc as unknown as { lastAutoTable?: { finalY?: number } }).lastAutoTable
-      ?.finalY ?? y + 2;
-
-  y = lastY3 + 10;
+  y = getLastAutoTableY(doc, y + 2) + 10;
 
   /* ===== INSIGHTS ===== */
   const insights = data.insights ?? [];
+
   if (insights.length > 0) {
     if (y > 250) {
       doc.addPage();
@@ -332,14 +326,18 @@ export async function generateClientAnalyticsPdf({
     doc.text(T.sections.insights, L, y);
     y += 6;
 
-    insights.slice(0, 12).forEach((it) => {
+    insights.slice(0, 12).forEach((it: InsightItem) => {
       if (y > 275) {
         doc.addPage();
         y = 18;
       }
 
       const level =
-        it.level === "critical" ? "CRITICAL" : it.level === "warning" ? "WARNING" : "INFO";
+        it.level === "critical"
+          ? "CRITICAL"
+          : it.level === "warning"
+          ? "WARNING"
+          : "INFO";
 
       doc.setFont("helvetica", "bold");
       doc.setFontSize(10);
@@ -349,7 +347,7 @@ export async function generateClientAnalyticsPdf({
 
       doc.setFont("helvetica", "normal");
       doc.setTextColor(80);
-      const lines = doc.splitTextToSize(safeText(it.description), 180);
+      const lines = doc.splitTextToSize(safeText(it.description), 180) as string[];
       doc.text(lines, L, y);
       y += lines.length * 4.2 + 3;
     });
@@ -359,8 +357,11 @@ export async function generateClientAnalyticsPdf({
   doc.setFont("helvetica", "normal");
   doc.setFontSize(9);
   doc.setTextColor(150);
+
   if (withBranding) {
-    doc.text("Generated with SmartWerk", 105, PAGE_BOTTOM, { align: "center" });
+    doc.text("Generated with SmartWerk", 105, PAGE_BOTTOM, {
+      align: "center",
+    });
   }
 
   return doc.output("blob");
