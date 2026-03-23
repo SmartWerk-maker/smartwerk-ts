@@ -1,20 +1,34 @@
-import * as admin from "firebase-admin";
+import { cert, getApps, initializeApp } from "firebase-admin/app";
+import { getAuth } from "firebase-admin/auth";
+import { getFirestore } from "firebase-admin/firestore";
 
-if (!admin.apps.length) {
-  const privateKey = process.env.FIREBASE_PRIVATE_KEY?.replace(/\\n/g, "\n");
+function getRequiredEnv(name: string): string {
+  const value = process.env[name];
 
-  if (!privateKey) {
-    console.error("❌ Missing FIREBASE_PRIVATE_KEY");
+  if (!value) {
+    throw new Error(`Missing required server env var: ${name}`);
   }
 
-  admin.initializeApp({
-    credential: admin.credential.cert({
-      projectId: process.env.FIREBASE_PROJECT_ID,
-      clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
+  return value;
+}
+
+function initFirebaseAdmin() {
+  if (getApps().length > 0) return getApps()[0];
+
+  const projectId = getRequiredEnv("FIREBASE_PROJECT_ID");
+  const clientEmail = getRequiredEnv("FIREBASE_CLIENT_EMAIL");
+  const privateKey = getRequiredEnv("FIREBASE_PRIVATE_KEY").replace(/\n/g, "\n");
+
+  return initializeApp({
+    credential: cert({
+      projectId,
+      clientEmail,
       privateKey,
     }),
   });
 }
 
-export const auth = admin.auth();
-export const db = admin.firestore();
+const app = initFirebaseAdmin();
+
+export const auth = getAuth(app);
+export const db = getFirestore(app);
