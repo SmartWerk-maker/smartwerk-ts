@@ -1,5 +1,5 @@
 // lib/billing.ts
-import { db } from "@/lib/firebase-admin";
+import { db } from "@/server/firebase-admin";
 
 /* ------------------------------
    USER TYPE

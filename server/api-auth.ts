@@ -1,6 +1,6 @@
 import "server-only";
 
-import { auth } from "@/lib/firebase-admin";
+import { auth } from "@/server/firebase-admin";
 
 export async function requireUserFromBearer(authHeader: string | null | undefined) {
   if (!authHeader || !authHeader.startsWith("Bearer ")) {

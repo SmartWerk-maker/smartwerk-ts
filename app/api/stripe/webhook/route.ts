@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { stripe } from "@/lib/stripe";
-import { updateSubscriptionStatus } from "@/lib/billing";
+import { updateSubscriptionStatus } from "@/server/billing";
 import Stripe from "stripe";
 
 export const dynamic = "force-dynamic";

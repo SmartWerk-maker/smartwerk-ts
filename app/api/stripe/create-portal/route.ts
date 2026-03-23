@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { stripe } from "@/lib/stripe";
-import { getUser } from "@/lib/billing";
-import { requireUserFromBodyToken } from "@/lib/api-auth";
+import { getUser } from "@/server/billing";
+import { requireUserFromBodyToken } from "@/server/api-auth";
 
 function getBaseUrl() {
   return process.env.NEXT_PUBLIC_URL || "http://localhost:3000";

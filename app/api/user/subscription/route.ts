@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
-import { db } from "@/lib/firebase-admin";
-import { requireUserFromBodyToken } from "@/lib/api-auth";
+import { db } from "@/server/firebase-admin";
+import { requireUserFromBodyToken } from "@/server/api-auth";
 
 export async function POST(req: Request) {
   try {
