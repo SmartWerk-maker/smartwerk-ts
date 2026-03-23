@@ -5,7 +5,7 @@ import type {
   GenerateClientAnalyticsPdfParams,
   RiskLevel,
   ClientAnalyticsMonth,
-} from "./types2.ts";
+} from "./types";
 
 /* ================= I18N (EN) ================= */
 
