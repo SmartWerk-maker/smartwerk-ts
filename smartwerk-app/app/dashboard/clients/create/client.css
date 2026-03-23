@@ -1,0 +1,415 @@
+/* ===========================================
+   THEME VARIABLES (INHERIT FROM DASHBOARD)
+   =========================================== */
+
+/* коли дашборд у світлій темі */
+body.dash-theme-light,
+body.dash-theme-light * {
+  --bg: #f1f5f9;
+  --text: #1f2937;
+  --card: #ffffff;
+  --input-bg: #ffffff;
+  --input-border: #d0d7e2;
+  --muted: #6b7280;
+  --accent: #3b82f6;
+  --accent-hover: #2563eb;
+  --panel: #f0f4f8;
+}
+
+/* коли дашборд у темній темі */
+body.dash-theme-dark,
+body.dash-theme-dark * {
+  --bg: #020617;
+  --text: #e2e8f0;
+  --card: #020617;
+  --input-bg: #020617;
+  --input-border: #1f2937;
+  --muted: #9ca3af;
+  --accent: #3b82f6;
+  --accent-hover: #2563eb;
+  --panel: #020617;
+}
+
+/* додатково — якщо theme вішаться на <html class="dark"> */
+html.dark body,
+html.dark body * {
+  --bg: #020617;
+  --text: #e2e8f0;
+  --card: #020617;
+  --input-bg: #020617;
+  --input-border: #1f2937;
+  --muted: #9ca3af;
+  --accent: #3b82f6;
+  --accent-hover: #2563eb;
+  --panel: #020617;
+}
+
+/* ===========================================
+   GLOBAL PAGE STYLING
+   =========================================== */
+
+/* не додаємо зайвих відступів до body,
+   фон все одно перекривається .dash-root */
+
+
+/* центримо контент і обмежуємо ширину,
+   щоб форма не розтягувалась на всю */
+.dash-main {
+  min-height: 100vh;
+}
+
+.dash-content {
+  max-width: 5000px;
+  margin: 0 auto;
+  padding: 0px 0px 0px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+/* топбар робимо компактнішим для форм */
+.dash-topbar {
+  padding: 8px 0 4px;
+  border-bottom: 1px solid rgba(148, 163, 184, 0.25);
+  margin-bottom: 12px;
+}
+
+.dash-topbar-left .dash-title {
+  font-size: 24px;
+}
+
+.dash-topbar-left .dash-subtitle {
+  font-size: 13px;
+  opacity: 0.8;
+}
+
+/* кнопки у хедері трохи легші за основні */
+.dash-topbar-right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.dash-topbar-right .top-tab {
+  padding: 8px 16px;
+  border-radius: 999px;
+  font-size: 13px;
+  border: 1px solid var(--input-border);
+  background: var(--card);
+  color: var(--text);
+  border-color: var(--accent);
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.25);
+}
+
+.dash-topbar-right .top-tab:hover {
+  background: var(--panel);
+}
+
+/* основна картка форми */
+.dash-card {
+  background: var(--card);
+  border-radius: 14px;
+  padding: 24px 24px 22px;
+  box-shadow: 0 12px 32px rgba(15, 23, 42, 0.45);
+  margin-bottom: 24px;
+  transition: 0.2s ease;
+}
+
+body.dash-theme-light .dash-card,
+html.dark body.dash-theme-light .dash-card {
+  box-shadow: 0 16px 40px rgba(148, 163, 184, 0.25);
+}
+
+.dash-card:hover {
+  box-shadow: 0 8px 26px rgba(15, 23, 42, 0.4);
+}
+
+/* ===========================================
+   TITLES
+   =========================================== */
+/* Вхідні поля */
+.form-section {
+  margin-bottom: 28px;
+}
+
+.form-section-title {
+  font-size: 17px;
+}
+
+/* ===========================================
+   INPUTS & SELECTS
+   =========================================== */
+.form-input,
+select,
+textarea {
+  width: 100%;
+  padding: 11px 13px;
+  border-radius: 10px;
+  font-size: 14px;
+  background: var(--input-bg);
+  border: 1px solid var(--input-border);
+  color: var(--text);
+  transition: 0.2s ease;
+}
+
+.form-input:focus,
+select:focus,
+textarea:focus {
+  border-color: var(--accent);
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.25);
+}
+
+::placeholder {
+  color: var(--muted);
+  font-size: 13px;
+}
+
+/* ===========================================
+   LABELS
+   =========================================== */
+label {
+  display: block;
+  font-size: 13px;
+  color: var(--muted);
+  margin-bottom: 4px;
+}
+
+/* ===========================================
+   GRID
+   =========================================== */
+.form-grid-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+}
+
+/* ===========================================
+   BUTTONS (BOTTOM ACTIONS)
+   =========================================== */
+form-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 18px;
+  flex-wrap: wrap;
+}
+
+.btn-primary {
+  background: var(--accent);
+  color: #fff;
+  padding: 10px 20px;
+  border-radius: 999px;
+  border: none;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.btn-primary:hover {
+  background: var(--accent-hover);
+}
+
+.btn-secondary {
+  background: var(--panel);
+  color: var(--text);
+  padding: 10px 18px;
+  border-radius: 999px;
+  border: 1px solid var(--input-border);
+  font-size: 14px;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.btn-secondary:hover {
+  background: var(--input-border);
+}
+
+/* Хінт Smart Suggest */
+.smart-hint {
+  background: #10b981;
+  color: white;
+  padding: 10px 14px;
+  border-radius: 999px;
+  margin-top: 14px;
+  font-size: 13px;
+}
+
+/* ===========================================
+   SMART SUGGEST HINT
+   =========================================== */
+.smart-hint {
+  background: #10b981;
+  color: white;
+  padding: 10px 14px;
+  border-radius: 999px;
+  margin-top: 14px;
+  font-size: 13px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ===========================================
+   RESPONSIVE
+   =========================================== */
+@media (max-width: 900px) {
+  .dash-content {
+    max-width: 100%;
+    padding: 16px 12px 24px;
+  }
+
+  .dash-topbar {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+    border-bottom: none;
+    padding-bottom: 0;
+  }
+
+  .dash-topbar-right {
+    width: 100%;
+    flex-wrap: wrap;
+  }
+
+  .dash-topbar-right .top-tab {
+    flex: 1 1 auto;
+    justify-content: center;
+    text-align: center;
+  }
+
+  .dash-card {
+    padding: 18px 16px 18px;
+    margin-bottom: 18px;
+  }
+
+  .form-grid-2 {
+    grid-template-columns: 1fr;
+  }
+
+  .form-actions {
+    flex-direction: column;
+  }
+
+  .btn-primary,
+  .btn-secondary {
+    width: 100%;
+    text-align: center;
+  }
+}
+.clients-page .clients-page-content {
+  width: 100%;
+  max-width: 100%;   /* 🔹 було 1120px */
+  margin: 0;         /* 🔹 прибрали центрування */
+  padding: 1px 5px 1px;
+  gap: 1px;
+}
+
+/* Хедер компактний, мінімалістичний */
+.clients-page-topbar {
+  padding: 8px 0 4px !important;
+  border-bottom: none;
+  align-items: center;
+  gap: 8px;
+}
+
+.clients-page-topbar .dash-topbar-left {
+  gap: 4px;
+}
+
+.clients-page-topbar .dash-title {
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.clients-page-topbar .dash-subtitle {
+  font-size: 12px;
+  opacity: 0.8;
+  max-width: 520px;
+}
+
+/* Кнопки зверху – трохи менші */
+.clients-page-topbar .dash-topbar-right {
+  gap: 8px;
+}
+
+.clients-page-topbar .top-tab {
+  padding: 6px 14px;
+  font-size: 13px;
+  border-radius: 999px;
+}
+
+/* Основна картка – розтягнута, але з мінімалізмом */
+.clients-page .clients-card {
+  width: 100%;
+  margin-top: 8px;
+  background: var(--card);
+  border-radius: 16px;
+  padding: 22px 24px;
+  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.45);
+}
+
+/* Вхідні поля */
+.form-section {
+  margin-bottom: 28px;
+}
+
+.form-section-title {
+  font-size: 17px;
+}
+@media (max-width: 900px) {
+  .clients-page .clients-page-content {
+    max-width: 100%;
+    padding: 8px 12px 16px;
+  }
+
+  .clients-page-topbar {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
+  }
+
+  .clients-page-topbar .dash-topbar-right {
+    width: 100%;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+  }
+
+  .clients-page-topbar .top-tab {
+    padding: 6px 10px;
+    font-size: 12px;
+  }
+
+  .clients-page .clients-card {
+    padding: 18px 14px;
+    border-radius: 14px;
+  }
+
+  .form-grid-2 {
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+
+  .form-actions {
+    flex-direction: column;
+  }
+
+  .btn-primary,
+  .btn-secondary {
+    width: 100%;
+    text-align: center;
+  }
+}

@@ -1,0 +1,2520 @@
+{
+	"knownSymbols": {
+		"nextConfig": [
+			{
+				"name": "nextConfig",
+				"path": "/Users/ihor/Downloads/SmartWerk.nl/smartwerk.nl/smartwerk-next/next.config.ts",
+				"isDefault": true
+			}
+		],
+		"type { NextConfig": [
+			{
+				"name": "type { NextConfig",
+				"module": "next",
+				"isDefault": true
+			}
+		],
+		"defineConfig": [
+			{
+				"name": "defineConfig",
+				"module": "vitest/config",
+				"isDefault": false
+			},
+			{
+				"name": "defineConfig",
+				"path": "/Users/ihor/Downloads/SmartWerk.nl/smartwerk.nl/smartwerk-next/vitest.config.ts",
+				"isDefault": true
+			}
+		],
+		"UserRecord": [
+			{
+				"name": "UserRecord",
+				"path": "/Users/ihor/Downloads/SmartWerk.nl/smartwerk.nl/smartwerk-next/lib/billing.ts",
+				"type": "interface",
+				"isDefault": false
+			}
+		],
+		"async": [
+			{
+				"name": "async",
+				"path": "/Users/ihor/Downloads/SmartWerk.nl/smartwerk.nl/smartwerk-next/app/dashboard/templates/cv/utils/cvPdfExport.pro.ts",
+				"isDefault": false
+			}
+		],
+		"SubUpdate": [
+			{
+				"name": "SubUpdate",
+				"path": "/Users/ihor/Downloads/SmartWerk.nl/smartwerk.nl/smartwerk-next/lib/billing.ts",
+				"type": "interface",
+				"isDefault": false
+			}
+		],
+		"db": [
+			{
+				"name": "db",
+				"module": "@/firebase",
+				"isDefault": false
+			},
+			{
+				"name": "db",
+				"module": "@/lib/firebase-admin",
+				"isDefault": false
+			},
+			{
+				"name": "db",
+				"path": "/Users/ihor/Downloads/SmartWerk.nl/smartwerk.nl/smartwerk-next/firebase.ts",
+				"type": "const",
+				"isDefault": false
+			}
+		],
+		"auth": [
+			{
+				"name": "auth",
+				"module": "@/firebase",
+				"isDefault": false
+			},
+			{
+				"name": "auth",
+				"module": "@/lib/firebase-admin",
+				"isDefault": false
+			},
+			{
+				"name": "auth",
+				"path": "/Users/ihor/Downloads/SmartWerk.nl/smartwerk.nl/smartwerk-next/firebase.ts",
+				"type": "const",
+				"isDefault": false
+			}
+		],
+		"admin": [
+			{
+				"name": "admin",
+				"module": "firebase-admin",
+				"isDefault": true,
+				"asDefinition": "* as admin"
+			}
+		],
+		"RiskLevel": [
+			{
+				"name": "RiskLevel",
+				"path": "/Users/ihor/Downloads/SmartWerk.nl/smartwerk.nl/smartwerk-next/lib/utils/analytics/bookkeeper/types.ts",
+				"type": "type",
+				"isDefault": false
+			}
+		],
+		"ClientAnalyticsMonth": [
+			{
+				"name": "ClientAnalyticsMonth",
+				"path": "/Users/ihor/Downloads/SmartWerk.nl/smartwerk.nl/smartwerk-next/lib/utils/analytics/bookkeeper/types.ts",
+				"type": "type",
+				"isDefault": false
+			}
+		],
+		"ClientAnalyticsPdfData": [
+			{
+				"name": "ClientAnalyticsPdfData",
+				"path": "/Users/ihor/Downloads/SmartWerk.nl/smartwerk.nl/smartwerk-next/lib/utils/analytics/bookkeeper/types.ts",
+				"type": "type",
+				"isDefault": false
+			}
+		],
+		"GenerateClientAnalyticsPdfParams": [
+			{
+				"name": "GenerateClientAnalyticsPdfParams",
+				"path": "/Users/ihor/Downloads/SmartWerk.nl/smartwerk.nl/smartwerk-next/lib/utils/analytics/bookkeeper/types.ts",
+				"type": "type",
+				"isDefault": false
+			}
+		],
+		"jsPDF": [
+			{
+				"name": "jsPDF",
+				"module": "jspdf",
+				"isDefault": true
+			}
+		],
+		"autoTable": [
+			{
+				"name": "autoTable",
+				"module": "jspdf-autotable",
+				"isDefault": true
+			}
+		],
+		"generateContractPdf": [
+			{
+				"name": "generateContractPdf",
+				"module": "@/lib/utils/contracts/generateContractPdf",
+				"isDefault": false
+			},
+			{
+				"name": "generateContractPdf",
+				"path": "/Users/ihor/Downloads/SmartWerk.nl/smartwerk.nl/smartwerk-next/lib/utils/contracts/generateContractPdf.ts",
+				"type": "function",
+				"isDefault": false
+			}
+		],
+		"ContractStatus": [
+			{
+				"name": "ContractStatus",
+				"path": "/Users/ihor/Downloads/SmartWerk.nl/smartwerk.nl/smartwerk-next/app/dashboard/contracts/create/types.ts",
+				"type": "type",
+				"isDefault": false
+			}
+		],
+		"ContractPdfData": [
+			{
+				"name": "ContractPdfData",
+				"path": "/Users/ihor/Downloads/SmartWerk.nl/smartwerk.nl/smartwerk-next/lib/utils/contracts/types.ts",
+				"type": "interface",
+				"isDefault": false
+			}
+		],
+		"cn": [
+			{
+				"name": "cn",
+				"module": "@/lib/utils",
+				"isDefault": false
+			},
+			{
+				"name": "cn",
+				"path": "/Users/ihor/Downloads/SmartWerk.nl/smartwerk.nl/smartwerk-next/lib/utils.ts",
+				"type": "function",
+				"isDefault": false
+			}
+		],
+		"clsx": [
+			{
+				"name": "clsx",
+				"module": "clsx",
+				"isDefault": false
+			}
+		],
+		"type ClassValue": [
+			{
+				"name": "type ClassValue",
+				"module": "clsx",
+				"isDefault": false
+			}
+		],
+		"twMerge": [
+			{
+				"name": "twMerge",
+				"module": "tailwind-merge",
+				"isDefault": false
+			}
+		],
+		"stripe": [
+			{
+				"name": "stripe",
+				"module": "@/lib/stripe",
+				"isDefault": false
+			},
+			{
+				"name": "stripe",
+				"path": "/Users/ihor/Downloads/SmartWerk.nl/smartwerk.nl/smartwerk-next/lib/stripe.ts",
+				"type": "const",
+				"isDefault": false
+			}
+		],
+		"Stripe": [
+			{
+				"name": "Stripe",
+				"module": "stripe",
+				"isDefault": true
+			}
+		],
+		"initializeApp": [
+			{
+				"name": "initializeApp",
+				"module": "firebase/app",
+				"isDefault": false
+			}
+		],
+		"getApps": [
+			{
+				"name": "getApps",
+				"module": "firebase/app",
+				"isDefault": false
+			}
+		],
+		"getApp": [
+			{
+				"name": "getApp",
+				"module": "firebase/app",
+				"isDefault": false
+			}
+		],
+		"getAuth": [
+			{
+				"name": "getAuth",
+				"module": "firebase/auth",
+				"isDefault": false
+			}
+		],
+		"getFirestore": [
+			{
+				"name": "getFirestore",
+				"module": "firebase/firestore",
+				"isDefault": false
+			}
+		],
+		"PricingPage": [
+			{
+				"name": "PricingPage",
+				"path": "/Users/ihor/Downloads/SmartWerk.nl/smartwerk.nl/smartwerk-next/app/pricing/page.tsx",
+				"type": "function",
+				"isDefault": true
+			}
+		],
+		"useState": [
+			{
+				"name": "useState",
+				"module": "react",
+				"isDefault": true
+			}
+		],
+		"Link": [
+			{
+				"name": "Link",
+				"module": "next/link",
+				"isDefault": true
+			}
+		],
+		"HomePage": [
+			{
+				"name": "HomePage",
+				"path": "/Users/ihor/Downloads/SmartWerk.nl/smartwerk.nl/smartwerk-next/app/page.tsx",
+				"type": "function",
+				"isDefault": true
+			}
+		],
+		"expenses": [
+			{
+				"name": "expenses",
+				"path": "/Users/ihor/Downloads/SmartWerk.nl/smartwerk.nl/smartwerk-next/app/page.tsx",
+				"isDefault": false
+			}
+		],
+		"Image": [
+			{
+				"name": "Image",
+				"module": "next/image",
+				"isDefault": true
+			}
+		],
+		"useHomeAuth": [
+			{
+				"name": "useHomeAuth",
+				"path": "/Users/ihor/Downloads/SmartWerk.nl/smartwerk.nl/smartwerk-next/app/components/useHomeAuth.tsx",
+				"type": "function",
+				"isDefault": false
+			},
+			{
+				"name": "useHomeAuth",
+				"module": "@/app/components/useHomeAuth",
+				"isDefault": false
+			}
+		],
+		"SUPPORTED_LANGUAGES": [
+			{
+				"name": "SUPPORTED_LANGUAGES",
+				"module": "@/app/i18n/config",
+				"isDefault": false
+			},
+			{
+				"name": "SUPPORTED_LANGUAGES",
+				"path": "/Users/ihor/Downloads/SmartWerk.nl/smartwerk.nl/smartwerk-next/app/i18n/config.ts",
+				"type": "const",
+				"isDefault": false
+			}
+		],
+		"Lang": [
+			{
+				"name": "Lang",
+				"path": "/Users/ihor/Downloads/SmartWerk.nl/smartwerk.nl/smartwerk-next/app/i18n/config.ts",
+				"type": "type",
+				"isDefault": false
+			}
+		],
+		"DEFAULT_LANG": [
+			{
+				"name": "DEFAULT_LANG",
+				"module": "@/app/i18n/config",
+				"isDefault": false
+			},
+			{
+				"name": "DEFAULT_LANG",
+				"path": "/Users/ihor/Downloads/SmartWerk.nl/smartwerk.nl/smartwerk-next/app/i18n/config.ts",
+				"type": "const",
+				"isDefault": false
+			}
+		],
+		"TranslationDictionary": [
+			{
+				"name": "TranslationDictionary",
+				"path": "/Users/ihor/Downloads/SmartWerk.nl/smartwerk.nl/smartwerk-next/app/i18n/index.ts",
+				"type": "type",
+				"isDefault": false
+			}
+		],
+		"detectBrowserLanguage": [
+			{
+				"name": "detectBrowserLanguage",
+				"path": "/Users/ihor/Downloads/SmartWerk.nl/smartwerk.nl/smartwerk-next/app/i18n/index.ts",
+				"type": "function",
+				"isDefault": false
+			}
+		],
+		"getSavedLanguage": [
+			{
+				"name": "getSavedLanguage",
+				"path": "/Users/ihor/Downloads/SmartWerk.nl/smartwerk.nl/smartwerk-next/app/i18n/index.ts",
+				"type": "function",
+				"isDefault": false
+			}
+		],
+		"saveLanguage": [
+			{
+				"name": "saveLanguage",
+				"path": "/Users/ihor/Downloads/SmartWerk.nl/smartwerk.nl/smartwerk-next/app/i18n/index.ts",
+				"type": "function",
+				"isDefault": false
+			}
+		],
+		"useTranslation": [
+			{
+				"name": "useTranslation",
+				"module": "@/app/i18n",
+				"isDefault": false
+			},
+			{
+				"name": "useTranslation",
+				"path": "/Users/ihor/Downloads/SmartWerk.nl/smartwerk.nl/smartwerk-next/app/i18n/index.ts",
+				"type": "function",
+				"isDefault": false
+			}
+		],
+		"useEffect": [
+			{
+				"name": "useEffect",
+				"module": "react",
+				"isDefault": true
+			}
+		],
+		"QuotesTranslation": [
+			{
+				"name": "QuotesTranslation",
+				"path": "/Users/ihor/Downloads/SmartWerk.nl/smartwerk.nl/smartwerk-next/app/i18n/typesQuotes.ts",
+				"type": "interface",
+				"isDefault": false
+			}
+		],
+		"ExpensePdfData": [
+			{
+				"name": "ExpensePdfData",
+				"path": "/Users/ihor/Downloads/SmartWerk.nl/smartwerk.nl/smartwerk-next/lib/utils/expenses/generateExpensePdf.ts",
+				"type": "type",
+				"isDefault": false
+			}
+		],
+		"BusinessPdfData": [
+			{
+				"name": "BusinessPdfData",
+				"path": "/Users/ihor/Downloads/SmartWerk.nl/smartwerk.nl/smartwerk-next/lib/utils/expenses/generateExpensePdf.ts",
+				"type": "type",
+				"isDefault": false
+			}
+		],
+		"GenerateExpensePdfParams": [
+			{
+				"name": "GenerateExpensePdfParams",
+				"path": "/Users/ihor/Downloads/SmartWerk.nl/smartwerk.nl/smartwerk-next/lib/utils/expenses/generateExpensePdf.ts",
+				"type": "type",
+				"isDefault": false
+			}
+		],
+		"LoginPage": [
+			{
+				"name": "LoginPage",
+				"path": "/Users/ihor/Downloads/SmartWerk.nl/smartwerk.nl/smartwerk-next/app/login/page.tsx",
+				"type": "function",
+				"isDefault": true
+			}
+		],
+		"doc": [
+			{
+				"name": "doc",
+				"module": "firebase/firestore",
+				"isDefault": false
+			}
+		],
+		"setDoc": [
+			{
+				"name": "setDoc",
+				"module": "firebase/firestore",
+				"isDefault": false
+			}
+		],
+		"getDoc": [
+			{
+				"name": "getDoc",
+				"module": "firebase/firestore",
+				"isDefault": false
+			}
+		],
+		"ResetPasswordPage": [
+			{
+				"name": "ResetPasswordPage",
+				"path": "/Users/ihor/Downloads/SmartWerk.nl/smartwerk.nl/smartwerk-next/app/reset-password/page.tsx",
+				"type": "function",
+				"isDefault": true
+			}
+		],
+		"sendPasswordResetEmail": [
+			{
+				"name": "sendPasswordResetEmail",
+				"module": "firebase/auth",
+				"isDefault": false
+			}
+		],
+		"the": [
+			{
+				"name": "the",
+				"path": "/Users/ihor/Downloads/SmartWerk.nl/smartwerk.nl/smartwerk-next/.next/dev/types/validator.ts",
+				"isDefault": false
+			}
+		],
+		"type { ResolvingMetadata": [
+			{
+				"name": "type { ResolvingMetadata",
+				"module": "next/types.js",
+				"isDefault": true
+			}
+		],
+		"ResolvingViewport": [
+			{
+				"name": "ResolvingViewport",
+				"module": "next/types.js",
+				"isDefault": true
+			}
+		],
+		"type { NextRequest": [
+			{
+				"name": "type { NextRequest",
+				"module": "next/server",
+				"isDefault": true
+			},
+			{
+				"name": "type { NextRequest",
+				"module": "next/server.js",
+				"isDefault": true
+			}
+		],
+		"ParamsOf": [
+			{
+				"name": "ParamsOf",
+				"path": "/Users/ihor/Downloads/SmartWerk.nl/smartwerk.nl/smartwerk-next/.next/dev/types/routes.d.ts",
+				"type": "type",
+				"isDefault": false
+			}
+		],
+		"type": [
+			{
+				"name": "type",
+				"path": "/Users/ihor/Downloads/SmartWerk.nl/smartwerk.nl/smartwerk-next/.next/dev/types/routes.d.ts",
+				"isDefault": false
+			}
+		],
+		"Page": [
+			{
+				"name": "Page",
+				"path": "/Users/ihor/Downloads/SmartWerk.nl/smartwerk.nl/smartwerk-next/app/dashboard/expenses/list/page.tsx",
+				"type": "function",
+				"isDefault": true
+			}
+		],
+		"Layout": [
+			{
+				"name": "Layout",
+				"path": "/Users/ihor/Downloads/SmartWerk.nl/smartwerk.nl/smartwerk-next/.next/dev/types/routes.d.ts",
+				"type": "function",
+				"isDefault": true
+			}
+		],
+		"cacheLife": [
+			{
+				"name": "cacheLife",
+				"path": "/Users/ihor/Downloads/SmartWerk.nl/smartwerk.nl/smartwerk-next/.next/dev/types/cache-life.d.ts",
+				"type": "function",
+				"isDefault": false
+			}
+		],
+		"unstable_cacheTag": [
+			{
+				"name": "unstable_cacheTag",
+				"path": "/Users/ihor/Downloads/SmartWerk.nl/smartwerk.nl/smartwerk-next/.next/dev/types/cache-life.d.ts",
+				"type": "const",
+				"isDefault": false
+			}
+		],
+		"unstable_cacheLife": [
+			{
+				"name": "unstable_cacheLife",
+				"path": "/Users/ihor/Downloads/SmartWerk.nl/smartwerk.nl/smartwerk-next/.next/dev/types/cache-life.d.ts",
+				"type": "const",
+				"isDefault": false
+			}
+		],
+		"cacheTag": [
+			{
+				"name": "cacheTag",
+				"module": "next/dist/server/use-cache/cache-tag",
+				"isDefault": false
+			}
+		],
+		"metadata": [
+			{
+				"name": "metadata",
+				"path": "/Users/ihor/Downloads/SmartWerk.nl/smartwerk.nl/smartwerk-next/app/dashboard/clients/list/page.tsx",
+				"type": "const",
+				"isDefault": false
+			}
+		],
+		"RootLayout": [
+			{
+				"name": "RootLayout",
+				"path": "/Users/ihor/Downloads/SmartWerk.nl/smartwerk.nl/smartwerk-next/app/layout.tsx",
+				"type": "function",
+				"isDefault": true
+			}
+		],
+		"type { Metadata": [
+			{
+				"name": "type { Metadata",
+				"module": "next",
+				"isDefault": true
+			}
+		],
+		"Geist": [
+			{
+				"name": "Geist",
+				"module": "next/font/google",
+				"isDefault": false
+			}
+		],
+		"Geist_Mono": [
+			{
+				"name": "Geist_Mono",
+				"module": "next/font/google",
+				"isDefault": false
+			}
+		],
+		"usePlan": [
+			{
+				"name": "usePlan",
+				"module": "@/app/hooks/usePlan",
+				"isDefault": false
+			},
+			{
+				"name": "usePlan",
+				"path": "/Users/ihor/Downloads/SmartWerk.nl/smartwerk.nl/smartwerk-next/app/hooks/usePlan.ts",
+				"type": "function",
+				"isDefault": false
+			}
+		],
+		"onSnapshot": [
+			{
+				"name": "onSnapshot",
+				"module": "firebase/firestore",
+				"isDefault": false
+			}
+		],
+		"useSubscription": [
+			{
+				"name": "useSubscription",
+				"path": "/Users/ihor/Downloads/SmartWerk.nl/smartwerk.nl/smartwerk-next/app/hooks/useSubscription.ts",
+				"type": "function",
+				"isDefault": false
+			}
+		],
+		"RegisterPage": [
+			{
+				"name": "RegisterPage",
+				"path": "/Users/ihor/Downloads/SmartWerk.nl/smartwerk.nl/smartwerk-next/app/register/page.tsx",
+				"type": "function",
+				"isDefault": true
+			}
+		],
+		"onAuthStateChanged": [
+			{
+				"name": "onAuthStateChanged",
+				"module": "firebase/auth",
+				"isDefault": false
+			}
+		],
+		"User": [
+			{
+				"name": "User",
+				"module": "firebase/auth",
+				"isDefault": false
+			}
+		],
+		"React": [
+			{
+				"name": "React",
+				"module": "react",
+				"isDefault": true,
+				"asDefinition": "* as React"
+			}
+		],
+		"SelectPrimitive": [
+			{
+				"name": "SelectPrimitive",
+				"module": "@radix-ui/react-select",
+				"isDefault": true,
+				"asDefinition": "* as SelectPrimitive"
+			}
+		],
+		"CheckIcon": [
+			{
+				"name": "CheckIcon",
+				"module": "lucide-react",
+				"isDefault": false
+			}
+		],
+		"ChevronDownIcon": [
+			{
+				"name": "ChevronDownIcon",
+				"module": "lucide-react",
+				"isDefault": false
+			}
+		],
+		"ChevronUpIcon": [
+			{
+				"name": "ChevronUpIcon",
+				"module": "lucide-react",
+				"isDefault": false
+			}
+		],
+		"Slot": [
+			{
+				"name": "Slot",
+				"module": "@radix-ui/react-slot",
+				"isDefault": false
+			}
+		],
+		"cva": [
+			{
+				"name": "cva",
+				"module": "class-variance-authority",
+				"isDefault": false
+			}
+		],
+		"type VariantProps": [
+			{
+				"name": "type VariantProps",
+				"module": "class-variance-authority",
+				"isDefault": false
+			}
+		],
+		"NextResponse": [
+			{
+				"name": "NextResponse",
+				"module": "next/server",
+				"isDefault": false
+			}
+		],
+		"getUser": [
+			{
+				"name": "getUser",
+				"module": "@/lib/billing",
+				"isDefault": false
+			}
+		],
+		"dynamic": [
+			{
+				"name": "dynamic",
+				"path": "/Users/ihor/Downloads/SmartWerk.nl/smartwerk.nl/smartwerk-next/app/api/stripe/webhook/route.ts",
+				"type": "const",
+				"isDefault": false
+			}
+		],
+		"updateSubscriptionStatus": [
+			{
+				"name": "updateSubscriptionStatus",
+				"module": "@/lib/billing",
+				"isDefault": false
+			}
+		],
+		"VerifyEmailPage": [
+			{
+				"name": "VerifyEmailPage",
+				"path": "/Users/ihor/Downloads/SmartWerk.nl/smartwerk.nl/smartwerk-next/app/verify-email/page.tsx",
+				"type": "function",
+				"isDefault": true
+			}
+		],
+		"config": [
+			{
+				"name": "config",
+				"path": "/Users/ihor/Downloads/SmartWerk.nl/smartwerk.nl/smartwerk-next/app/api/user/subscription/middleware.ts",
+				"type": "const",
+				"isDefault": false
+			}
+		],
+		"FinancialDashboard": [
+			{
+				"name": "FinancialDashboard",
+				"path": "/Users/ihor/Downloads/SmartWerk.nl/smartwerk.nl/smartwerk-next/app/dashboard/hooks/useFinancialDashboard.ts",
+				"type": "interface",
+				"isDefault": false
+			}
+		],
+		"useFinancialDashboard": [
+			{
+				"name": "useFinancialDashboard",
+				"module": "@/app/dashboard/hooks/useFinancialDashboard",
+				"isDefault": false
+			},
+			{
+				"name": "useFinancialDashboard",
+				"path": "/Users/ihor/Downloads/SmartWerk.nl/smartwerk.nl/smartwerk-next/app/dashboard/hooks/useFinancialDashboard.ts",
+				"type": "function",
+				"isDefault": false
+			}
+		],
+		"useMemo": [
+			{
+				"name": "useMemo",
+				"module": "react",
+				"isDefault": true
+			}
+		],
+		"Timestamp": [
+			{
+				"name": "Timestamp",
+				"module": "firebase/firestore",
+				"isDefault": true
+			}
+		],
+		"QuoteStatus": [
+			{
+				"name": "QuoteStatus",
+				"path": "/Users/ihor/Downloads/SmartWerk.nl/smartwerk.nl/smartwerk-next/app/dashboard/hooks/useQuotes.ts",
+				"type": "type",
+				"isDefault": false
+			}
+		],
+		"QuoteItem": [
+			{
+				"name": "QuoteItem",
+				"path": "/Users/ihor/Downloads/SmartWerk.nl/smartwerk.nl/smartwerk-next/app/dashboard/hooks/useQuotes.ts",
+				"type": "interface",
+				"isDefault": false
+			}
+		],
+		"Quote": [
+			{
+				"name": "Quote",
+				"path": "/Users/ihor/Downloads/SmartWerk.nl/smartwerk.nl/smartwerk-next/app/dashboard/hooks/useQuotes.ts",
+				"type": "interface",
+				"isDefault": false
+			}
+		],
+		"useQuotes": [
+			{
+				"name": "useQuotes",
+				"path": "/Users/ihor/Downloads/SmartWerk.nl/smartwerk.nl/smartwerk-next/app/dashboard/hooks/useQuotes.ts",
+				"type": "function",
+				"isDefault": false
+			}
+		],
+		"InvoiceStatus": [
+			{
+				"name": "InvoiceStatus",
+				"path": "/Users/ihor/Downloads/SmartWerk.nl/smartwerk.nl/smartwerk-next/app/dashboard/analytics/bookkeeper/types.ts",
+				"type": "type",
+				"isDefault": false
+			}
+		],
+		"InvoiceItem": [
+			{
+				"name": "InvoiceItem",
+				"path": "/Users/ihor/Downloads/SmartWerk.nl/smartwerk.nl/smartwerk-next/app/dashboard/hooks/useInvoices.ts",
+				"type": "interface",
+				"isDefault": false
+			}
+		],
+		"Invoice": [
+			{
+				"name": "Invoice",
+				"path": "/Users/ihor/Downloads/SmartWerk.nl/smartwerk.nl/smartwerk-next/app/dashboard/hooks/useInvoices.ts",
+				"type": "interface",
+				"isDefault": false
+			}
+		],
+		"useInvoices": [
+			{
+				"name": "useInvoices",
+				"path": "/Users/ihor/Downloads/SmartWerk.nl/smartwerk.nl/smartwerk-next/app/dashboard/hooks/useInvoices.ts",
+				"type": "function",
+				"isDefault": false
+			}
+		],
+		"Expense": [
+			{
+				"name": "Expense",
+				"path": "/Users/ihor/Downloads/SmartWerk.nl/smartwerk.nl/smartwerk-next/app/dashboard/hooks/useExpenses.ts",
+				"type": "interface",
+				"isDefault": false
+			}
+		],
+		"useExpenses": [
+			{
+				"name": "useExpenses",
+				"path": "/Users/ihor/Downloads/SmartWerk.nl/smartwerk.nl/smartwerk-next/app/dashboard/hooks/useExpenses.ts",
+				"type": "function",
+				"isDefault": false
+			}
+		],
+		"ReminderStatus": [
+			{
+				"name": "ReminderStatus",
+				"path": "/Users/ihor/Downloads/SmartWerk.nl/smartwerk.nl/smartwerk-next/app/dashboard/reminders/create/types.ts",
+				"type": "type",
+				"isDefault": false
+			}
+		],
+		"Reminder": [
+			{
+				"name": "Reminder",
+				"path": "/Users/ihor/Downloads/SmartWerk.nl/smartwerk.nl/smartwerk-next/app/dashboard/hooks/useReminders.ts",
+				"type": "interface",
+				"isDefault": false
+			}
+		],
+		"useReminders": [
+			{
+				"name": "useReminders",
+				"path": "/Users/ihor/Downloads/SmartWerk.nl/smartwerk.nl/smartwerk-next/app/dashboard/hooks/useReminders.ts",
+				"type": "function",
+				"isDefault": false
+			}
+		],
+		"collection": [
+			{
+				"name": "collection",
+				"module": "firebase/firestore",
+				"isDefault": false
+			}
+		],
+		"orderBy": [
+			{
+				"name": "orderBy",
+				"module": "firebase/firestore",
+				"isDefault": false
+			}
+		],
+		"query": [
+			{
+				"name": "query",
+				"module": "firebase/firestore",
+				"isDefault": false
+			}
+		],
+		"Client": [
+			{
+				"name": "Client",
+				"path": "/Users/ihor/Downloads/SmartWerk.nl/smartwerk.nl/smartwerk-next/app/dashboard/hooks/useClients.ts",
+				"type": "interface",
+				"isDefault": false
+			}
+		],
+		"useClients": [
+			{
+				"name": "useClients",
+				"path": "/Users/ihor/Downloads/SmartWerk.nl/smartwerk.nl/smartwerk-next/app/dashboard/hooks/useClients.ts",
+				"type": "function",
+				"isDefault": false
+			}
+		],
+		"ActivityType": [
+			{
+				"name": "ActivityType",
+				"path": "/Users/ihor/Downloads/SmartWerk.nl/smartwerk.nl/smartwerk-next/app/dashboard/hooks/useActivity.ts",
+				"type": "type",
+				"isDefault": false
+			}
+		],
+		"ActivityLog": [
+			{
+				"name": "ActivityLog",
+				"path": "/Users/ihor/Downloads/SmartWerk.nl/smartwerk.nl/smartwerk-next/app/dashboard/hooks/useActivity.ts",
+				"type": "interface",
+				"isDefault": false
+			}
+		],
+		"useActivity": [
+			{
+				"name": "useActivity",
+				"module": "@/app/dashboard/hooks/useActivity",
+				"isDefault": false
+			},
+			{
+				"name": "useActivity",
+				"path": "/Users/ihor/Downloads/SmartWerk.nl/smartwerk.nl/smartwerk-next/app/dashboard/hooks/useActivity.ts",
+				"type": "function",
+				"isDefault": false
+			}
+		],
+		"type { Timestamp": [
+			{
+				"name": "type { Timestamp",
+				"module": "firebase/firestore",
+				"isDefault": true
+			}
+		],
+		"LanguageSwitcher": [
+			{
+				"name": "LanguageSwitcher",
+				"path": "/Users/ihor/Downloads/SmartWerk.nl/smartwerk.nl/smartwerk-next/app/dashboard/components/LanguageSwitcher.tsx",
+				"type": "function",
+				"isDefault": true
+			}
+		],
+		"type { LanguageCode": [
+			{
+				"name": "type { LanguageCode",
+				"module": "@/app/providers/LanguageProvider",
+				"isDefault": true
+			}
+		],
+		"Sidebar": [
+			{
+				"name": "Sidebar",
+				"path": "/Users/ihor/Downloads/SmartWerk.nl/smartwerk.nl/smartwerk-next/app/dashboard/components/sidebar.tsx",
+				"type": "function",
+				"isDefault": true
+			}
+		],
+		"{ useState": [
+			{
+				"name": "{ useState",
+				"module": "react",
+				"isDefault": true
+			}
+		],
+		"useRouter": [
+			{
+				"name": "useRouter",
+				"module": "next/navigation",
+				"isDefault": false
+			}
+		],
+		"useLanguage": [
+			{
+				"name": "useLanguage",
+				"module": "@/app/providers/LanguageProvider",
+				"isDefault": false
+			},
+			{
+				"name": "useLanguage",
+				"path": "/Users/ihor/Downloads/SmartWerk.nl/smartwerk.nl/smartwerk-next/app/providers/LanguageProvider.tsx",
+				"type": "function",
+				"isDefault": false
+			}
+		],
+		"useTheme": [
+			{
+				"name": "useTheme",
+				"path": "/Users/ihor/Downloads/SmartWerk.nl/smartwerk.nl/smartwerk-next/app/providers/ThemeProvider.tsx",
+				"type": "function",
+				"isDefault": false
+			},
+			{
+				"name": "useTheme",
+				"module": "@/app/providers/ThemeProvider",
+				"isDefault": false
+			}
+		],
+		"KPIGroup": [
+			{
+				"name": "KPIGroup",
+				"path": "/Users/ihor/Downloads/SmartWerk.nl/smartwerk.nl/smartwerk-next/app/dashboard/components/KPIGroup.tsx",
+				"type": "function",
+				"isDefault": true
+			}
+		],
+		"{ useMemo": [
+			{
+				"name": "{ useMemo",
+				"module": "react",
+				"isDefault": true
+			}
+		],
+		"Topbar": [
+			{
+				"name": "Topbar",
+				"path": "/Users/ihor/Downloads/SmartWerk.nl/smartwerk.nl/smartwerk-next/app/dashboard/components/Topbar.tsx",
+				"type": "function",
+				"isDefault": true
+			}
+		],
+		"type { User": [
+			{
+				"name": "type { User",
+				"module": "firebase/auth",
+				"isDefault": true
+			}
+		],
+		"RecentActivity": [
+			{
+				"name": "RecentActivity",
+				"path": "/Users/ihor/Downloads/SmartWerk.nl/smartwerk.nl/smartwerk-next/app/dashboard/components/recent-activity.tsx",
+				"type": "function",
+				"isDefault": true
+			}
+		],
+		"type { ActivityLog": [
+			{
+				"name": "type { ActivityLog",
+				"module": "@/app/dashboard/hooks/useActivity",
+				"isDefault": true
+			}
+		],
+		"Suggestions": [
+			{
+				"name": "Suggestions",
+				"path": "/Users/ihor/Downloads/SmartWerk.nl/smartwerk.nl/smartwerk-next/app/dashboard/components/suggestions.tsx",
+				"type": "function",
+				"isDefault": true
+			}
+		],
+		"RevenueChart": [
+			{
+				"name": "RevenueChart",
+				"path": "/Users/ihor/Downloads/SmartWerk.nl/smartwerk.nl/smartwerk-next/app/dashboard/components/charts/RevenueChart.tsx",
+				"type": "function",
+				"isDefault": true
+			}
+		],
+		"InvoiceStatusChart": [
+			{
+				"name": "InvoiceStatusChart",
+				"path": "/Users/ihor/Downloads/SmartWerk.nl/smartwerk.nl/smartwerk-next/app/dashboard/components/charts/InvoiceStatusChart.tsx",
+				"type": "function",
+				"isDefault": true
+			}
+		],
+		"PieChart": [
+			{
+				"name": "PieChart",
+				"module": "recharts",
+				"isDefault": false
+			}
+		],
+		"Pie": [
+			{
+				"name": "Pie",
+				"module": "recharts",
+				"isDefault": false
+			}
+		],
+		"Cell": [
+			{
+				"name": "Cell",
+				"module": "recharts",
+				"isDefault": false
+			}
+		],
+		"Tooltip": [
+			{
+				"name": "Tooltip",
+				"module": "recharts",
+				"isDefault": false
+			}
+		],
+		"ResponsiveContainer": [
+			{
+				"name": "ResponsiveContainer",
+				"module": "recharts",
+				"isDefault": false
+			}
+		],
+		"ClientWrapper": [
+			{
+				"name": "ClientWrapper",
+				"path": "/Users/ihor/Downloads/SmartWerk.nl/smartwerk.nl/smartwerk-next/app/dashboard/wrapper.tsx",
+				"type": "function",
+				"isDefault": true
+			}
+		],
+		"ThemeProvider": [
+			{
+				"name": "ThemeProvider",
+				"path": "/Users/ihor/Downloads/SmartWerk.nl/smartwerk.nl/smartwerk-next/app/providers/ThemeProvider.tsx",
+				"type": "function",
+				"isDefault": false
+			},
+			{
+				"name": "ThemeProvider",
+				"module": "@/app/providers/ThemeProvider",
+				"isDefault": false
+			}
+		],
+		"LanguageProvider": [
+			{
+				"name": "LanguageProvider",
+				"path": "/Users/ihor/Downloads/SmartWerk.nl/smartwerk.nl/smartwerk-next/app/providers/LanguageProvider.tsx",
+				"type": "function",
+				"isDefault": false
+			},
+			{
+				"name": "LanguageProvider",
+				"module": "@/app/providers/LanguageProvider",
+				"isDefault": false
+			}
+		],
+		"DashboardPage": [
+			{
+				"name": "DashboardPage",
+				"path": "/Users/ihor/Downloads/SmartWerk.nl/smartwerk.nl/smartwerk-next/app/dashboard/page.tsx",
+				"type": "function",
+				"isDefault": true
+			}
+		],
+		"{ useCallback": [
+			{
+				"name": "{ useCallback",
+				"module": "react",
+				"isDefault": true
+			}
+		],
+		"signOut": [
+			{
+				"name": "signOut",
+				"module": "firebase/auth",
+				"isDefault": false
+			}
+		],
+		"type User": [
+			{
+				"name": "type User",
+				"module": "firebase/auth",
+				"isDefault": false
+			}
+		],
+		"dashboardMetadata": [
+			{
+				"name": "dashboardMetadata",
+				"path": "/Users/ihor/Downloads/SmartWerk.nl/smartwerk.nl/smartwerk-next/app/dashboard/metadata.ts",
+				"type": "const",
+				"isDefault": false
+			}
+		],
+		"ReminderType": [
+			{
+				"name": "ReminderType",
+				"path": "/Users/ihor/Downloads/SmartWerk.nl/smartwerk.nl/smartwerk-next/app/dashboard/reminders/create/types.ts",
+				"type": "type",
+				"isDefault": false
+			}
+		],
+		"ReminderSignature": [
+			{
+				"name": "ReminderSignature",
+				"path": "/Users/ihor/Downloads/SmartWerk.nl/smartwerk.nl/smartwerk-next/app/dashboard/reminders/create/types.ts",
+				"type": "type",
+				"isDefault": false
+			}
+		],
+		"ReminderFormState": [
+			{
+				"name": "ReminderFormState",
+				"path": "/Users/ihor/Downloads/SmartWerk.nl/smartwerk.nl/smartwerk-next/app/dashboard/reminders/create/types.ts",
+				"type": "type",
+				"isDefault": false
+			}
+		],
+		"todayISODate": [
+			{
+				"name": "todayISODate",
+				"path": "/Users/ihor/Downloads/SmartWerk.nl/smartwerk.nl/smartwerk-next/app/dashboard/contracts/create/types.ts",
+				"type": "function",
+				"isDefault": false
+			}
+		],
+		"createInitialReminderForm": [
+			{
+				"name": "createInitialReminderForm",
+				"path": "/Users/ihor/Downloads/SmartWerk.nl/smartwerk.nl/smartwerk-next/app/dashboard/reminders/create/types.ts",
+				"type": "function",
+				"isDefault": false
+			}
+		],
+		"BillingPage": [
+			{
+				"name": "BillingPage",
+				"path": "/Users/ihor/Downloads/SmartWerk.nl/smartwerk.nl/smartwerk-next/app/dashboard/billing/page.tsx",
+				"type": "function",
+				"isDefault": true
+			}
+		],
+		"RemindersI18nSection": [
+			{
+				"name": "RemindersI18nSection",
+				"path": "/Users/ihor/Downloads/SmartWerk.nl/smartwerk.nl/smartwerk-next/app/dashboard/reminders/create/page.tsx",
+				"type": "type",
+				"isDefault": false
+			}
+		],
+		"ReminderCreatePage": [
+			{
+				"name": "ReminderCreatePage",
+				"path": "/Users/ihor/Downloads/SmartWerk.nl/smartwerk.nl/smartwerk-next/app/dashboard/reminders/create/page.tsx",
+				"type": "function",
+				"isDefault": true
+			}
+		],
+		"ContractSign": [
+			{
+				"name": "ContractSign",
+				"path": "/Users/ihor/Downloads/SmartWerk.nl/smartwerk.nl/smartwerk-next/app/dashboard/contracts/create/components/ContractSign.tsx",
+				"type": "function",
+				"isDefault": true
+			},
+			{
+				"name": "ContractSign",
+				"module": "@/app/dashboard/contracts/create/components/ContractSign",
+				"isDefault": true
+			}
+		],
+		"AnalyticsPeriod": [
+			{
+				"name": "AnalyticsPeriod",
+				"path": "/Users/ihor/Downloads/SmartWerk.nl/smartwerk.nl/smartwerk-next/app/dashboard/analytics/bookkeeper/types.ts",
+				"type": "type",
+				"isDefault": false
+			}
+		],
+		"AnalyticsFilters": [
+			{
+				"name": "AnalyticsFilters",
+				"path": "/Users/ihor/Downloads/SmartWerk.nl/smartwerk.nl/smartwerk-next/app/dashboard/analytics/bookkeeper/components/AnalyticsFilters.tsx",
+				"type": "function",
+				"isDefault": true
+			}
+		],
+		"AnalyticsInvoice": [
+			{
+				"name": "AnalyticsInvoice",
+				"path": "/Users/ihor/Downloads/SmartWerk.nl/smartwerk.nl/smartwerk-next/app/dashboard/analytics/bookkeeper/types.ts",
+				"type": "interface",
+				"isDefault": false
+			}
+		],
+		"AnalyticsExpense": [
+			{
+				"name": "AnalyticsExpense",
+				"path": "/Users/ihor/Downloads/SmartWerk.nl/smartwerk.nl/smartwerk-next/app/dashboard/analytics/bookkeeper/types.ts",
+				"type": "interface",
+				"isDefault": false
+			}
+		],
+		"AnalyticsClient": [
+			{
+				"name": "AnalyticsClient",
+				"path": "/Users/ihor/Downloads/SmartWerk.nl/smartwerk.nl/smartwerk-next/app/dashboard/analytics/bookkeeper/AnalyticsClient.tsx",
+				"type": "function",
+				"isDefault": true
+			}
+		],
+		"AnalyticsStats": [
+			{
+				"name": "AnalyticsStats",
+				"path": "/Users/ihor/Downloads/SmartWerk.nl/smartwerk.nl/smartwerk-next/app/dashboard/analytics/bookkeeper/components/AnalyticsStats.tsx",
+				"type": "function",
+				"isDefault": true
+			}
+		],
+		"AnalyticsChartsData": [
+			{
+				"name": "AnalyticsChartsData",
+				"path": "/Users/ihor/Downloads/SmartWerk.nl/smartwerk.nl/smartwerk-next/app/dashboard/analytics/bookkeeper/types.ts",
+				"type": "interface",
+				"isDefault": false
+			}
+		],
+		"AnalyticsPeriodView": [
+			{
+				"name": "AnalyticsPeriodView",
+				"path": "/Users/ihor/Downloads/SmartWerk.nl/smartwerk.nl/smartwerk-next/app/dashboard/analytics/bookkeeper/hooks/useAnalytics.ts",
+				"type": "type",
+				"isDefault": false
+			}
+		],
+		"AnalyticsScopeView": [
+			{
+				"name": "AnalyticsScopeView",
+				"path": "/Users/ihor/Downloads/SmartWerk.nl/smartwerk.nl/smartwerk-next/app/dashboard/analytics/bookkeeper/types.ts",
+				"type": "type",
+				"isDefault": false
+			}
+		],
+		"useROI": [
+			{
+				"name": "useROI",
+				"path": "/Users/ihor/Downloads/SmartWerk.nl/smartwerk.nl/smartwerk-next/app/dashboard/analytics/roi/hooks/useROI.ts",
+				"type": "function",
+				"isDefault": false
+			}
+		],
+		"AnalyticsScope": [
+			{
+				"name": "AnalyticsScope",
+				"path": "/Users/ihor/Downloads/SmartWerk.nl/smartwerk.nl/smartwerk-next/app/dashboard/analytics/bookkeeper/hooks/useAnalytics.ts",
+				"type": "type",
+				"isDefault": false
+			}
+		],
+		"useAnalytics": [
+			{
+				"name": "useAnalytics",
+				"path": "/Users/ihor/Downloads/SmartWerk.nl/smartwerk.nl/smartwerk-next/app/dashboard/analytics/bookkeeper/hooks/useAnalytics.ts",
+				"type": "function",
+				"isDefault": false
+			}
+		],
+		"getDocs": [
+			{
+				"name": "getDocs",
+				"module": "firebase/firestore",
+				"isDefault": false
+			}
+		],
+		"ROII18n": [
+			{
+				"name": "ROII18n",
+				"path": "/Users/ihor/Downloads/SmartWerk.nl/smartwerk.nl/smartwerk-next/app/dashboard/analytics/roi/types.ts",
+				"type": "type",
+				"isDefault": false
+			}
+		],
+		"ROIInput": [
+			{
+				"name": "ROIInput",
+				"path": "/Users/ihor/Downloads/SmartWerk.nl/smartwerk.nl/smartwerk-next/app/dashboard/analytics/roi/types.ts",
+				"type": "type",
+				"isDefault": false
+			}
+		],
+		"ROITipKey": [
+			{
+				"name": "ROITipKey",
+				"path": "/Users/ihor/Downloads/SmartWerk.nl/smartwerk.nl/smartwerk-next/app/dashboard/analytics/roi/types.ts",
+				"type": "type",
+				"isDefault": false
+			}
+		],
+		"ROITip": [
+			{
+				"name": "ROITip",
+				"path": "/Users/ihor/Downloads/SmartWerk.nl/smartwerk.nl/smartwerk-next/app/dashboard/analytics/roi/types.ts",
+				"type": "type",
+				"isDefault": false
+			}
+		],
+		"ROIResult": [
+			{
+				"name": "ROIResult",
+				"path": "/Users/ihor/Downloads/SmartWerk.nl/smartwerk.nl/smartwerk-next/app/dashboard/analytics/roi/types.ts",
+				"type": "type",
+				"isDefault": false
+			}
+		],
+		"ROIRecommendation": [
+			{
+				"name": "ROIRecommendation",
+				"path": "/Users/ihor/Downloads/SmartWerk.nl/smartwerk.nl/smartwerk-next/app/dashboard/analytics/roi/components/ROIRecommendation.tsx",
+				"type": "function",
+				"isDefault": true
+			}
+		],
+		"normalizeInvoice": [
+			{
+				"name": "normalizeInvoice",
+				"path": "/Users/ihor/Downloads/SmartWerk.nl/smartwerk.nl/smartwerk-next/app/dashboard/analytics/bookkeeper/utils/normalize.ts",
+				"type": "function",
+				"isDefault": false
+			}
+		],
+		"normalizeExpense": [
+			{
+				"name": "normalizeExpense",
+				"path": "/Users/ihor/Downloads/SmartWerk.nl/smartwerk.nl/smartwerk-next/app/dashboard/analytics/bookkeeper/utils/normalize.ts",
+				"type": "function",
+				"isDefault": false
+			}
+		],
+		"ROIResults": [
+			{
+				"name": "ROIResults",
+				"path": "/Users/ihor/Downloads/SmartWerk.nl/smartwerk.nl/smartwerk-next/app/dashboard/analytics/roi/components/ROIResults.tsx",
+				"type": "function",
+				"isDefault": true
+			}
+		],
+		"eur": [
+			{
+				"name": "eur",
+				"path": "/Users/ihor/Downloads/SmartWerk.nl/smartwerk.nl/smartwerk-next/app/dashboard/analytics/bookkeeper/utils/currency.ts",
+				"type": "function",
+				"isDefault": false
+			},
+			{
+				"name": "eur",
+				"module": "@/app/dashboard/analytics/bookkeeper/utils/currency",
+				"isDefault": false
+			}
+		],
+		"filterByPeriod": [
+			{
+				"name": "filterByPeriod",
+				"path": "/Users/ihor/Downloads/SmartWerk.nl/smartwerk.nl/smartwerk-next/app/dashboard/analytics/bookkeeper/utils/period.ts",
+				"type": "function",
+				"isDefault": false
+			}
+		],
+		"calculateROI": [
+			{
+				"name": "calculateROI",
+				"path": "/Users/ihor/Downloads/SmartWerk.nl/smartwerk.nl/smartwerk-next/app/dashboard/analytics/roi/utils/roiMath.ts",
+				"type": "function",
+				"isDefault": false
+			}
+		],
+		"AnalyticsExports": [
+			{
+				"name": "AnalyticsExports",
+				"path": "/Users/ihor/Downloads/SmartWerk.nl/smartwerk.nl/smartwerk-next/app/dashboard/analytics/bookkeeper/components/AnalyticsExports.tsx",
+				"type": "function",
+				"isDefault": true
+			}
+		],
+		"exportAnalyticsCSV": [
+			{
+				"name": "exportAnalyticsCSV",
+				"path": "/Users/ihor/Downloads/SmartWerk.nl/smartwerk.nl/smartwerk-next/app/dashboard/analytics/bookkeeper/utils/analyticsExport.ts",
+				"type": "function",
+				"isDefault": false
+			}
+		],
+		"AnalyticsCharts": [
+			{
+				"name": "AnalyticsCharts",
+				"path": "/Users/ihor/Downloads/SmartWerk.nl/smartwerk.nl/smartwerk-next/app/dashboard/analytics/bookkeeper/components/AnalyticsCharts.tsx",
+				"type": "function",
+				"isDefault": true
+			}
+		],
+		"useRef": [
+			{
+				"name": "useRef",
+				"module": "react",
+				"isDefault": false
+			}
+		],
+		"Chart": [
+			{
+				"name": "Chart",
+				"module": "chart.js/auto",
+				"isDefault": true
+			}
+		],
+		"exportAnalyticsPDF": [
+			{
+				"name": "exportAnalyticsPDF",
+				"path": "/Users/ihor/Downloads/SmartWerk.nl/smartwerk.nl/smartwerk-next/app/dashboard/analytics/bookkeeper/utils/exportAnalyticsPDF.ts",
+				"type": "function",
+				"isDefault": false
+			}
+		],
+		"AnalyticsForecast": [
+			{
+				"name": "AnalyticsForecast",
+				"path": "/Users/ihor/Downloads/SmartWerk.nl/smartwerk.nl/smartwerk-next/app/dashboard/analytics/bookkeeper/components/AnalyticsForecast.tsx",
+				"type": "function",
+				"isDefault": true
+			}
+		],
+		"MonthlyPoint": [
+			{
+				"name": "MonthlyPoint",
+				"path": "/Users/ihor/Downloads/SmartWerk.nl/smartwerk.nl/smartwerk-next/app/dashboard/analytics/bookkeeper/utils/analyticsForecast.ts",
+				"type": "type",
+				"isDefault": false
+			}
+		],
+		"TopClient": [
+			{
+				"name": "TopClient",
+				"path": "/Users/ihor/Downloads/SmartWerk.nl/smartwerk.nl/smartwerk-next/app/dashboard/analytics/bookkeeper/utils/analyticsForecast.ts",
+				"type": "type",
+				"isDefault": false
+			}
+		],
+		"groupIncomeByMonth": [
+			{
+				"name": "groupIncomeByMonth",
+				"path": "/Users/ihor/Downloads/SmartWerk.nl/smartwerk.nl/smartwerk-next/app/dashboard/analytics/bookkeeper/utils/analyticsForecast.ts",
+				"type": "function",
+				"isDefault": false
+			}
+		],
+		"forecastIncome": [
+			{
+				"name": "forecastIncome",
+				"path": "/Users/ihor/Downloads/SmartWerk.nl/smartwerk.nl/smartwerk-next/app/dashboard/analytics/bookkeeper/utils/analyticsForecast.ts",
+				"type": "function",
+				"isDefault": false
+			}
+		],
+		"estimateTargetMonth": [
+			{
+				"name": "estimateTargetMonth",
+				"path": "/Users/ihor/Downloads/SmartWerk.nl/smartwerk.nl/smartwerk-next/app/dashboard/analytics/bookkeeper/utils/analyticsForecast.ts",
+				"type": "function",
+				"isDefault": false
+			}
+		],
+		"topClients": [
+			{
+				"name": "topClients",
+				"path": "/Users/ihor/Downloads/SmartWerk.nl/smartwerk.nl/smartwerk-next/app/dashboard/analytics/bookkeeper/utils/analyticsForecast.ts",
+				"type": "function",
+				"isDefault": false
+			}
+		],
+		"ROIClient": [
+			{
+				"name": "ROIClient",
+				"path": "/Users/ihor/Downloads/SmartWerk.nl/smartwerk.nl/smartwerk-next/app/dashboard/analytics/roi/ROIClient.tsx",
+				"type": "function",
+				"isDefault": true
+			}
+		],
+		"type TranslationDictionary": [
+			{
+				"name": "type TranslationDictionary",
+				"module": "@/app/i18n",
+				"isDefault": false
+			}
+		],
+		"generateROITips": [
+			{
+				"name": "generateROITips",
+				"path": "/Users/ihor/Downloads/SmartWerk.nl/smartwerk.nl/smartwerk-next/app/dashboard/analytics/roi/utils/roiTips.ts",
+				"type": "function",
+				"isDefault": false
+			}
+		],
+		"groupInvoicesByMonth": [
+			{
+				"name": "groupInvoicesByMonth",
+				"path": "/Users/ihor/Downloads/SmartWerk.nl/smartwerk.nl/smartwerk-next/app/dashboard/analytics/bookkeeper/utils/charts.ts",
+				"type": "function",
+				"isDefault": false
+			}
+		],
+		"groupExpensesByMonth": [
+			{
+				"name": "groupExpensesByMonth",
+				"path": "/Users/ihor/Downloads/SmartWerk.nl/smartwerk.nl/smartwerk-next/app/dashboard/analytics/bookkeeper/utils/charts.ts",
+				"type": "function",
+				"isDefault": false
+			}
+		],
+		"incomeByClient": [
+			{
+				"name": "incomeByClient",
+				"path": "/Users/ihor/Downloads/SmartWerk.nl/smartwerk.nl/smartwerk-next/app/dashboard/analytics/bookkeeper/utils/charts.ts",
+				"type": "function",
+				"isDefault": false
+			}
+		],
+		"generateROIRecommendation": [
+			{
+				"name": "generateROIRecommendation",
+				"path": "/Users/ihor/Downloads/SmartWerk.nl/smartwerk.nl/smartwerk-next/app/dashboard/analytics/roi/utils/roiRecommendation.ts",
+				"type": "function",
+				"isDefault": false
+			}
+		],
+		"DashboardLayout": [
+			{
+				"name": "DashboardLayout",
+				"path": "/Users/ihor/Downloads/SmartWerk.nl/smartwerk.nl/smartwerk-next/app/dashboard/layout.tsx",
+				"type": "function",
+				"isDefault": true
+			}
+		],
+		"Script": [
+			{
+				"name": "Script",
+				"module": "next/script",
+				"isDefault": true
+			}
+		],
+		"LanguageCode": [
+			{
+				"name": "LanguageCode",
+				"path": "/Users/ihor/Downloads/SmartWerk.nl/smartwerk.nl/smartwerk-next/app/providers/LanguageProvider.tsx",
+				"type": "type",
+				"isDefault": false
+			}
+		],
+		"type Lang": [
+			{
+				"name": "type Lang",
+				"module": "@/app/i18n/config",
+				"isDefault": false
+			}
+		],
+		"ROITips": [
+			{
+				"name": "ROITips",
+				"path": "/Users/ihor/Downloads/SmartWerk.nl/smartwerk.nl/smartwerk-next/app/dashboard/analytics/roi/components/ROITips.tsx",
+				"type": "function",
+				"isDefault": true
+			}
+		],
+		"ROICharts": [
+			{
+				"name": "ROICharts",
+				"path": "/Users/ihor/Downloads/SmartWerk.nl/smartwerk.nl/smartwerk-next/app/dashboard/analytics/roi/components/ROICharts.tsx",
+				"type": "function",
+				"isDefault": true
+			}
+		],
+		"useCallback": [
+			{
+				"name": "useCallback",
+				"module": "react",
+				"isDefault": false
+			}
+		],
+		"type { ChartOptions": [
+			{
+				"name": "type { ChartOptions",
+				"module": "chart.js",
+				"isDefault": true
+			}
+		],
+		"ROIForm": [
+			{
+				"name": "ROIForm",
+				"path": "/Users/ihor/Downloads/SmartWerk.nl/smartwerk.nl/smartwerk-next/app/dashboard/analytics/roi/components/ROIForm.tsx",
+				"type": "function",
+				"isDefault": true
+			}
+		],
+		"RemindersListPage": [
+			{
+				"name": "RemindersListPage",
+				"path": "/Users/ihor/Downloads/SmartWerk.nl/smartwerk.nl/smartwerk-next/app/dashboard/reminders/list/page.tsx",
+				"type": "function",
+				"isDefault": true
+			}
+		],
+		"RemindersListI18n": [
+			{
+				"name": "RemindersListI18n",
+				"path": "/Users/ihor/Downloads/SmartWerk.nl/smartwerk.nl/smartwerk-next/app/dashboard/reminders/list/RemindersListClient.tsx",
+				"type": "type",
+				"isDefault": false
+			}
+		],
+		"RemindersListClient": [
+			{
+				"name": "RemindersListClient",
+				"path": "/Users/ihor/Downloads/SmartWerk.nl/smartwerk.nl/smartwerk-next/app/dashboard/reminders/list/RemindersListClient.tsx",
+				"type": "function",
+				"isDefault": true
+			}
+		],
+		"failed": [
+			{
+				"name": "failed",
+				"path": "/Users/ihor/Downloads/SmartWerk.nl/smartwerk.nl/smartwerk-next/app/dashboard/reminders/list/RemindersListClient.tsx",
+				"isDefault": false
+			}
+		],
+		"ProfilePage": [
+			{
+				"name": "ProfilePage",
+				"path": "/Users/ihor/Downloads/SmartWerk.nl/smartwerk.nl/smartwerk-next/app/dashboard/profile/page.tsx",
+				"type": "function",
+				"isDefault": true
+			}
+		],
+		"ValidationResult": [
+			{
+				"name": "ValidationResult",
+				"path": "/Users/ihor/Downloads/SmartWerk.nl/smartwerk.nl/smartwerk-next/app/dashboard/profile/logic.ts",
+				"type": "interface",
+				"isDefault": false
+			}
+		],
+		"QuoteCreatePage": [
+			{
+				"name": "QuoteCreatePage",
+				"path": "/Users/ihor/Downloads/SmartWerk.nl/smartwerk.nl/smartwerk-next/app/dashboard/quotes/create/page.tsx",
+				"type": "function",
+				"isDefault": true
+			}
+		],
+		"{ useEffect": [
+			{
+				"name": "{ useEffect",
+				"module": "react",
+				"isDefault": true
+			}
+		],
+		"serverTimestamp": [
+			{
+				"name": "serverTimestamp",
+				"module": "firebase/firestore",
+				"isDefault": false
+			}
+		],
+		"type { FieldValue": [
+			{
+				"name": "type { FieldValue",
+				"module": "firebase/firestore",
+				"isDefault": true
+			}
+		],
+		"ContractListPage": [
+			{
+				"name": "ContractListPage",
+				"path": "/Users/ihor/Downloads/SmartWerk.nl/smartwerk.nl/smartwerk-next/app/dashboard/contracts/list/page.tsx",
+				"type": "function",
+				"isDefault": true
+			}
+		],
+		"type { ContractPdfData": [
+			{
+				"name": "type { ContractPdfData",
+				"module": "@/lib/utils/contracts/types",
+				"isDefault": true
+			}
+		],
+		"ClientDoc": [
+			{
+				"name": "ClientDoc",
+				"path": "/Users/ihor/Downloads/SmartWerk.nl/smartwerk.nl/smartwerk-next/app/dashboard/contracts/hooks/useContractsCreate.ts",
+				"type": "type",
+				"isDefault": false
+			}
+		],
+		"useContractsCreate": [
+			{
+				"name": "useContractsCreate",
+				"path": "/Users/ihor/Downloads/SmartWerk.nl/smartwerk.nl/smartwerk-next/app/dashboard/contracts/hooks/useContractsCreate.ts",
+				"type": "function",
+				"isDefault": false
+			}
+		],
+		"ContractsI18nSection": [
+			{
+				"name": "ContractsI18nSection",
+				"path": "/Users/ihor/Downloads/SmartWerk.nl/smartwerk.nl/smartwerk-next/app/dashboard/contracts/create/ContractForm.tsx",
+				"type": "interface",
+				"isDefault": false
+			}
+		],
+		"ContractForm": [
+			{
+				"name": "ContractForm",
+				"path": "/Users/ihor/Downloads/SmartWerk.nl/smartwerk.nl/smartwerk-next/app/dashboard/contracts/create/ContractForm.tsx",
+				"type": "function",
+				"isDefault": true
+			}
+		],
+		"type { Dispatch": [
+			{
+				"name": "type { Dispatch",
+				"module": "react",
+				"isDefault": true
+			}
+		],
+		"SetStateAction": [
+			{
+				"name": "SetStateAction",
+				"module": "react",
+				"isDefault": true
+			}
+		],
+		"ContractCreatePage": [
+			{
+				"name": "ContractCreatePage",
+				"path": "/Users/ihor/Downloads/SmartWerk.nl/smartwerk.nl/smartwerk-next/app/dashboard/contracts/create/page.tsx",
+				"type": "function",
+				"isDefault": true
+			}
+		],
+		"ExpenseCreatePage": [
+			{
+				"name": "ExpenseCreatePage",
+				"path": "/Users/ihor/Downloads/SmartWerk.nl/smartwerk.nl/smartwerk-next/app/dashboard/expenses/create/page.tsx",
+				"type": "function",
+				"isDefault": true
+			}
+		],
+		"BusinessSnapshot": [
+			{
+				"name": "BusinessSnapshot",
+				"path": "/Users/ihor/Downloads/SmartWerk.nl/smartwerk.nl/smartwerk-next/app/dashboard/contracts/create/types.ts",
+				"type": "type",
+				"isDefault": false
+			}
+		],
+		"ContractClient": [
+			{
+				"name": "ContractClient",
+				"path": "/Users/ihor/Downloads/SmartWerk.nl/smartwerk.nl/smartwerk-next/app/dashboard/contracts/create/types.ts",
+				"type": "type",
+				"isDefault": false
+			}
+		],
+		"ContractProject": [
+			{
+				"name": "ContractProject",
+				"path": "/Users/ihor/Downloads/SmartWerk.nl/smartwerk.nl/smartwerk-next/app/dashboard/contracts/create/types.ts",
+				"type": "type",
+				"isDefault": false
+			}
+		],
+		"ContractSignature": [
+			{
+				"name": "ContractSignature",
+				"path": "/Users/ihor/Downloads/SmartWerk.nl/smartwerk.nl/smartwerk-next/app/dashboard/contracts/create/types.ts",
+				"type": "type",
+				"isDefault": false
+			}
+		],
+		"ContractFormState": [
+			{
+				"name": "ContractFormState",
+				"path": "/Users/ihor/Downloads/SmartWerk.nl/smartwerk.nl/smartwerk-next/app/dashboard/contracts/create/types.ts",
+				"type": "interface",
+				"isDefault": false
+			}
+		],
+		"EMPTY_BUSINESS_SNAPSHOT": [
+			{
+				"name": "EMPTY_BUSINESS_SNAPSHOT",
+				"path": "/Users/ihor/Downloads/SmartWerk.nl/smartwerk.nl/smartwerk-next/app/dashboard/contracts/create/types.ts",
+				"type": "const",
+				"isDefault": false
+			}
+		],
+		"EMPTY_CLIENT": [
+			{
+				"name": "EMPTY_CLIENT",
+				"path": "/Users/ihor/Downloads/SmartWerk.nl/smartwerk.nl/smartwerk-next/app/dashboard/contracts/create/types.ts",
+				"type": "const",
+				"isDefault": false
+			}
+		],
+		"EMPTY_PROJECT": [
+			{
+				"name": "EMPTY_PROJECT",
+				"path": "/Users/ihor/Downloads/SmartWerk.nl/smartwerk.nl/smartwerk-next/app/dashboard/contracts/create/types.ts",
+				"type": "const",
+				"isDefault": false
+			}
+		],
+		"EMPTY_SIGNATURE": [
+			{
+				"name": "EMPTY_SIGNATURE",
+				"path": "/Users/ihor/Downloads/SmartWerk.nl/smartwerk.nl/smartwerk-next/app/dashboard/contracts/create/types.ts",
+				"type": "const",
+				"isDefault": false
+			}
+		],
+		"createInitialContractForm": [
+			{
+				"name": "createInitialContractForm",
+				"path": "/Users/ihor/Downloads/SmartWerk.nl/smartwerk.nl/smartwerk-next/app/dashboard/contracts/create/types.ts",
+				"type": "function",
+				"isDefault": false
+			}
+		],
+		"ExpenseStatus": [
+			{
+				"name": "ExpenseStatus",
+				"path": "/Users/ihor/Downloads/SmartWerk.nl/smartwerk.nl/smartwerk-next/app/dashboard/expenses/create/ExpenseCreateClient.tsx",
+				"type": "type",
+				"isDefault": false
+			}
+		],
+		"ExpenseFormState": [
+			{
+				"name": "ExpenseFormState",
+				"path": "/Users/ihor/Downloads/SmartWerk.nl/smartwerk.nl/smartwerk-next/app/dashboard/expenses/create/types.ts",
+				"type": "type",
+				"isDefault": false
+			}
+		],
+		"calcExpenses": [
+			{
+				"name": "calcExpenses",
+				"path": "/Users/ihor/Downloads/SmartWerk.nl/smartwerk.nl/smartwerk-next/app/dashboard/tax/calculator/engine/calcExpenses.ts",
+				"type": "function",
+				"isDefault": true
+			}
+		],
+		"calcZvw": [
+			{
+				"name": "calcZvw",
+				"path": "/Users/ihor/Downloads/SmartWerk.nl/smartwerk.nl/smartwerk-next/app/dashboard/tax/calculator/engine/calcZvw.ts",
+				"type": "function",
+				"isDefault": true
+			}
+		],
+		"calcBtw": [
+			{
+				"name": "calcBtw",
+				"path": "/Users/ihor/Downloads/SmartWerk.nl/smartwerk.nl/smartwerk-next/app/dashboard/tax/calculator/engine/calcBtw.ts",
+				"type": "function",
+				"isDefault": true
+			}
+		],
+		"MKBResult": [
+			{
+				"name": "MKBResult",
+				"path": "/Users/ihor/Downloads/SmartWerk.nl/smartwerk.nl/smartwerk-next/app/dashboard/tax/calculator/engine/calcMKB.ts",
+				"type": "type",
+				"isDefault": false
+			}
+		],
+		"calcMKB": [
+			{
+				"name": "calcMKB",
+				"path": "/Users/ihor/Downloads/SmartWerk.nl/smartwerk.nl/smartwerk-next/app/dashboard/tax/calculator/engine/calcMKB.ts",
+				"type": "function",
+				"isDefault": true
+			}
+		],
+		"calcIncome": [
+			{
+				"name": "calcIncome",
+				"path": "/Users/ihor/Downloads/SmartWerk.nl/smartwerk.nl/smartwerk-next/app/dashboard/tax/calculator/engine/calcIncome.ts",
+				"type": "function",
+				"isDefault": true
+			}
+		],
+		"calcIncomeTax": [
+			{
+				"name": "calcIncomeTax",
+				"path": "/Users/ihor/Downloads/SmartWerk.nl/smartwerk.nl/smartwerk-next/app/dashboard/tax/calculator/engine/calcIncomeTax.ts",
+				"type": "function",
+				"isDefault": true
+			}
+		],
+		"DeductionsResult": [
+			{
+				"name": "DeductionsResult",
+				"path": "/Users/ihor/Downloads/SmartWerk.nl/smartwerk.nl/smartwerk-next/app/dashboard/tax/calculator/engine/calcDeductions.ts",
+				"type": "type",
+				"isDefault": false
+			}
+		],
+		"calcDeductions": [
+			{
+				"name": "calcDeductions",
+				"path": "/Users/ihor/Downloads/SmartWerk.nl/smartwerk.nl/smartwerk-next/app/dashboard/tax/calculator/engine/calcDeductions.ts",
+				"type": "function",
+				"isDefault": true
+			}
+		],
+		"round": [
+			{
+				"name": "round",
+				"path": "/Users/ihor/Downloads/SmartWerk.nl/smartwerk.nl/smartwerk-next/app/dashboard/tax/calculator/engine/rounding.ts",
+				"type": "function",
+				"isDefault": true
+			}
+		],
+		"roundCurrency": [
+			{
+				"name": "roundCurrency",
+				"path": "/Users/ihor/Downloads/SmartWerk.nl/smartwerk.nl/smartwerk-next/app/dashboard/tax/calculator/engine/rounding.ts",
+				"type": "function",
+				"isDefault": false
+			}
+		],
+		"validateTaxInput": [
+			{
+				"name": "validateTaxInput",
+				"path": "/Users/ihor/Downloads/SmartWerk.nl/smartwerk.nl/smartwerk-next/app/dashboard/tax/calculator/engine/validate.ts",
+				"type": "function",
+				"isDefault": true
+			}
+		],
+		"calculateTaxNL": [
+			{
+				"name": "calculateTaxNL",
+				"path": "/Users/ihor/Downloads/SmartWerk.nl/smartwerk.nl/smartwerk-next/app/dashboard/tax/calculator/engine/calculateTaxNL.ts",
+				"type": "function",
+				"isDefault": true
+			}
+		],
+		"ContractSignI18n": [
+			{
+				"name": "ContractSignI18n",
+				"path": "/Users/ihor/Downloads/SmartWerk.nl/smartwerk.nl/smartwerk-next/app/dashboard/contracts/create/components/ContractSign.tsx",
+				"type": "type",
+				"isDefault": false
+			}
+		],
+		"ExpenseType": [
+			{
+				"name": "ExpenseType",
+				"path": "/Users/ihor/Downloads/SmartWerk.nl/smartwerk.nl/smartwerk-next/app/dashboard/expenses/create/ExpenseCreateClient.tsx",
+				"type": "type",
+				"isDefault": false
+			}
+		],
+		"ExpensesListI18n": [
+			{
+				"name": "ExpensesListI18n",
+				"path": "/Users/ihor/Downloads/SmartWerk.nl/smartwerk.nl/smartwerk-next/app/dashboard/expenses/list/ExpensesListClient.tsx",
+				"type": "type",
+				"isDefault": false
+			}
+		],
+		"ExpensesListClient": [
+			{
+				"name": "ExpensesListClient",
+				"path": "/Users/ihor/Downloads/SmartWerk.nl/smartwerk.nl/smartwerk-next/app/dashboard/expenses/list/ExpensesListClient.tsx",
+				"type": "function",
+				"isDefault": true
+			}
+		],
+		"generateExpensePdf": [
+			{
+				"name": "generateExpensePdf",
+				"module": "@/lib/utils/expenses/generateExpensePdf",
+				"isDefault": false
+			}
+		],
+		"describe": [
+			{
+				"name": "describe",
+				"module": "vitest",
+				"isDefault": false
+			}
+		],
+		"it": [
+			{
+				"name": "it",
+				"module": "vitest",
+				"isDefault": false
+			}
+		],
+		"expect": [
+			{
+				"name": "expect",
+				"module": "vitest",
+				"isDefault": false
+			}
+		],
+		"ExpensesI18n": [
+			{
+				"name": "ExpensesI18n",
+				"path": "/Users/ihor/Downloads/SmartWerk.nl/smartwerk.nl/smartwerk-next/app/dashboard/expenses/create/ExpenseCreateClient.tsx",
+				"type": "type",
+				"isDefault": false
+			}
+		],
+		"ExpenseCreateClient": [
+			{
+				"name": "ExpenseCreateClient",
+				"path": "/Users/ihor/Downloads/SmartWerk.nl/smartwerk.nl/smartwerk-next/app/dashboard/expenses/create/ExpenseCreateClient.tsx",
+				"type": "function",
+				"isDefault": true
+			}
+		],
+		"NL_2026_RULES": [
+			{
+				"name": "NL_2026_RULES",
+				"path": "/Users/ihor/Downloads/SmartWerk.nl/smartwerk.nl/smartwerk-next/app/dashboard/tax/calculator/config/nl/2026.ts",
+				"type": "const",
+				"isDefault": true
+			}
+		],
+		"TaxRules": [
+			{
+				"name": "TaxRules",
+				"path": "/Users/ihor/Downloads/SmartWerk.nl/smartwerk.nl/smartwerk-next/app/dashboard/tax/calculator/types/TaxRules.ts",
+				"type": "interface",
+				"isDefault": false
+			}
+		],
+		"TaxBracket": [
+			{
+				"name": "TaxBracket",
+				"path": "/Users/ihor/Downloads/SmartWerk.nl/smartwerk.nl/smartwerk-next/app/dashboard/tax/calculator/types/TaxRules.ts",
+				"type": "interface",
+				"isDefault": false
+			}
+		],
+		"TaxYear": [
+			{
+				"name": "TaxYear",
+				"path": "/Users/ihor/Downloads/SmartWerk.nl/smartwerk.nl/smartwerk-next/app/dashboard/tax/calculator/types/TaxYear.ts",
+				"type": "type",
+				"isDefault": false
+			}
+		],
+		"SUPPORTED_TAX_YEARS": [
+			{
+				"name": "SUPPORTED_TAX_YEARS",
+				"path": "/Users/ihor/Downloads/SmartWerk.nl/smartwerk.nl/smartwerk-next/app/dashboard/tax/calculator/types/TaxYear.ts",
+				"type": "const",
+				"isDefault": false
+			}
+		],
+		"isSupportedTaxYear": [
+			{
+				"name": "isSupportedTaxYear",
+				"path": "/Users/ihor/Downloads/SmartWerk.nl/smartwerk.nl/smartwerk-next/app/dashboard/tax/calculator/types/TaxYear.ts",
+				"type": "function",
+				"isDefault": false
+			}
+		],
+		"TaxResult": [
+			{
+				"name": "TaxResult",
+				"path": "/Users/ihor/Downloads/SmartWerk.nl/smartwerk.nl/smartwerk-next/app/dashboard/tax/calculator/types/TaxResult.ts",
+				"type": "type",
+				"isDefault": true
+			}
+		],
+		"TaxResultSuccess": [
+			{
+				"name": "TaxResultSuccess",
+				"path": "/Users/ihor/Downloads/SmartWerk.nl/smartwerk.nl/smartwerk-next/app/dashboard/tax/calculator/types/TaxResult.ts",
+				"type": "interface",
+				"isDefault": false
+			}
+		],
+		"TaxResultError": [
+			{
+				"name": "TaxResultError",
+				"path": "/Users/ihor/Downloads/SmartWerk.nl/smartwerk.nl/smartwerk-next/app/dashboard/tax/calculator/types/TaxResult.ts",
+				"type": "interface",
+				"isDefault": false
+			}
+		],
+		"TaxInput": [
+			{
+				"name": "TaxInput",
+				"path": "/Users/ihor/Downloads/SmartWerk.nl/smartwerk.nl/smartwerk-next/app/dashboard/tax/calculator/types/TaxInput.ts",
+				"type": "interface",
+				"isDefault": true
+			}
+		],
+		"QuotesListPage": [
+			{
+				"name": "QuotesListPage",
+				"path": "/Users/ihor/Downloads/SmartWerk.nl/smartwerk.nl/smartwerk-next/app/dashboard/quotes/list/page.tsx",
+				"type": "function",
+				"isDefault": true
+			}
+		],
+		"CVAIText": [
+			{
+				"name": "CVAIText",
+				"path": "/Users/ihor/Downloads/SmartWerk.nl/smartwerk.nl/smartwerk-next/app/dashboard/templates/cv/types.ts",
+				"type": "type",
+				"isDefault": false
+			}
+		],
+		"CVAII18n": [
+			{
+				"name": "CVAII18n",
+				"path": "/Users/ihor/Downloads/SmartWerk.nl/smartwerk.nl/smartwerk-next/app/dashboard/templates/cv/types.ts",
+				"type": "type",
+				"isDefault": false
+			}
+		],
+		"CVBlockI18n": [
+			{
+				"name": "CVBlockI18n",
+				"path": "/Users/ihor/Downloads/SmartWerk.nl/smartwerk.nl/smartwerk-next/app/dashboard/templates/cv/types.ts",
+				"type": "type",
+				"isDefault": false
+			}
+		],
+		"CVBlockType": [
+			{
+				"name": "CVBlockType",
+				"path": "/Users/ihor/Downloads/SmartWerk.nl/smartwerk.nl/smartwerk-next/app/dashboard/templates/cv/types.ts",
+				"type": "type",
+				"isDefault": false
+			}
+		],
+		"CVI18n": [
+			{
+				"name": "CVI18n",
+				"path": "/Users/ihor/Downloads/SmartWerk.nl/smartwerk.nl/smartwerk-next/app/dashboard/templates/cv/types.ts",
+				"type": "type",
+				"isDefault": false
+			}
+		],
+		"CVDictionary": [
+			{
+				"name": "CVDictionary",
+				"path": "/Users/ihor/Downloads/SmartWerk.nl/smartwerk.nl/smartwerk-next/app/dashboard/templates/cv/types.ts",
+				"type": "type",
+				"isDefault": false
+			}
+		],
+		"CVPersonalInfo": [
+			{
+				"name": "CVPersonalInfo",
+				"path": "/Users/ihor/Downloads/SmartWerk.nl/smartwerk.nl/smartwerk-next/app/dashboard/templates/cv/components/CVPersonalInfo.tsx",
+				"type": "function",
+				"isDefault": true
+			}
+		],
+		"CVBlockData": [
+			{
+				"name": "CVBlockData",
+				"path": "/Users/ihor/Downloads/SmartWerk.nl/smartwerk.nl/smartwerk-next/app/dashboard/templates/cv/types.ts",
+				"type": "type",
+				"isDefault": false
+			}
+		],
+		"CVData": [
+			{
+				"name": "CVData",
+				"path": "/Users/ihor/Downloads/SmartWerk.nl/smartwerk.nl/smartwerk-next/app/dashboard/templates/cv/types.ts",
+				"type": "type",
+				"isDefault": false
+			}
+		],
+		"CVExportOptions": [
+			{
+				"name": "CVExportOptions",
+				"path": "/Users/ihor/Downloads/SmartWerk.nl/smartwerk.nl/smartwerk-next/app/dashboard/templates/cv/types.ts",
+				"type": "type",
+				"isDefault": false
+			}
+		],
+		"useCVAI": [
+			{
+				"name": "useCVAI",
+				"path": "/Users/ihor/Downloads/SmartWerk.nl/smartwerk.nl/smartwerk-next/app/dashboard/templates/cv/hooks/useCVAI.ts",
+				"type": "function",
+				"isDefault": false
+			}
+		],
+		"CVClient": [
+			{
+				"name": "CVClient",
+				"path": "/Users/ihor/Downloads/SmartWerk.nl/smartwerk.nl/smartwerk-next/app/dashboard/templates/cv/CVClient.tsx",
+				"type": "function",
+				"isDefault": true
+			}
+		],
+		"useCV": [
+			{
+				"name": "useCV",
+				"path": "/Users/ihor/Downloads/SmartWerk.nl/smartwerk.nl/smartwerk-next/app/dashboard/templates/cv/hooks/useCV.ts",
+				"type": "function",
+				"isDefault": false
+			}
+		],
+		"CVAILevel": [
+			{
+				"name": "CVAILevel",
+				"path": "/Users/ihor/Downloads/SmartWerk.nl/smartwerk.nl/smartwerk-next/app/dashboard/templates/cv/ai/cvAITypes.ts",
+				"type": "type",
+				"isDefault": false
+			}
+		],
+		"CVAIAction": [
+			{
+				"name": "CVAIAction",
+				"path": "/Users/ihor/Downloads/SmartWerk.nl/smartwerk.nl/smartwerk-next/app/dashboard/templates/cv/ai/cvAITypes.ts",
+				"type": "type",
+				"isDefault": false
+			}
+		],
+		"CVAIKey": [
+			{
+				"name": "CVAIKey",
+				"path": "/Users/ihor/Downloads/SmartWerk.nl/smartwerk.nl/smartwerk-next/app/dashboard/templates/cv/ai/cvAITypes.ts",
+				"type": "type",
+				"isDefault": false
+			}
+		],
+		"CVAISuggestion": [
+			{
+				"name": "CVAISuggestion",
+				"path": "/Users/ihor/Downloads/SmartWerk.nl/smartwerk.nl/smartwerk-next/app/dashboard/templates/cv/ai/cvAITypes.ts",
+				"type": "type",
+				"isDefault": false
+			}
+		],
+		"CVAIContext": [
+			{
+				"name": "CVAIContext",
+				"path": "/Users/ihor/Downloads/SmartWerk.nl/smartwerk.nl/smartwerk-next/app/dashboard/templates/cv/ai/cvAITypes.ts",
+				"type": "type",
+				"isDefault": false
+			}
+		],
+		"html2canvas": [
+			{
+				"name": "html2canvas",
+				"module": "html2canvas",
+				"isDefault": true
+			}
+		],
+		"runCVRules": [
+			{
+				"name": "runCVRules",
+				"path": "/Users/ihor/Downloads/SmartWerk.nl/smartwerk.nl/smartwerk-next/app/dashboard/templates/cv/ai/cvAIRules.ts",
+				"type": "function",
+				"isDefault": false
+			}
+		],
+		"analyzeCVBlock": [
+			{
+				"name": "analyzeCVBlock",
+				"path": "/Users/ihor/Downloads/SmartWerk.nl/smartwerk.nl/smartwerk-next/app/dashboard/templates/cv/ai/cvAI.ts",
+				"type": "function",
+				"isDefault": false
+			}
+		],
+		"CVBlockEditor": [
+			{
+				"name": "CVBlockEditor",
+				"path": "/Users/ihor/Downloads/SmartWerk.nl/smartwerk.nl/smartwerk-next/app/dashboard/templates/cv/components/CVBlockEditor.tsx",
+				"type": "function",
+				"isDefault": true
+			}
+		],
+		"CVAIButton": [
+			{
+				"name": "CVAIButton",
+				"path": "/Users/ihor/Downloads/SmartWerk.nl/smartwerk.nl/smartwerk-next/app/dashboard/templates/cv/components/CVAIButton.tsx",
+				"type": "function",
+				"isDefault": true
+			}
+		],
+		"InvoiceCreatePage": [
+			{
+				"name": "InvoiceCreatePage",
+				"path": "/Users/ihor/Downloads/SmartWerk.nl/smartwerk.nl/smartwerk-next/app/dashboard/invoices/create/page.tsx",
+				"type": "function",
+				"isDefault": true
+			}
+		],
+		"ProFeature": [
+			{
+				"name": "ProFeature",
+				"path": "/Users/ihor/Downloads/SmartWerk.nl/smartwerk.nl/smartwerk-next/app/dashboard/pro-features/page.tsx",
+				"type": "function",
+				"isDefault": true
+			}
+		],
+		"CVBlock": [
+			{
+				"name": "CVBlock",
+				"path": "/Users/ihor/Downloads/SmartWerk.nl/smartwerk.nl/smartwerk-next/app/dashboard/templates/cv/components/CVBlock.tsx",
+				"type": "function",
+				"isDefault": true
+			}
+		],
+		"CVAISuggestions": [
+			{
+				"name": "CVAISuggestions",
+				"path": "/Users/ihor/Downloads/SmartWerk.nl/smartwerk.nl/smartwerk-next/app/dashboard/templates/cv/components/CVAISuggestions.tsx",
+				"type": "function",
+				"isDefault": true
+			}
+		],
+		"InvoiceListPage": [
+			{
+				"name": "InvoiceListPage",
+				"path": "/Users/ihor/Downloads/SmartWerk.nl/smartwerk.nl/smartwerk-next/app/dashboard/invoices/list/page.tsx",
+				"type": "function",
+				"isDefault": true
+			}
+		],
+		"type { jsPDF as JsPdfCtor": [
+			{
+				"name": "type { jsPDF as JsPdfCtor",
+				"module": "jspdf",
+				"isDefault": true
+			}
+		],
+		"type { UserOptions": [
+			{
+				"name": "type { UserOptions",
+				"module": "jspdf-autotable",
+				"isDefault": true
+			}
+		],
+		"ClientsListPage": [
+			{
+				"name": "ClientsListPage",
+				"path": "/Users/ihor/Downloads/SmartWerk.nl/smartwerk.nl/smartwerk-next/app/dashboard/clients/list/page.tsx",
+				"type": "function",
+				"isDefault": true
+			}
+		],
+		"ClientsListClient": [
+			{
+				"name": "ClientsListClient",
+				"path": "/Users/ihor/Downloads/SmartWerk.nl/smartwerk.nl/smartwerk-next/app/dashboard/clients/list/ClientsListClient.tsx",
+				"type": "function",
+				"isDefault": true
+			}
+		],
+		"error": [
+			{
+				"name": "error",
+				"path": "/Users/ihor/Downloads/SmartWerk.nl/smartwerk.nl/smartwerk-next/app/dashboard/clients/list/ClientsListClient.tsx",
+				"isDefault": false
+			}
+		],
+		"Button": [
+			{
+				"name": "Button",
+				"module": "@/components/ui/button",
+				"isDefault": false
+			}
+		],
+		"Input": [
+			{
+				"name": "Input",
+				"module": "@/components/ui/input",
+				"isDefault": false
+			}
+		],
+		"AddClientPage": [
+			{
+				"name": "AddClientPage",
+				"path": "/Users/ihor/Downloads/SmartWerk.nl/smartwerk.nl/smartwerk-next/app/dashboard/clients/create/page.tsx",
+				"type": "function",
+				"isDefault": true
+			}
+		]
+	}
+}

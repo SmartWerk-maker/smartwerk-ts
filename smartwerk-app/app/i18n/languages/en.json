@@ -1,0 +1,1369 @@
+{
+  "topbar": {
+    "title": "Dashboard",
+    "subtitle": "All your freelance tools in one place.",
+    "profileLink": "Profile"
+  },
+
+  "tabs": {
+    "clients": "Clients",
+    "invoice": "Invoice",
+    "quote": "Quote",
+    "contract": "Contract",
+    "reminder": "Reminder"
+  },
+
+  "sidebar": {
+    "home": "Home",
+    "close": "Close",
+    "logout": "Logout",
+
+    "clients": {
+      "label": "Clients",
+      "create": "Create Client",
+      "list": "Saved Clients"
+    },
+    "invoices": {
+      "label": "Invoices",
+      "create": "Create Invoice",
+      "list": "Saved Invoices"
+    },
+    "quotes": {
+      "label": "Quotes",
+      "create": "Create Quote",
+      "list": "Saved Quotes"
+    },
+    "contracts": {
+      "label": "Contracts",
+      "create": "Create Contract",
+      "list": "Saved Contracts"
+    },
+    "reminders": {
+      "label": "Reminders",
+      "create": "Create Reminder",
+      "list": "Saved Reminders"
+    },
+    "expenses": {
+      "label": "Expenses",
+      "create": "Create Expense",
+      "list": "Saved Expenses"
+    },
+    "analytics": {
+      "label": "Analytics",
+      "bookkeeper": "My Bookkeeper",
+      "summary": "Summary",
+      "roi": "ROI Estimator"
+    },
+    "tax": {
+      "label": "Tax Assistant",
+      "calculator": "Tax Calculator",
+      "analytics": "Tax Analytics",
+      "guide": "Tax Guide"
+    },
+    "templates": {
+      "label": "Templates",
+      "email": "Email to Gemeente",
+      "cv": "CV / Portfolio",
+      "ai": "AI Assistant (PRO)"
+    },
+    "settings": {
+      "label": "Settings",
+      "profile": "Profile",
+      "theme": "Toggle Theme"
+    },
+    "help": {
+      "label": "Help",
+      "support": "Support",
+      "faq": "FAQ"
+    }
+  },
+
+  "kpi": {
+    "revenue": "Revenue",
+    "unpaid": "Unpaid",
+    "overdue": "Overdue",
+    "remindersSent": "Reminders Sent",
+    "expenses": "Expenses",
+    "quoteWinRate": "Quote Win Rate",
+    "topClient": "Top Client",
+    "noClient": "—"
+  },
+
+  "charts": {
+    "revenue": {
+      "title": "Revenue Trend",
+      "tooltip": "Revenue"
+    },
+    "invoiceStatus": {
+      "title": "Invoice Status",
+      "paid": "Paid",
+      "unpaid": "Unpaid",
+      "overdue": "Overdue"
+    }
+  },
+
+  "suggestions": {
+    "title": "Smart Suggestions",
+    "overdueTitle": "Overdue invoices",
+    "overdueBody": "You have {count} overdue invoice(s). Send reminders to get paid faster.",
+    "lowWinTitle": "Low quote win rate",
+    "lowWinBody": "Your quote win rate is below {threshold}%. Improve your offers and follow-ups.",
+    "allGoodTitle": "Everything looks good!",
+    "allGoodBody": "No overdue invoices and a healthy quote win rate. Keep it up!"
+  },
+
+  "recentActivity": {
+    "title": "Recent Activity",
+    "empty": "No recent activity.",
+    "goToProfile": "Go to Profile →"
+  },
+
+  "clients": {
+    "addTitle": "Add Client",
+    "sections": {
+      "info": "🏢 Client Information",
+      "company": "💼 Company Data"
+    },
+    "fields": {
+      "clientId": "Client ID",
+      "status": "Status",
+      "companyName": "Company / Full Name",
+      "contactPerson": "Contact Person",
+      "email": "Email",
+      "phone": "Phone",
+      "address": "Address",
+      "country": "Country",
+      "paymentTerm": "Payment Term",
+      "kvk": "KvK Number",
+      "vat": "VAT Number",
+      "tags": "Tags",
+      "currency": "Default Currency",
+      "notes": "Notes"
+    },
+    "statusOptions": {
+      "active": "Active",
+      "prospect": "Prospect",
+      "inactive": "Inactive"
+    },
+    "paymentTerms": {
+      "term14": "14 days",
+      "term30": "30 days",
+      "term60": "60 days",
+      "receipt": "On Receipt"
+    },
+    "actions": {
+      "save": "Save Client",
+      "update": "Update Client",
+      "list": "Saved Clients",
+      "smartSuggest": "Smart Suggest",
+      "backToDashboard": "Back to Dashboard"
+    },
+    "hints": {
+      "freemailDetected": "Freemail detected → Status changed to Prospect",
+      "enterEmailSuggestion": "Enter an email to auto-fill company details"
+    },
+    "validation": {
+      "nameRequired": "Client name is required.",
+      "invalidEmail": "Invalid email address.",
+      "invalidPhone": "Invalid phone number."
+    }
+  },
+
+  "clientsList": {
+    "listTitle": "Saved Clients",
+    "listSubtitle": "View, filter and manage all your clients.",
+    "kpi": {
+      "active": "Active",
+      "prospect": "Prospect",
+      "inactive": "Inactive",
+      "total": "Total"
+    },
+    "filters": {
+      "searchPlaceholder": "Search by name, email or country…",
+      "allStatuses": "All Statuses",
+      "statusActive": "Active",
+      "statusProspect": "Prospect",
+      "statusInactive": "Inactive"
+    },
+    "table": {
+      "clientId": "Client ID",
+      "name": "Name / Company",
+      "email": "Email",
+      "phone": "Phone",
+      "status": "Status",
+      "country": "Country",
+      "actions": "Actions"
+    },
+    "actions": {
+      "newClient": "New Client",
+      "backToDashboard": "Back to Dashboard",
+      "refresh": "Refresh",
+      "invoice": "Invoice",
+      "quote": "Quote",
+      "reminder": "Reminder",
+      "edit": "Edit",
+      "delete": "Delete",
+      "pdf": "PDF",
+      "pdfPro": "PRO"
+    },
+    "messages": {
+      "loading": "Loading clients…",
+      "loadError": "Error loading clients.",
+      "noClients": "No clients found.",
+      "synced": "Synced with cloud",
+      "deleteConfirm": "Delete this client? This action cannot be undone.",
+      "deleteSuccess": "Client deleted.",
+      "clientNotFound": "Client not found."
+    },
+    "pdf": {
+      "titleBrand": "SmartWerk — Client Summary",
+      "titleBasic": "Client Summary",
+      "footer": "Generated by SmartWerk © 2025"
+    },
+    "meta": {
+    "client": "client",
+    "clients": "clients"
+  },
+"invoices": {
+  "title": "Invoice",
+  "back": "Back to Dashboard",
+  "list": "Saved Invoices",
+
+  "businessSection": "Business Info",
+  "clientSection": "Client Info",
+  "itemsSection": "Items",
+  "summarySection": "Summary",
+  "ocrSection": "OCR Scan",
+  "signSection": "Signatures",
+
+  "businessName": "Business Name",
+  "kvk": "KvK Number",
+  "iban": "IBAN",
+  "btw": "VAT Number",
+  "email": "Email",
+  "address": "Business Address",
+  "phone": "Business Phone",
+
+  "clientName": "Client Name",
+  "clientEmail": "Client Email",
+  "clientPhone": "Client Phone",
+  "clientAddress": "Client Address",
+
+  "invoiceDate": "Invoice Date",
+  "dueDate": "Due Date",
+  "invoiceNumber": "Invoice Number",
+  "status": "Status",
+  "statusDraft": "Draft",
+  "statusSent": "Sent",
+  "statusPaid": "Paid",
+
+  "desc": "Description",
+  "qty": "Qty",
+  "price": "Price",
+  "vat": "VAT %",
+  "total": "Total",
+  "action": "Action",
+
+  "addItem": "Add Item",
+  "subtotal": "Subtotal",
+  "totalVat": "Total VAT",
+  "grandTotal": "Total",
+  "note": "Note...",
+
+  "btnSave": "Save Invoice",
+  "btnSaved": "Saved Invoices",
+
+  "business": "Business",
+  "client": "Client",
+  "date": "Date",
+  "clear": "Clear",
+
+  "ocrChoose": "Choose file",
+  "ocrScan": "Scan"
+},
+  "invoicesList": {
+    "title": "Saved Invoices",
+    "back": "Back to Dashboard",
+    "create": "New Invoice",
+    "filters": {
+      "from": "From",
+      "to": "To",
+      "status": "Status",
+      "search": "Search",
+      "searchPlaceholder": "Search client / Invoice # / amount",
+      "sortBy": "Sort by",
+      "reset": "Reset filters"
+    },
+    "statusOptions": {
+      "all": "All",
+      "draft": "Draft",
+      "sent": "Sent",
+      "paid": "Paid",
+      "reminder": "Reminder Sent"
+    },
+    "sortOptions": {
+      "invoiceNumberDesc": "Invoice # (new)",
+      "invoiceNumberAsc": "Invoice # (old)",
+      "dateDesc": "Date (new)",
+      "dateAsc": "Date (old)",
+      "amountDesc": "Amount ↓",
+      "amountAsc": "Amount ↑"
+    },
+    "table": {
+      "invoiceNumber": "Invoice #",
+      "client": "Client",
+      "status": "Status",
+      "date": "Date",
+      "total": "Total",
+      "actions": "Actions"
+    },
+    "actions": {
+      "edit": "Edit",
+      "delete": "Delete",
+      "pdf": "PDF",
+      "pdfPro": "PRO PDF without branding"
+    },
+    "messages": {
+      "loading": "Loading invoices…",
+      "noInvoices": "No invoices found.",
+      "confirmDelete": "Delete this invoice?"
+    }
+    },
+    "quotes": {
+    "title": "Quote / Offer",
+    "back": "Back to Dashboard",
+    "list": "Saved Quotes",
+
+    "businessSection": "Business Info",
+    "clientSection": "Client Info",
+    "itemsSection": "Items",
+    "summarySection": "Summary",
+    "signSection": "Signatures",
+
+    "businessName": "Business Name",
+    "kvk": "KvK Number",
+    "iban": "IBAN",
+    "btw": "VAT Number",
+    "email": "Email",
+    "address": "Business Address",
+    "phone": "Business Phone",
+
+    "clientName": "Client Name",
+    "clientEmail": "Client Email",
+    "clientPhone": "Client Phone",
+    "clientAddress": "Client Address",
+
+    "quoteDate": "Quote Date",
+    "validUntil": "Valid Until",
+    "quoteNumber": "Quote Number",
+    "status": "Status",
+
+    "statusDraft": "Draft",
+    "statusSent": "Sent",
+    "statusAccepted": "Accepted",
+    "statusRejected": "Rejected",
+
+    "desc": "Description",
+    "qty": "Qty",
+    "price": "Price",
+    "vat": "VAT %",
+    "total": "Total",
+    "action": "Action",
+
+    "addItem": "Add Item",
+    "subtotal": "Subtotal",
+    "totalVat": "Total VAT",
+    "grandTotal": "Total",
+    "note": "Notes...",
+
+    "btnSave": "Save Quote",
+    "btnSaved": "Saved Quotes",
+
+    "business": "Business",
+    "date": "Date",
+    "clear": "Clear"
+  }
+
+  },
+  "quotes": {
+  "title": "Quotes",
+  "listTitle": "Saved Quotes",
+  "messagesLoading": "Loading quotes...",
+  "messagesEmpty": "No quotes found.",
+
+  "newQuote": "New Quote",
+  "backToDashboard": "Back to Dashboard",
+
+  "from": "From",
+  "to": "To",
+  "status": "Status",
+  "statusAll": "All",
+  "statusDraft": "Draft",
+  "statusSent": "Sent",
+  "statusAccepted": "Accepted",
+  "statusRejected": "Rejected",
+
+  "searchLabel": "Search",
+  "searchPlaceholder": "Search client / quote # / amount...",
+
+  "sortBy": "Sort by",
+  "sortDateDesc": "Date (new)",
+  "sortDateAsc": "Date (old)",
+  "sortNumberDesc": "Quote # (new)",
+  "sortNumberAsc": "Quote # (old)",
+  "sortAmountDesc": "Amount ↓",
+  "sortAmountAsc": "Amount ↑",
+  "reset": "Reset",
+
+  "colNumber": "Quote #",
+  "colClient": "Client",
+  "colStatus": "Status",
+  "colDate": "Date",
+  "colTotal": "Total",
+  "colActions": "Actions",
+
+  "actionEdit": "Edit",
+  "actionDelete": "Delete",
+  "actionPdf": "PDF",
+  "actionPdfPro": "PDF (No Branding)",
+  "actionConvert": "Convert to Invoice"
+},
+"quotesList": {
+  "listTitle": "Saved Quotes",
+  "newQuote": "New Quote",
+  "backToDashboard": "Back to Dashboard",
+
+  "from": "From",
+  "to": "To",
+  "status": "Status",
+  "statusAll": "All",
+  "statusDraft": "Draft",
+  "statusSent": "Sent",
+  "statusAccepted": "Accepted",
+  "statusRejected": "Rejected",
+
+  "searchLabel": "Search",
+  "searchPlaceholder": "Search client / Quote # / amount",
+
+  "sortBy": "Sort by",
+  "sortDateDesc": "Date (new)",
+  "sortDateAsc": "Date (old)",
+  "sortNumberDesc": "Quote # (new)",
+  "sortNumberAsc": "Quote # (old)",
+  "sortAmountDesc": "Amount ↓",
+  "sortAmountAsc": "Amount ↑",
+  "reset": "Reset",
+
+  "colNumber": "Quote #",
+  "colClient": "Client",
+  "colStatus": "Status",
+  "colDate": "Date",
+  "colTotal": "Total",
+  "colActions": "Actions",
+
+  "actionEdit": "Edit",
+  "actionDelete": "Delete",
+  "actionPdf": "PDF",
+  "actionPdfPro": "PRO PDF",
+  "actionConvert": "Convert to Invoice",
+
+  "messagesLoading": "Loading quotes…",
+  "messagesEmpty": "No quotes found."
+},
+ "page": {
+    "createTitle": "Create Contract"
+  },
+  "btn": {
+    "backDashboard": "Back to Dashboard",
+    "savedContracts": "Saved Contracts",
+    "save": "Save Contract",
+    "saving": "Saving…"
+  },
+  
+  "contracts": {
+    "createTitle": "Create Contract",
+    "sections": {
+      "overview": "Contract Overview",
+      "business": "Business Info",
+      "client": "Client Info",
+      "project": "Project Details",
+      "terms": "Legal Terms",
+      "signatures": "Signatures"
+    },
+    "fields": {
+      "contractId": "Contract ID",
+      "status": "Status",
+      "date": "Date",
+      "selectClient": "Select client",
+      "projectTitle": "Project Title",
+      "scope": "Scope of Work",
+      "timeline": "Timeline",
+      "paymentTerms": "Payment Terms",
+      "legalTerms": "Legal Terms",
+      "name": "Name",
+      "kvk": "KvK",
+      "btw": "BTW",
+      "iban": "IBAN",
+      "phone": "Phone",
+      "email": "Email",
+      "address": "Address"
+    },
+    "actions": {
+      "save": "Save Contract",
+      "saving": "Saving…",
+      "backToDashboard": "Back to Dashboard",
+      "list": "Saved Contracts"
+    },
+    "sign": {
+  "freelancer": "Freelancer",
+  "client": "Client",
+  "date": "Date",
+  "clear": "Clear"
+},
+
+     "statuses": {
+      "Draft": "Draft",
+      "Sent": "Sent",
+      "Signed": "Signed",
+      "Completed": "Completed"
+    },
+    "validation": {
+      "signaturesRequired": "Both signatures are required before signing the contract.",
+      "mustBeSigned": "Contract must be Signed before it can be Locked."
+    }
+  },
+  "contractsList": {
+    "title": "Saved Contracts",
+
+    "actions": {
+      "new": "New Contract",
+      "back": "Back to Dashboard",
+      "edit": "Edit",
+      "delete": "Delete",
+      "pdf": "PDF"
+    },
+
+    "fields": {
+      "search": "Search contracts...",
+      "status": "Status",
+      "allStatuses": "All Statuses",
+      "contractId": "Contract ID",
+      "client": "Client",
+      "project": "Project",
+      "date": "Date",
+      "actions": "Actions"
+    },
+
+      "placeholders": {
+      "selectClient": "Select a client..."
+    },
+     "empty": "No contracts found",
+    "confirmDelete": "Delete this contract?"
+  },
+  
+  "reminders": {
+    "title": "Payment Reminder",
+    "actions": {
+      "backToDashboard": "Back to Dashboard",
+      "list": "Saved Reminders",
+      "save": "Save Reminder",
+      "update": "Update Reminder",
+      "saving": "Saving…",
+
+      "aiFill": "AI Fill",
+      "aiDraft": "AI Draft",
+      "aiStrict": "Strict",
+      "aiFriendly": "Friendly",
+
+      "clear": "Clear"
+    },
+    "sections": {
+      "business": "🏢 Business Info",
+      "client": "👤 Client Info",
+      "linkedInvoice": "📑 Linked Invoice",
+      "details": "⏰ Reminder Details",
+      "message": "💬 Message",
+      "signatures": "✍️ Signature"
+    },
+    "fields": {
+      "businessName": "Business Name",
+      "businessEmail": "Business Email",
+      "businessAddress": "Business Address",
+      "businessPhone": "Business Phone",
+
+      "clientName": "Client Name",
+      "clientEmail": "Client Email",
+      "clientAddress": "Client Address",
+
+      "linkedInvoice": "Select Invoice",
+      "selectInvoice": "— Select Invoice —",
+
+      "invoiceDate": "Invoice Date",
+      "dueDate": "Due Date",
+      "invoiceAmount": "Invoice Amount",
+
+      "reminderId": "Reminder ID",
+      "reminderDate": "Reminder Date",
+      "status": "Status",
+      "type": "Type",
+      "amount": "Amount",
+
+      "messagePlaceholder": "Message body…",
+
+      "business": "Business",
+      "date": "Date"
+    },
+    "statusOptions": {
+      "draft": "Draft",
+      "sent": "Sent",
+      "paid": "Paid"
+    },
+    "typeOptions": {
+      "first": "First Reminder",
+      "second": "Second Reminder",
+      "final": "Final Reminder"
+    },
+    "messages": {
+      "loading": "Loading reminder…",
+      "loadError": "Failed to load reminder data",
+      "authError": "Not authenticated",
+      "saveFailed": "Save failed",
+      "updated": "✅ Reminder updated",
+      "saved": "✅ Reminder saved as"
+    }
+     },
+  "remindersList": {
+    "title": "Saved Payment Reminders",
+    "subtitle": "Manage, filter and send payment reminders.",
+    "actions": {
+      "new": "New Reminder",
+      "back": "Back to Dashboard",
+      "refresh": "Refresh",
+      "edit": "Edit",
+      "delete": "Delete",
+      "pdf": "PDF",
+      "pdfPro": "PRO PDF",
+      "send": "Send"
+    },
+    "filters": {
+      "from": "From",
+      "to": "To",
+      "status": "Status",
+      "type": "Type",
+      "search": "Search",
+      "sortBy": "Sort by",
+      "all": "All"
+    },
+    "statusOptions": {
+      "draft": "Draft",
+      "sent": "Sent",
+      "paid": "Paid"
+    },
+    "typeOptions": {
+      "first": "First Reminder",
+      "second": "Second Reminder",
+      "final": "Final Reminder"
+    },
+    "sort": {
+      "dateDesc": "Date (new)",
+      "dateAsc": "Date (old)",
+      "numberDesc": "Reminder # (new)",
+      "numberAsc": "Reminder # (old)",
+      "amountDesc": "Amount ↓",
+      "amountAsc": "Amount ↑"
+    },
+    "table": {
+      "reminderId": "Reminder ID",
+      "invoice": "Invoice",
+      "client": "Client",
+      "status": "Status",
+      "type": "Type",
+      "date": "Date",
+      "amount": "Amount",
+      "actions": "Actions"
+    },
+    "messages": {
+      "loading": "Loading reminders…",
+      "empty": "No reminders found.",
+      "deleteConfirm": "Delete this reminder?",
+      "statusError": "Status update failed"
+    },
+    "pdf": {
+      "title": "PAYMENT REMINDER",
+      "from": "From",
+      "to": "To",
+      "message": "Message",
+      "businessSignature": "Business Signature",
+      "clientSignature": "Client Signature",
+      "footer": "Generated with SmartWerk"
+    }
+  },
+  
+  "expenses": {
+    "title": "Expense Tracker",
+
+    "actions": {
+      "back": "Back to Dashboard",
+      "list": "Saved Expenses",
+      "save": "Save Expense",
+      "saving": "Saving…"
+    },
+
+    "sections": {
+      "business": "Business Info",
+      "details": "Expense Details",
+      "totals": "Totals"
+    },
+
+    "fields": {
+      "businessName": "Business Name",
+      "email": "Email",
+      "businessAddress": "Business Address",
+
+      "expenseId": "Expense ID",
+      "date": "Date",
+      "description": "Description",
+      "category": "Category",
+      "amount": "Amount (excl. VAT)",
+      "vat": "VAT %",
+      "status": "Status",
+      "notes": "Notes"
+    },
+
+    "totals": {
+      "subtotal": "Subtotal",
+      "vat": "VAT",
+      "total": "Total"
+    },
+    
+    "statusOptions": {
+      "paid": "Paid",
+      "pending": "Pending",
+      "overdue": "Overdue",
+      "scheduled": "Scheduled"
+  },
+
+    "messages": {
+      "loading": "Loading expense…"
+    }
+  },
+
+  
+  "expensesList": {
+    "title": "Saved Expenses",
+
+    "actions": {
+      "new": "➕ New Expense",
+      "back": "🏠 Back to Dashboard",
+      "reset": "Reset",
+      "edit": "✏️ Edit",
+      "delete": "🗑 Delete"
+    },
+
+    "filters": {
+      "from": "From",
+      "to": "To",
+      "status": "Status",
+      "type": "Type",
+      "search": "Search",
+      "searchPlaceholder": "Search ID / description / category / amount",
+      "sortBy": "Sort by",
+      "all": "All"
+    },
+
+    "statusOptions": {
+      "paid": "Paid",
+      "pending": "Pending",
+      "overdue": "Overdue",
+      "scheduled": "Scheduled"
+    },
+
+    "typeOptions": {
+      "oneTime": "One-time",
+      "monthly": "Monthly",
+      "annual": "Annual"
+    },
+
+    "sort": {
+      "dateDesc": "Date (newest)",
+      "dateAsc": "Date (oldest)",
+      "numberDesc": "Expense # (newest)",
+      "numberAsc": "Expense # (oldest)",
+      "amountDesc": "Amount ↓",
+      "amountAsc": "Amount ↑"
+    },
+
+    "table": {
+      "expenseId": "Expense ID",
+      "date": "Date",
+      "description": "Description",
+      "category": "Category",
+      "status": "Status",
+      "amountNet": "Net",
+      "vat": "VAT",
+      "total": "Total",
+      "actions": "Actions"
+    },
+
+    "messages": {
+      "loading": "Loading expenses…",
+      "empty": "No expenses found",
+      "deleteConfirm": "Delete this expense? This action cannot be undone.",
+      "statusFailed": "❌ Failed to update status"
+    }
+  },
+  "profile": {
+  "title": "Profile",
+
+  "actions": {
+    "back": "🏠 Back to Dashboard",
+    "save": "Save profile",
+    "saving": "Saving…"
+  },
+
+  "sections": {
+    "account": "Account",
+    "basic": "Basic",
+    "plan": "Plan",
+    "details": "Profile details"
+  },
+
+  "status": {
+    "label": "Status",
+    "emailVerified": "Email verified",
+    "emailNotVerified": "Email not verified",
+    "resendVerification": "Resend verification email"
+  },
+
+  "plan": {
+    "current": "Current plan",
+    "trialStatus": "Trial status",
+    "upgrade": "Upgrade / Change plan",
+    "manageBilling": "Manage billing"
+  },
+
+  "fields": {
+    "fullName": "Full name",
+    "fullNamePlaceholder": "Your full name",
+    "companyName": "Company name",
+    "companyNamePlaceholder": "Business / brand name",
+    "phone": "Phone",
+    "city": "City",
+    "country": "Country",
+    "kvk": "KVK",
+    "iban": "IBAN",
+    "vat": "VAT / BTW number"
+  },
+
+  "messages": {
+    "loading": "Loading profile…",
+    "saved": "Profile saved.",
+    "loadError": "Could not load profile."
+  }
+},
+
+  
+  
+  "analytics": {
+    "title": "Analytics",
+
+    "meta": {
+      "basedOnPaid": "Income and VAT are calculated from paid invoices. Expenses include all recorded costs."
+    },
+
+    "actions": {
+      "dashboard": "Dashboard"
+    },
+
+    "filters": {
+      "client": "Client",
+      "allClients": "All clients",
+      "period": "Period",
+      "from": "From",
+      "to": "To",
+      "customHint": "Please select both start and end dates",
+      "periods": {
+        "all": "All time",
+        "thisMonth": "This month",
+        "lastMonth": "Last month",
+        "thisYear": "This year",
+        "custom": "Custom range"
+      }
+    },
+
+    "stats": {
+      "income": "Total Income",
+      "expense": "Total Expenses",
+      "profit": "Net Profit",
+      "vat": "Total VAT",
+      "target": "Annual Target",
+      "noData": "No financial data available for the selected scope."
+    },
+
+    "charts": {
+      "summaryTitle": "Income vs Expenses",
+      "byClientTitle": "Income by Client",
+      "income": "Income",
+      "expenses": "Expenses",
+      "noData": "No chart data available for the selected scope."
+    },
+
+    "exports": {
+      "csv": "Export CSV",
+      "pdf": "Export PDF"
+    }
+  },
+  
+ 
+ 
+  "roi": {
+    "title": "ROI Estimator",
+
+    "description": {
+      "who": "Who it's for",
+      "whoText": "Business owners evaluating investments",
+      "what": "What it does",
+      "whatText": "Calculates ROI, payback period and profitability",
+      "how": "How to use",
+      "howText": "Enter investment and profit projections"
+    },
+
+    "form": {
+      "investment": "Initial Investment (€)",
+      "monthlyProfit": "Monthly Profit Increase (€)",
+      "months": "Period (months)",
+      "extraCosts": "Extra Costs (€)",
+      "placeholders": {
+        "investment": "e.g. 1000",
+        "monthlyProfit": "e.g. 250",
+        "months": "e.g. 6",
+        "extraCosts": "Optional"
+      }
+    },
+
+    "results": {
+      "title": "Results",
+      "totalProfit": "Total Profit",
+      "roi": "ROI",
+      "payback": "Payback Period",
+      "months": "months",
+      "noPayback": "Not reached yet"
+    },
+
+    "charts": {
+      "month": "Month",
+      "monthlyProfit": "Monthly Profit",
+      "cumulativeProfit": "Cumulative Profit",
+      "growthTitle": "Profit Growth",
+      "cumulativeTitle": "Cumulative ROI"
+    },
+
+    "tips": {
+      "title": "Smart Suggestions",
+      "dangerLoss": "This investment is currently unprofitable. Total profit is negative.",
+      "warningPayback": "The investment does not break even within the selected period.",
+      "successHighRoi": "High ROI detected. This investment has strong potential.",
+      "infoLowRoi": "ROI is relatively low. Consider increasing monthly profit or reducing costs.",
+      "warningExtraCosts": "Extra costs are quite high compared to the initial investment.",
+      "infoOk": "No major risks detected. Review assumptions to optimize results further."
+    },
+
+    "ai": {
+      "title": "Business Recommendation",
+      "negativeTitle": "High Risk Investment",
+      "negativeText": "This investment results in a net loss and is not recommended.",
+      "neutralLongTitle": "Long-Term Investment",
+      "neutralLongText": "The investment may become profitable over time, but does not break even within the selected period.",
+      "strongTitle": "Excellent Opportunity",
+      "strongText": "This investment shows a very strong ROI and fast payback.",
+      "positiveTitle": "Promising Investment",
+      "positiveText": "The investment is profitable with a reasonable ROI.",
+      "neutralLowTitle": "Low Return Investment",
+      "neutralLowText": "ROI is positive but relatively low. Consider optimization."
+    },
+      "actions": {
+  "dashboard": "Dashboard"
+}
+  },
+  
+ 
+  "cv": {
+    "title": "CV / Resume",
+    "subtitle": "Create a professional CV",
+
+    "personal": {
+      "title": "Personal information",
+      "fullName": "Full name",
+      "email": "Email",
+      "phone": "Phone",
+      "website": "Website"
+    },
+
+    "blocks": {
+      "summary": { "title": "Summary", "placeholder": "" },
+      "skills": { "title": "Skills", "placeholder": "" },
+      "experience": { "title": "Experience", "placeholder": "" },
+      "education": { "title": "Education", "placeholder": "" },
+      "projects": { "title": "Projects", "placeholder": "" },
+      "achievements": { "title": "Achievements", "placeholder": "" },
+      "testimonials": { "title": "Testimonials", "placeholder": "" },
+      "proposal": { "title": "Business Proposal", "placeholder": "" }
+    },
+
+    "actions": {
+      "exportPdf": "Export PDF",
+      "save": "Save",
+      "load": "Load",
+      "clear": "Clear",
+      "dashboard": "Dashboard",
+        "addItem": "Add item"
+    },
+
+    "ai": {
+      "summary": {
+        "tooShort": {
+          "title": "Summary is too short",
+          "message": "Most strong summaries are 2–3 sentences (120–180 characters)."
+        },
+        "noExperience": {
+          "title": "Mention experience",
+          "message": "Example: “Professional with 3+ years of experience in web and mobile projects”"
+        }
+      },
+       "ui": {
+      "sectionWarning": "This section can be improved",
+      "improveWithAI": "Improve with AI",
+      "suggestionsTitle": "AI Suggestions",
+        "removePhoto": "Remove photo"
+
+     
+    },
+
+      "skills": {
+        "few": {
+          "title": "Few skills listed",
+          "message": "Recruiters usually expect at least 6–10 relevant skills."
+        }
+      },
+
+      "experience": {
+        "noResults": {
+          "title": "No measurable results",
+          "message": "Recruiters care about results more than responsibilities."
+        }
+      },
+
+      "universal": {
+        "tooThin": {
+          "title": "Content could be stronger",
+          "message": "This section looks very brief. Adding more detail can improve your CV."
+        }
+      }
+      }
+  },
+
+
+
+
+ 
+  "common": {
+    "yes": "Yes",
+    "no": "No",
+    "close": "Close",
+    "delete": "Delete",
+    "cancel": "Cancel",
+    "loading": "Loading…"
+  },
+
+  "tax": {
+
+    
+    
+    "header": {
+      "title": "📊 SmartWerk Tax Calculator",
+      "subtitle": "Estimate your Dutch taxes (ZZP, MKB, BTW, ZVW)",
+       "back": "Back to Dashboard"
+    },
+
+    "explain": {
+    "title": "Tax calculation explained",
+    "clickToExplain": "Click to explain this amount",
+    "formula": "Formula",
+    "inputs": "Inputs",
+    "explanation": "Explanation ",
+    "sections": {
+  "income": "Income",
+  "deductions": "Deductions",
+  "tax": "Tax",
+  "vat": "VAT",
+  "net": "Net"
+
+    }
+  },
+    "form": {
+
+      "submit": "Calculate",
+  "calculating": "Calculating...",
+
+      "income": {
+        "title": "Work & Income",
+        "hours": "Hours worked",
+        "rate": "Hourly rate (€)",
+        "estimatedGross": "Estimated gross income:",
+        "hint": "Include all billable and non-billable hours worked in the selected year."
+      },
+
+      "expenses": {
+        "title": "Business expenses",
+
+        "fields": {
+
+          "vehicle": {
+
+            "label": "Transport & vehicle costs",
+            "hint": "Car, fuel, public transport, bike lease, parking."
+          },
+
+          "office": {
+            "label": "Workspace & rent costs",
+            "hint": "Home office, coworking, rent, utilities."
+          },
+
+          "internet": {
+            "label": "Internet & communication",
+            "hint": "Mobile phone, internet, domains."
+          },
+
+          "marketing": {
+            "label": "Marketing & advertising",
+            "hint": "Website, ads, branding."
+          },
+
+          "other": {
+            "label": "Business gifts & representation",
+            "hint": "Client gifts, networking."
+          },
+
+          "extraBenefits": {
+            "label": "Study, insurance & misc",
+            "hint": "Courses, software, accountant."
+          }
+
+        },
+
+        "note": "Only business-related expenses are deductible under Dutch tax rules."
+      },
+
+      "options": {
+
+        "title": "Tax options",
+
+       "options": {
+    "meets1225": "Yes",
+    "notMeets1225": "No"
+  },
+
+        "kvk": {
+          "label": "KvK registration",
+          "hint": "Required for ZZP deductions.",
+          "notice": "Without KvK registration, entrepreneur deductions cannot be applied."
+        },
+
+        "starter": {
+          "label": "Starter (first 5 years)",
+          "hint": "Starter deduction applies only if you qualify as an entrepreneur."
+        },
+
+        "kor": {
+          "label": "KOR (Small Business Scheme)",
+          "hint": "If enabled, you do not charge VAT."
+        },
+
+        "vat": {
+          "label": "VAT (BTW) rate",
+          "hint": "Disabled when KOR is applied",
+
+          "options": {
+            "vat21": "21% (standard)",
+            "vat9": "9% (reduced)",
+            "vat0": "0% (exempt)"
+          }
+        }
+
+      },
+
+      "period": {
+        "title": "Reporting period",
+        "label": "Tax period",
+        "hint": "Select the quarter you want to calculate taxes for.",
+        "options": {
+        "Q1": "Q1 — January to March",
+        "Q2": "Q2 — April to June",
+        "Q3": "Q3 — July to September",
+        "Q4": "Q4 — October to December"
+      }
+}
+    },
+
+   "results": {
+  "title": "Result",
+  "rows": {
+    "revenue": "Revenue",
+    "expenses": "Business expenses",
+    "profit": "Profit",
+    "taxableIncome": "Taxable income",
+    "incomeTax": "Income tax",
+    "taxCredits": "Tax credits",
+    "zvw": "ZVW contribution",
+    "totalTax": "Total tax",
+    "vatPayable": "VAT payable / receivable",
+    "netIncome": "Net income",
+    "netCashPosition": "Net cash position"
+  },
+  "exportPdf": "Export PDF",
+  "exportExcel": "Export Excel"
+},
+
+      "warnings": {
+        "title": "Important notes",
+      "explain": "Explain with AI",
+      "explainWithAi": "Explain this warning with AI",
+      "warnings": {
+ "EXPENSES_GT_INCOME": {  
+  "title": "Expenses exceed revenue",
+  "description": "Your reported business expenses are higher than your revenue for this period. This results in a net loss. Please review your inputs to ensure they are accurate. If correct, this may indicate a need to reduce expenses or increase revenue to achieve profitability."
+},
+ "KOR_BTW_RATE_MISMATCH": {
+  "title": "KOR selected but VAT rate is not 0%",
+  "description": "You have selected the KOR (Small Business Scheme) option, which means you should not charge VAT. However, your VAT rate is set to a non-zero value. Please either disable KOR or set the VAT rate to 0% to ensure accurate tax calculations."
+},
+"KOR_WITH_VAT_DETAILS": {
+  "title": "KOR selected but VAT details provided",
+  "description": "You have selected the Small Business Ordinance (KOR) but have entered VAT information. When using the KOR, VAT is not generally charged or deducted."
+    },    
+    "KOR_THRESHOLD_EXCEEDED": { 
+      "title": "KOR turnover limit exceeded",
+        "description": "The turnover reported exceeds the maximum limit for the application of the Small Business Ordinance (KOR) scheme. In this case, the KOR scheme may not be applicable for the selected period."
+        } ,
+          "LOW_HOURS_NO_ZZP": { 
+            "title": "Hours requirement not met",
+            "description": "Based on the entered number of working hours, the minimum hours requirement for entrepreneur deductions is not met in this calculation."
+          },
+        
+        
+          "NO_KVK_NO_DEDUCTIONS": {
+            "title": "No KvK registration means no entrepreneur deductions",
+            "description": "Since you have indicated that you are not registered with the KvK, you will not be able to apply any entrepreneur deductions in this calculation. This may result in a higher taxable income and tax liability."
+          },
+           "DEDUCTION_CAP_APPLIED": {
+            "title": "The tax deduction limit has been applied",
+            "description": "The total amount of business tax deductions was limited in accordance with current tax rules."  
+           }
+      }
+    },
+    "history": {
+  "title": "Calculation history",
+  "loading": "Loading…",
+  "error": "Failed to load history.",
+  "empty": "No saved calculations yet.",
+  "restore": "Load calculation",
+  "delete": "Delete",
+  "cancel": "Cancel",
+  "confirmDelete": "Delete this calculation?",
+  "taxableIncome": "Taxable income",
+  "totalTax": "Total tax",
+  "netIncome": "Net income"
+},
+
+
+    "disclaimer": {
+  "title": "Important notice",
+  "text": "This calculator provides an estimate of Dutch taxes based on the information you provide. It is not official tax advice and does not replace professional accounting services."
+},
+
+    "accountant": {
+
+      "title": "Accountant view",
+
+      "sections": {
+        "profitLoss": "Profit & Loss",
+        "deductions": "Deductions",
+        "taxableIncome": "Taxable income",
+        "tax": "Tax",
+        "vat": "VAT",
+        "net": "Net result"
+      },
+
+      "fields": {
+
+        "grossIncome": "Gross income",
+        "expenses": "Expenses",
+        "profitBeforeDeductions": "Profit before deductions",
+
+        "zzpEligibility": "ZZP eligibility",
+        "eligible": "Eligible",
+        "notEligible": "Not eligible",
+
+        "zzpDeduction": "ZZP deduction",
+        "mkbDeduction": "MKB deduction",
+        "totalDeductions": "Total deductions",
+
+        "deductionCap": "Deduction cap",
+        "applied": "Applied",
+        "notApplied": "Not applied",
+
+        "taxableIncome": "Taxable income",
+
+        "incomeTax": "Income tax",
+        "zvw": "ZVW contribution",
+        "taxCredits": "Tax credits",
+        "totalTax": "Total tax",
+
+        "vatSales": "Turnover (excl. VAT)",
+        "outputVat": "Output VAT",
+        "inputVat": "Input VAT",
+        "vatPayable": "VAT payable",
+
+        "netIncome": "Net income",
+
+        "kor": "KOR",
+
+        "clickToExplain": "Click to explain"
+      },
+      "howItWorks": {
+  "title": "How the calculation works",
+  "items": {
+    "profit": "Profit = revenue − business expenses",
+    "taxableIncome": "Taxable income is profit minus eligible deductions",
+    "incomeTax": "Income tax is calculated using Dutch tax brackets",
+    "zvw": "ZVW is the mandatory health contribution for entrepreneurs",
+    "vat": "VAT is calculated separately and does not affect income tax"
+  }
+}
+
+
+    }
+
+  }
+}
+
+  
+  
+
+
+  
+
+
+    
+  
+
+
+
+
+  
+
+
+
+
+  
+

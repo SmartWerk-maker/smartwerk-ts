@@ -1,0 +1,187 @@
+body {
+  margin: 0;
+  font-family: 'Segoe UI', sans-serif;
+  background: url('/assets/img/amsterdam-night.jpg') no-repeat center center fixed;
+  background-size: cover;
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+/* Top bar */
+.topbar {
+  background: rgba(0, 0, 0, 0.6);
+  padding: 12px 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  backdrop-filter: blur(6px);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.6);
+}
+
+.brand {
+  font-size: 20px;
+  color: #fff;
+  font-weight: bold;
+  text-decoration: none;
+}
+
+.btn {
+  background: #2563eb;
+  color: #fff;
+  border: none;
+  padding: 10px 18px;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.3s;
+  text-decoration: none;
+}
+
+.btn:hover {
+  background: #1e40af;
+}
+
+/* Center */
+.center {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 30px 20px;
+}
+
+/* Card */
+.card {
+  background: rgba(0, 0, 0, 0.5);
+  padding: 32px 28px;
+  border-radius: 16px;
+  box-shadow: 0 0 30px rgba(0, 0, 0, 0.s6);
+  max-width: 500px;
+  width: 100%;
+  backdrop-filter: blur(8px);
+  animation: fadeInUp 0.6s ease-out;
+}
+
+.card h2 {
+  margin-top: 0px;
+  margin-bottom: 8px;
+  font-size: 26px;
+}
+
+.card .muted {
+  font-size: 14px;
+  color: #cbd5e1;
+  margin-bottom: 20px;
+}
+
+/* Fields */
+.field {
+  margin-bottom: 16px;
+}
+
+label {
+  display: block;
+  margin-bottom: 4px;
+  font-size: 14px;
+  color: #e2e8f0;
+}
+
+input[type="email"],
+input[type="password"] {
+  width: 100%;
+  padding: 10px 12px;
+  border: none;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+  font-size: 14px;
+  outline: none;
+  transition: background 0.3s;
+}
+
+input:focus {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+/* Password eye toggle */
+.password-wrap {
+  position: relative;
+}
+
+.toggle-btn {
+  position: absolute;
+  top: 6px;
+  right: 8px;
+  background: transparent;
+  border: none;
+  font-size: 16px;
+  cursor: pointer;
+  color: #fff;
+}
+
+/* Row */
+.row {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+/* Messages (React-compatible) */
+#errorBox, #okBox {
+  padding: 12px;
+  margin: 10px 0;
+  border-radius: 6px;
+  font-size: 14px;
+  animation: fadeIn 0.4s ease-in;
+}
+
+#errorBox {
+  background: #fee2e2;
+  color: #b91c1c;
+  border: 1px solid #fca5a5;
+}
+
+#okBox {
+  background: #dcfce7;
+  color: #15803d;
+  border: 1px solid #86efac;
+}
+
+/* Footer */
+.foot {
+  margin-top: 18px;
+  font-size: 13px;
+  color: #cbd5e1;
+}
+
+.foot input[type="email"] {
+  margin-top: 6px;
+  margin-bottom: 6px;
+}
+
+/* Mobile */
+@media (max-width: 480px) {
+  .card {
+    padding: 24px 20px;
+    max-width: 90%;
+  }
+
+  .row {
+    flex-direction: column;
+  }
+}
+
+/* Animation */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

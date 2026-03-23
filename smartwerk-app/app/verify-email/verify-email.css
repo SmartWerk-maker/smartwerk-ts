@@ -1,0 +1,102 @@
+.verify-page {
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+  font-family: 'Segoe UI', sans-serif;
+  background: url("/assets/img/amsterdam-day.jpg") no-repeat center center fixed;
+  background-size: cover;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.verify-card {
+  background: rgba(0,0,0,0.6);
+  padding: 32px 28px;
+  border-radius: 16px;
+  width: 420px;
+  max-width: 90%;
+  text-align: center;
+  color: #fff;
+  box-shadow: 0 0 25px rgba(0,0,0,0.6);
+  backdrop-filter: blur(8px);
+  animation: fadeIn 0.5s ease-out;
+}
+
+.verify-card h2 {
+  margin-bottom: 8px;
+}
+
+.email {
+  font-weight: bold;
+  color: #60a5fa;
+}
+
+/* MESSAGE BOXES */
+.msg {
+  padding: 12px 14px;
+  border-radius: 8px;
+  margin: 12px 0;
+  font-size: 14px;
+  animation: fadeIn 0.3s ease-in;
+}
+
+.msg--info {
+  background: #bfdbfe;
+  color: #1e3a8a;
+}
+
+.msg--success {
+  background: #d1fae5;
+  color: #065f46;
+}
+
+.msg--error {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+.btn-main {
+  width: 100%;
+  padding: 12px;
+  background: #2563eb;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  margin-top: 10px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.btn-main:hover {
+  background: #1e40af;
+}
+
+.btn-secondary {
+  width: 100%;
+  padding: 12px;
+  background: #475569;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  margin-top: 10px;
+  cursor: pointer;
+}
+
+.btn-secondary:hover {
+  background: #334155;
+}
+
+.footer {
+  margin-top: 18px;
+}
+
+.footer a {
+  color: #60a5fa;
+  text-decoration: none;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(15px); }
+  to { opacity: 1; transform: translateY(0); }
+}

@@ -1,0 +1,76 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function signedIn() {
+      return request.auth != null;
+    }
+
+    function isOwner(uid) {
+      return signedIn() && request.auth.uid == uid;
+    }
+
+    match /users/{uid} {
+
+      // сам документ users/{uid}
+      allow read, write: if isOwner(uid);
+
+      match /contracts/{contractId} {
+        allow read, write: if isOwner(uid);
+      }
+
+      match /invoices/{invoiceId} {
+        allow read, write: if isOwner(uid);
+      }
+
+      match /quotes/{quoteId} {
+        allow read, write: if isOwner(uid);
+      }
+
+      match /expenses/{expenseId} {
+        allow read, write: if isOwner(uid);
+      }
+
+      match /clients/{clientId} {
+        allow read, write: if isOwner(uid);
+      }
+
+      match /reminders/{reminderId} {
+        allow read, write: if isOwner(uid);
+      }
+
+      match /events/{eventId} {
+        allow read, write: if isOwner(uid);
+      }
+
+      /* ✅ TAX CALCULATOR HISTORY — ВАЖЛИВО */
+      match /taxHistory/{entryId} {
+        allow read, create: if isOwner(uid);
+        allow update, delete: if false;
+      }
+    }
+
+    match /publicContracts/{token} {
+      allow read: if true;
+
+      allow create: if signedIn()
+        && request.resource.data.uid == request.auth.uid
+        && request.resource.data.used == false;
+
+      allow update: if resource.data.used == false
+        && request.resource.data.used == true
+        && request.resource.data.clientSignature is string
+        && request.resource.data.clientDate is string
+        && request.resource.data.uid == resource.data.uid
+        && request.resource.data.diff(resource.data).changedKeys()
+          .hasOnly(["used", "clientSignature", "clientDate"]);
+
+      allow delete: if signedIn()
+        && resource.data.uid == request.auth.uid;
+    }
+
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

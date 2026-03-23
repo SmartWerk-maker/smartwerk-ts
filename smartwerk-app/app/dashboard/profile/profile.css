@@ -1,0 +1,245 @@
+/* ======================================================
+   ROOT
+====================================================== */
+.profile-page {
+  min-height: 100vh;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Inter", sans-serif;
+}
+
+/* ======================================================
+   THEME BACKGROUND
+====================================================== */
+body.dash-theme-dark .profile-page {
+  background: radial-gradient(1200px 500px at 20% -10%, #0b1226, #020617 60%);
+  color: #e5e7eb;
+}
+
+body.dash-theme-light .profile-page {
+  background: #f6f7fb;
+  color: #0f172a;
+}
+
+/* ======================================================
+   TOPBAR
+====================================================== */
+.profile-topbar {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 28px;
+  backdrop-filter: blur(14px);
+}
+
+body.dash-theme-dark .profile-topbar {
+  background: rgba(2, 6, 23, 0.7);
+  border-bottom: 1px solid rgba(148,163,184,0.15);
+}
+
+body.dash-theme-light .profile-topbar {
+  background: rgba(255,255,255,0.8);
+  border-bottom: 1px solid rgba(0,0,0,0.08);
+}
+
+.profile-logo {
+  font-weight: 600;
+  font-size: 15px;
+  text-decoration: none;
+}
+
+body.dash-theme-dark .profile-logo { color: #e5e7eb; }
+body.dash-theme-light .profile-logo { color: #0f172a; }
+
+/* ======================================================
+   LAYOUT
+====================================================== */
+.profile-layout {
+  max-width: 1120px;
+  margin: 28px auto 48px;
+  padding: 0 16px;
+  display: grid;
+  grid-template-columns: 300px 1fr;
+  gap: 20px;
+}
+
+/* ======================================================
+   CARDS (GLASS)
+====================================================== */
+.profile-summary,
+.profile-form-card {
+  border-radius: 24px;
+  padding: 20px 22px;
+}
+
+body.dash-theme-dark .profile-summary,
+body.dash-theme-dark .profile-form-card {
+  background: linear-gradient(
+    180deg,
+    rgba(15,23,42,0.85),
+    rgba(2,6,23,0.85)
+  );
+  border: 1px solid rgba(148,163,184,0.18);
+}
+
+body.dash-theme-light .profile-summary,
+body.dash-theme-light .profile-form-card {
+  background: #ffffff;
+  border: 1px solid rgba(0,0,0,0.12);
+}
+
+/* ======================================================
+   SUMMARY
+====================================================== */
+.profile-summary {
+  background: linear-gradient(
+    180deg,
+    rgba(15, 23, 42, 0.75),
+    rgba(2, 6, 23, 0.75)
+  );
+  border-radius: 22px;
+  padding: 20px;
+  border: 1px solid rgba(148,163,184,0.18);
+}
+.profile-summary h2 {
+  font-size: 18px;
+  margin-bottom: 10px;
+}
+
+.summary-block {
+  background: none;
+  border: none;
+  box-shadow: none;
+  padding: 14px 0;
+}
+
+.summary-block + .summary-block {
+  border-top: 1px solid rgba(148,163,184,0.15);
+  margin-top: 12px;
+}
+
+body.dash-theme-dark .summary-block {
+  background: rgba(15,23,42,0.9);
+  border: 1px solid rgba(148,163,184,0.15);
+}
+
+body.dash-theme-light .summary-block {
+  background: #f9fafb;
+  border: 1px solid rgba(0,0,0,0.08);
+}
+
+.summary-email {
+  font-size: 13px;
+  opacity: 0.8;
+}
+
+/* ======================================================
+   CHIPS
+====================================================== */
+.chip {
+  font-size: 11px;
+  padding: 3px 10px;
+  border-radius: 999px;
+  font-weight: 600;
+}
+
+.chip-ok {
+  background: rgba(34,197,94,0.18);
+  color: #22c55e;
+}
+
+.chip-warn {
+  background: rgba(250,204,21,0.2);
+  color: #facc15;
+}
+
+/* ======================================================
+   FORM
+====================================================== */
+.profile-form-card h2 {
+  font-size: 18px;
+  margin-bottom: 12px;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px 14px;
+}
+
+.field label {
+  font-size: 12px;
+  opacity: 0.7;
+}
+
+.field input {
+  padding: 6px 10px;
+  font-size: 13.5px;
+  border-radius: 10px;
+}
+
+body.dash-theme-dark .field input {
+  background: #0b1020;
+  border: 1px solid #2b3350;
+  color: #e5e7eb;
+}
+
+body.dash-theme-light .field input {
+  background: #ffffff;
+  border: 1px solid rgba(0,0,0,0.15);
+}
+
+/* ======================================================
+   BUTTONS (MODERN)
+====================================================== */
+.btn-primary {
+  background: linear-gradient(135deg, #38bdf8, #6366f1);
+  color: #fff;
+  padding: 9px 18px;
+  border-radius: 700px;
+    font-size: 14px;
+
+ 
+}
+
+.btn-primary:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 8px 30px rgba(99,102,241,0.35);
+}
+
+.btn-outline {
+  background: transparent;
+  border-radius: 999px;
+  padding: 8px 16px;
+    backdrop-filter: blur(8px);
+  font-size: 14px;
+}
+
+body.dash-theme-dark .btn-outline {
+  border: 1px solid rgba(148,163,184,0.4);
+  color: #e5e7eb;
+}
+
+body.dash-theme-light .btn-outline {
+  border: 1px solid rgba(0,0,0,0.2);
+  color: #0f172a;
+}
+
+/* ======================================================
+   ACTION BAR
+====================================================== */
+.form-actions {
+  margin-top: 16px;
+  display: flex;
+  justify-content: flex-end;
+}
+
+/* ======================================================
+   RESPONSIVE
+====================================================== */
+@media (max-width: 900px) {
+  .profile-layout {
+    grid-template-columns: 1fr;
+  }
+}

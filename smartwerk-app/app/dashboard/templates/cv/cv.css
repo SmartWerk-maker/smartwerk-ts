@@ -1,0 +1,362 @@
+/* ======================================================
+   ROOT LAYOUT
+====================================================== */
+
+
+.cv-container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 28px 32px 80px;
+}
+
+.cv-photo-upload {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.cv-photo {
+  width: 96px;
+  height: 96px;
+  border-radius: 14px;
+  background: var(--card-soft);
+  border: 1px dashed var(--line);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  overflow: hidden;
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+.cv-photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.contact {
+  font-size: 13px;
+  line-height: 1.8;
+  color: #1f2937; /* темніше */
+}
+
+/* ======================================================
+   HEADER
+====================================================== */
+
+.cv-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 24px;
+  margin-bottom: 28px;
+}
+
+.cv-header-left h1 {
+  font-size: 30px;
+  font-weight: 800;
+}
+
+.cv-subtitle {
+  margin-top: 6px;
+  font-size: 14px;
+  color: var(--text-muted);
+}
+
+/* ======================================================
+   MAIN 2-COLUMN LAYOUT
+====================================================== */
+
+.cv-layout {
+  display: grid;
+  grid-template-columns: 420px minmax(0, 1fr);
+  gap: 28px;
+  align-items: start;
+}
+
+/* ======================================================
+   LEFT COLUMN
+====================================================== */
+
+.cv-left {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+  position: sticky;
+  top: 24px;
+  align-self: start;
+}
+
+/* ======================================================
+   RIGHT COLUMN
+====================================================== */
+
+.cv-right {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+
+/* ======================================================
+   PERSONAL INFO
+====================================================== */
+
+.cv-personal {
+  background: linear-gradient(180deg, var(--card), var(--card-soft));
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  padding: 18px 20px;
+}
+
+.cv-personal-header h2 {
+  font-size: 16px;
+  font-weight: 700;
+  margin-bottom: 14px;
+}
+
+.cv-personal-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.cv-field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.cv-field--full {
+  
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.cv-field label {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.cv-field input {
+  padding: 10px 12px;
+  border-radius: 12px;
+  border: 1px solid var(--line);
+  background: var(--input-bg);
+  color: var(--text);
+}
+
+.cv-personal-preview {
+  margin-top: 14px;
+  padding-top: 12px;
+  border-top: 1px dashed var(--line);
+  font-size: 14px;
+  color: var(--text-muted);
+}
+
+/* ======================================================
+   BLOCKS
+====================================================== */
+
+.cv-blocks {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.cv-block {
+  background: linear-gradient(180deg, var(--card), var(--card-soft));
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  padding: 16px 18px;
+  transition: all 0.2s ease;
+}
+
+.cv-block--disabled {
+  opacity: 0.45;
+}
+
+.cv-block-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+
+.cv-block-title {
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.cv-block-actions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.cv-block-toggle {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  font-size: 18px;
+  opacity: 0.75;
+}
+
+/* ======================================================
+   EDITORS
+====================================================== */
+
+.cv-editor-text {
+  width: 100%;
+  border-radius: 14px;
+  border: 1px solid var(--line);
+  padding: 12px 14px;
+  font-size: 14px;
+  background: var(--input-bg);
+  color: var(--text);
+  resize: vertical;
+}
+
+.cv-editor-text:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(59,130,246,.18);
+}
+
+.cv-editor-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.cv-editor-list-item {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.cv-editor-list input {
+  flex: 1;
+  padding: 10px 12px;
+  border-radius: 12px;
+  border: 1px solid var(--line);
+  background: var(--input-bg);
+}
+
+.cv-editor-remove {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  color: var(--text-muted);
+}
+
+.cv-editor-add {
+  margin-top: 8px;
+  background: transparent;
+  border: none;
+  color: var(--primary);
+  font-weight: 600;
+  cursor: pointer;
+}
+
+/* ======================================================
+   AI PANEL
+====================================================== */
+
+.cv-ai-panel {
+  margin-top: 14px;
+  padding: 14px;
+  border-radius: 14px;
+  border: 1px solid var(--line);
+  background: var(--card-soft);
+}
+
+.ai-tip {
+  margin-bottom: 12px;
+  padding: 12px 14px;
+  border-radius: 12px;
+  font-size: 14px;
+}
+
+.ai-tip.success { background: rgba(34,197,94,.15); }
+.ai-tip.warning { background: rgba(245,158,11,.15); }
+.ai-tip.info    { background: rgba(59,130,246,.15); }
+
+/* ======================================================
+   ACTIONS (STICKY FOOTER)
+====================================================== */
+
+.cv-actions {
+  position: sticky;
+  bottom: 0;
+  margin-top: 40px;
+  padding: 16px;
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  background: linear-gradient(
+    180deg,
+    rgba(0,0,0,0),
+    var(--bg)
+  );
+  border-top: 1px dashed var(--line);
+  backdrop-filter: blur(6px);
+}
+
+.cv-actions .danger {
+  border-color: rgba(239, 68, 68, 0.5);
+  color: var(--danger);
+}
+
+/* ===============================
+   PERSONAL INFO (LEFT COLUMN)
+================================ */
+
+
+
+/* Обмежуємо великі поля зліва */
+.cv-personal textarea,
+.cv-personal .cv-editor-text {
+  min-height: 80px;
+  max-height: 120px;
+  resize: none;
+  line-height: 1.4;
+}
+
+/* Трохи компактніші інпути */
+.cv-personal input {
+  padding: 10px 12px;
+  font-size: 13px;
+}
+
+/* Preview компактніший */
+.cv-personal-preview {
+  margin-top: 12px;
+  padding-top: 10px;
+  border-top: 1px dashed var(--line);
+  font-size: 13px;
+  color: var(--text-muted);
+}
+.cv-left .cv-editor-text {
+  min-height: 72px;
+  max-height: 110px;
+}
+
+/* ======================================================
+   RESPONSIVE
+====================================================== */
+
+
+@media (max-width: 1100px) {
+  .cv-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .cv-left {
+    position: static;
+  }
+}

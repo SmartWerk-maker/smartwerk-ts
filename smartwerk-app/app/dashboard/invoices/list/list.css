@@ -1,0 +1,465 @@
+:root {
+  --bg: #0e1014;
+  --card: #1a1d2e;
+  --line: #2d3147;
+  --text: #f0f2f5;
+  --muted: #9aa3b2;
+  --accent: #3b79ff;
+  --accent-hover: #2a66db;
+  --danger: #ff4d4f;
+  --shadow: rgba(0, 0, 0, 0.25);
+  --flat-bg: #1e293b;
+  --flat-text: #f0f2f5;
+  --flat-border: #2d3147;
+}
+
+body {
+  margin: 0;
+  font-family: 'Segoe UI', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+}
+
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 1.5rem 0.5rem; /* Зменшено верхній та нижній відступ */
+  flex-wrap: wrap;
+}
+header h1 {
+  font-size: 24px;
+  margin: 0;
+}
+.header-actions {
+  display: flex;
+  gap: 10px;
+}
+.btn {
+  padding: 8px 16px;
+  background: var(--accent);
+  color: white;
+  border: none;
+  border-radius: 6px;
+  text-decoration: none;
+  cursor: pointer;
+  font-size: 14px;
+  box-shadow: 0 4px 10px var(--shadow);
+  transition: background 0.2s ease;
+}
+.btn:hover {
+  background: var(--accent-hover);
+}
+.btn-danger {
+  background: var(--danger);
+}
+.btn-danger:hover {
+  background: #d9363b;
+}
+
+main, .wrap {
+  width: 100%;
+  padding: 0 1.5rem 2rem;
+  box-sizing: border-box;
+}
+
+.filters label {
+  display: flex;
+  flex-direction: column;
+  font-size: 14px;
+  color: var(--muted);
+  flex: 1 1 180px;
+  min-width: 160px;
+}
+
+.filters input,
+.filters select {
+  margin-top: 4px;
+  padding: 8px 12px;
+  border-radius: 6px;
+  border: 1px solid var(--line);
+  background: var(--bg);
+  color: var(--text);
+  font-size: 14px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px; /* <-- більше відстані між From / To */
+  align-items: flex-end;
+  background: var(--card);
+  padding: 1rem;
+  border-radius: 12px;
+  border: 1px solid var(--line);
+  margin-bottom: 1.5rem;
+}
+
+.filters button {
+  padding: 8px 12px;
+  font-size: 14px;
+  background: var(--accent);
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.filters button:hover {
+  background: var(--accent-hover);
+}
+.filters h3 {
+  grid-column: 1/-1;
+  font-size: 18px;
+  margin-bottom: 0.5rem;
+}
+.flatpickr-input {
+  cursor: pointer;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  overflow: hidden;
+  width: 100%;
+  margin: 1.5rem 0;
+}
+table th, table td {
+  padding: 12px 14px;
+  text-align: left;
+  font-size: 14px;
+  border-bottom: 1px solid var(--line);
+}
+table th {
+  background: var(--card);
+  color: var(--muted);
+  font-weight: 600;
+}
+
+table td button {
+  padding: 6px 10px;
+  font-size: 13px;
+  border-radius: 6px;
+  margin-right: 4px;
+  border: none;
+  cursor: pointer;
+  background: var(--accent);
+  color: white;
+  transition: background 0.2s ease;
+}
+table td button:hover {
+  background: var(--accent-hover);
+}
+table td button.btn-danger {
+  background: var(--danger);
+}
+table td button.btn-danger:hover {
+  background: #d9363b;
+}
+
+footer {
+  text-align: center;
+  font-size: 13px;
+  color: var(--muted);
+  margin: 2rem 0;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .filters {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+
+  .header-actions {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .header-actions a {
+    width: 100%;
+    text-align: center;
+  }
+
+  table {
+    font-size: 13px;
+  }
+
+  table td button {
+    margin-top: 4px;
+    display: block;
+    width: 100%;
+  }
+}
+.flatpickr-input {
+  padding: 10px 14px;
+  border-radius: 6px;
+  border: 1px solid var(--line);
+  background: var(--bg);
+  color: var(--text);
+  font-size: 14px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.flatpickr-input::placeholder {
+  color: var(--muted);
+  opacity: 1;
+}
+.filters-bar {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 1rem 1.5rem;
+  margin-bottom: 1.8rem;
+  box-shadow: 0 2px 8px var(--shadow);
+}
+
+.filters-bar h3 {
+  margin: 0 0 1rem;
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--muted);
+}
+
+.filters-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.filters-row input,
+.filters-row select {
+  padding: 8px 12px;
+  background: var(--bg);
+  color: var(--text);
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  font-size: 13px;
+}
+
+.filters-row input[type="date"] {
+  min-width: 140px;
+}
+
+.filters-row select {
+  min-width: 160px;
+}
+
+.filters-row input[type="text"] {
+  min-width: 200px;
+}
+
+.filters-row .btn.reset {
+  background: transparent;
+  border: 1px solid var(--line);
+  padding: 8px 14px;
+  font-size: 13px;
+  color: var(--muted);
+  border-radius: 6px;
+}
+
+.filters-row .btn.reset:hover {
+  background: var(--line);
+  color: var(--text);
+}
+
+/* === FLATPICKR DARK THEME FIX === */
+.flatpickr-calendar {
+  background: var(--flat-bg);
+  color: var(--flat-text);
+  border: 1px solid var(--flat-border);
+  box-shadow: 0 0 12px var(--shadow);
+  border-radius: 10px;
+  font-family: 'Segoe UI', sans-serif;
+  z-index: 9999;
+}
+
+.flatpickr-day {
+  background: transparent;
+  color: #f0f2f5;
+  border-radius: 6px;
+}
+
+.flatpickr-day.today {
+   border: 1px solid var(--accent);
+}
+
+.flatpickr-day.selected {
+  background: var(--accent);
+  color: white;
+}
+
+.flatpickr-day:hover {
+  background: #334155;
+}
+
+.flatpickr-months,
+.flatpickr-weekdays {
+  background: var(--card);
+  color: var(--text);
+}
+.js-date {
+  max-width: 180px; /* або 140px */
+  width: 100%;
+  box-sizing: border-box;
+}
+section table {
+  width: 100%;
+  border-collapse: collapse;
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px var(--shadow);
+  margin-top: 1rem;
+}
+
+section table th,
+section table td {
+  padding: 12px 14px;
+  text-align: left;
+  font-size: 14px;
+  border-bottom: 1px solid var(--line);
+  color: var(--text);
+}
+
+section table th {
+  background: var(--card);
+  color: var(--muted);
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 13px;
+  letter-spacing: 0.5px;
+}
+
+/* Actions column styling */
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.actions .btn {
+  padding: 6px 10px;
+  font-size: 13px;
+  border-radius: 6px;
+  background: var(--accent);
+  color: white;
+  border: none;
+  cursor: pointer;
+  transition: background 0.2s ease, transform 0.2s ease;
+  box-shadow: 0 2px 6px var(--shadow);
+  white-space: nowrap;
+}
+
+.actions .btn:hover {
+  background: var(--accent-hover);
+  transform: translateY(-1px);
+}
+
+.actions .btn-danger {
+  background: var(--danger);
+}
+
+.actions .btn-danger:hover {
+  background: #d9363b;
+}
+td select {
+  padding: 6px 10px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  border: 1px solid transparent;
+  background-color: var(--card);
+  color: var(--text);
+  transition: border-color 0.2s ease;
+  text-transform: capitalize;
+  
+}
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+main {
+  flex: 1;
+}
+
+footer {
+  text-align: center;
+  font-size: 13px;
+  color: var(--muted);
+  padding: 1rem;
+  background: transparent;
+}
+
+/* LIGHT THEME */
+.theme-light {
+  --bg: #f1f5f9;
+  --text: #1e293b;
+  --card: #ffffff;
+  --accent: #3b82f6;
+  --accent-hover: #2563eb;
+  --danger: #ef4444;
+  --muted: #64748b;
+  --line: #e2e8f0;
+  --shadow: rgba(0, 0, 0, 0.1);
+  --panel-bg: #f8fafc;
+  --flat-bg: #ffffff;
+  --flat-text: #1e293b;
+  --flat-border: #e2e8f0;
+}
+input,
+textarea,
+select {
+  background-color: var(--card);
+  color: var(--text);
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  padding: 8px 12px;
+  font-size: 14px;
+  transition: border 0.2s, background 0.2s;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+  border-color: var(--accent);
+  outline: none;
+  background-color: var(--panel-bg);
+}
+
+button {
+  background-color: var(--accent);
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+button:hover {
+  background-color: var(--accent-hover);
+}

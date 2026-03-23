@@ -1,0 +1,252 @@
+/* =========== GLOBAL =========== */
+.register-page {
+  margin: 0;
+  padding: 0;
+  font-family: 'Segoe UI', sans-serif;
+  color: #fff;
+  min-height: 100vh;
+  position: relative;
+}
+
+/* Background image */
+.background {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: url("/assets/img/amsterdam-night.jpg") no-repeat center center fixed;
+  background-size: cover;
+  z-index: -1;
+  filter: brightness(0.85);
+}
+
+/* =========== TOPBAR =========== */
+.topbar {
+  background: rgba(0, 0, 0, 0.6);
+  padding: 12px 24px;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  backdrop-filter: blur(6px);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}
+
+.brand {
+  font-size: 20px;
+  color: #fff;
+  font-weight: bold;
+  text-decoration: none;
+}
+
+/* =========== REGISTER CARD =========== */
+.register-card {
+  width: 500px;
+  max-width: 90%;
+  margin: 90px auto;
+  padding: 32px 28px;
+  background: rgba(0, 0, 0, 0.55);
+  border-radius: 16px;
+  backdrop-filter: blur(8px);
+  box-shadow: 0 0 30px rgba(0, 0, 0, 0.6);
+  animation: fadeInUp 0.7s ease-out;
+}
+
+.register-card h2 {
+  margin-top: 0;
+  margin-bottom: 14px;
+  font-size: 28px;
+  font-weight: 600;
+  text-align: center;
+}
+
+/* =========== INPUTS =========== */
+.register-card input[type="email"],
+.register-card input[type="password"] {
+  width: 100%;
+  padding: 12px 14px;
+  border: none;
+  border-radius: 8px;
+  font-size: 15px;
+  background: rgba(255, 255, 255, 0.12);
+  color: #fff;
+  margin-bottom: 15px;
+  outline: none;
+  transition: background 0.3s;
+}
+
+.register-card input:focus {
+  background: rgba(255, 255, 255, 0.22);
+}
+
+/* =========== SWITCH (checkbox) =========== */
+.form-check {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 14px;
+  margin-bottom: 20px;
+}
+
+.form-check a {
+  color: #60a5fa;
+  text-decoration: none;
+}
+
+.form-check a:hover {
+  text-decoration: underline;
+}
+
+/* Toggle switch */
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 46px;
+  height: 24px;
+}
+
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  background-color: #ccc;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  transition: 0.4s;
+  border-radius: 24px;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 18px;
+  width: 18px;
+  left: 3px;
+  bottom: 3px;
+  background-color: white;
+  border-radius: 50%;
+  transition: 0.4s;
+}
+
+.switch input:checked + .slider {
+  background-color: #2563eb;
+}
+
+.switch input:checked + .slider:before {
+  transform: translateX(22px);
+}
+
+/* =========== BUTTONS =========== */
+.btn-main {
+  width: 100%;
+  background: #2563eb;
+  color: white;
+  border: none;
+  padding: 12px 18px;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  margin-top: 6px;
+  transition: background 0.3s;
+}
+
+.btn-main:hover {
+  background: #1e40af;
+}
+
+/* Google button */
+.btn-google {
+  margin-top: 14px;
+  width: 100%;
+  background: white;
+  color: #333;
+  padding: 11px 16px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  font-size: 15px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.btn-google:hover {
+  background: #f3f3f3;
+}
+
+/* =========== MESSAGES =========== */
+.error-box,
+.ok-box {
+  padding: 10px 14px;
+  border-radius: 8px;
+  font-size: 14px;
+  margin-bottom: 15px;
+  animation: fadeIn 0.3s ease-in;
+}
+
+.error-box {
+  background: #fee2e2;
+  color: #b91c1c;
+  border: 1px solid #fca5a5;
+}
+
+.ok-box {
+  background: #dcfce7;
+  color: #15803d;
+  border: 1px solid #86efac;
+}
+
+/* Footer links */
+.footer-links {
+  margin-top: 18px;
+  font-size: 15px;
+  text-align: center;
+  color: #ddd;
+}
+
+.footer-links a {
+  color: #60a5fa;
+  text-decoration: none;
+}
+
+.footer-links a:hover {
+  text-decoration: underline;
+}
+
+/* =========== Animations =========== */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* =========== RESPONSIVE =========== */
+@media (max-width: 480px) {
+  .register-card {
+    padding: 24px 20px;
+  }
+
+  .btn-main,
+  .btn-google {
+    font-size: 15px;
+  }
+}
