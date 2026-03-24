@@ -1,19 +1,20 @@
 import Stripe from "stripe";
 
-let stripe: Stripe | null = null;
+let stripeInstance: Stripe | null = null;
 
-export function getStripe() {
-  if (!stripe) {
-    const key = process.env.STRIPE_SECRET_KEY;
+export function getStripe(): Stripe {
+  if (stripeInstance) return stripeInstance;
 
-    if (!key) {
-      throw new Error("Stripe not configured");
-    }
+  const key = process.env.STRIPE_SECRET_KEY;
 
-    stripe = new Stripe(key, {
-      apiVersion: "2024-06-20",
-    });
+  if (!key) {
+    console.warn("⚠️ Stripe not configured");
+    throw new Error("Stripe not configured");
   }
 
-  return stripe;
+  stripeInstance = new Stripe(key, {
+    apiVersion: "2024-06-20",
+  });
+
+  return stripeInstance;
 }

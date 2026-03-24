@@ -9,15 +9,14 @@ const firebaseConfig = {
   storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET,
   messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
   appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
-  measurementId: process.env.NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID,
 };
 
 const missingKeys = Object.entries(firebaseConfig)
   .filter(([, value]) => !value)
   .map(([key]) => key);
 
-if (missingKeys.length > 0 && typeof window !== "undefined") {
-  throw new Error(...)
+if (missingKeys.length > 0) {
+  console.warn("⚠️ Missing Firebase public env vars:", missingKeys);
 }
 
 const app = getApps().length > 0 ? getApp() : initializeApp(firebaseConfig);

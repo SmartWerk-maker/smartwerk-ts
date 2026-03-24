@@ -6,7 +6,7 @@ import { onAuthStateChanged } from "firebase/auth";
 
 import { auth } from "@/firebase";
 import { useLanguage } from "@/app/providers/LanguageProvider";
-import { useTranslation, type TranslationDictionary } from "@/app/i18n";
+import { useTranslation, type TranslationDictionary } from "app/i18n";
 import { useAnalytics } from "./hooks/useAnalytics";
 
 import AnalyticsFilters from "./components/AnalyticsFilters";

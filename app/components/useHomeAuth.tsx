@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { auth } from "";
+import { auth } from "firebase";
 import { onAuthStateChanged, User } from "firebase/auth";
 
 export function useHomeAuth() {
