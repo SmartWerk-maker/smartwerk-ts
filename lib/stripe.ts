@@ -1,11 +1,19 @@
 import Stripe from "stripe";
 
-const stripeSecretKey = process.env.STRIPE_SECRET_KEY;
+let stripe: Stripe | null = null;
 
-if (!stripeSecretKey) {
-  throw new Error("Missing required server env var: STRIPE_SECRET_KEY");
+export function getStripe() {
+  if (!stripe) {
+    const key = process.env.STRIPE_SECRET_KEY;
+
+    if (!key) {
+      throw new Error("Stripe not configured");
+    }
+
+    stripe = new Stripe(key, {
+      apiVersion: "2024-06-20",
+    });
+  }
+
+  return stripe;
 }
-
-export const stripe = new Stripe(stripeSecretKey, {
-  apiVersion: "2024-06-20",
-});

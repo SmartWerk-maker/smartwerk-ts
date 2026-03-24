@@ -1,0 +1,1 @@
+(globalThis.TURBOPACK||(globalThis.TURBOPACK=[])).push(["object"==typeof document?document.currentScript:void 0,18566,(o,r,e)=>{r.exports=o.r(76562)},1531,o=>{"use strict";o.i(43476),o.i(71645);let r=Error("Cannot find module '@/app/providers/LanguageProvider'");throw r.code="MODULE_NOT_FOUND",r}]);

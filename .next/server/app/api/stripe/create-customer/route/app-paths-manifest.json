@@ -1,0 +1,3 @@
+{
+  "/api/stripe/create-customer/route": "app/api/stripe/create-customer/route.js"
+}

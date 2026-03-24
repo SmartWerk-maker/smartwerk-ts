@@ -16,8 +16,8 @@ const missingKeys = Object.entries(firebaseConfig)
   .filter(([, value]) => !value)
   .map(([key]) => key);
 
-if (missingKeys.length > 0) {
-  throw new Error(`Missing Firebase public env vars: ${missingKeys.join(", ")}`);
+if (missingKeys.length > 0 && typeof window !== "undefined") {
+  throw new Error(...)
 }
 
 const app = getApps().length > 0 ? getApp() : initializeApp(firebaseConfig);
