@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
-import { stripe } from "@/lib/stripe";
+import { getStripe } from "@/lib/stripe";
+const stripe = getStripe();
 
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";

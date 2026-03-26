@@ -11,7 +11,7 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Missing token" }, { status: 400 });
     }
 
-    const { getAdminAuth, getAdminDb } = await import("firebase-admin.ts");
+    const { getAdminAuth, getAdminDb } = await import("@/lib/firebase-admin");
     const auth = getAdminAuth();
     const db = getAdminDb();
 

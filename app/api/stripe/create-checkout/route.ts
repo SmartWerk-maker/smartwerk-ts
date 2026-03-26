@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
-import { stripe } from "@/lib/stripe";
+import { getStripe } from "@/lib/stripe";
+const stripe = getStripe();
 import { getUser } from "@/lib/billing";
 
 export const dynamic = "force-dynamic";
@@ -14,7 +15,7 @@ export async function POST(req: Request) {
     if (!token) return NextResponse.json({ error: "Missing authentication token" }, { status: 400 });
     if (!priceId) return NextResponse.json({ error: "Missing priceId" }, { status: 400 });
 
-    const { getAdminAuth } = await import("@/lib/firebase-admin");
+    const { getAdminAuth } = await import("firebase-admin");
     const auth = getAdminAuth();
     const decoded = await auth.verifyIdToken(token);
 

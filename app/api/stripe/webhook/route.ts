@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import Stripe from "stripe";
-import { stripe } from "@/lib/stripe";
+import { getStripe } from "@/lib/stripe";
+const stripe = getStripe();
 import { updateSubscriptionStatus } from "lib/billing";
 
 export const dynamic = "force-dynamic";
