@@ -15,7 +15,7 @@ export async function POST(req: Request) {
     if (!token) return NextResponse.json({ error: "Missing authentication token" }, { status: 400 });
     if (!priceId) return NextResponse.json({ error: "Missing priceId" }, { status: 400 });
 
-    const { getAdminAuth } = await import("firebase-admin");
+    const { getAdminAuth } = await import("@/lib/firebase-admin");
     const auth = getAdminAuth();
     const decoded = await auth.verifyIdToken(token);
 
