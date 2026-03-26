@@ -1,5 +1,5 @@
 "use client";
-import { usePlan } from "@/app/hooks/usePlan";
+import { usePlan } from "@/hooks/usePlan";
 
 export default function ProFeature() {
   const plan = usePlan();

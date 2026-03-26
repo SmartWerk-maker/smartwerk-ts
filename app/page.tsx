@@ -3,7 +3,7 @@
 import "./home.css";
 import Image from "next/image";
 import Link from "next/link";
-import { useHomeAuth } from "@/app/components/useHomeAuth";
+import { useHomeAuth } from "@/components/useHomeAuth";
 
 export default function HomePage() {
   const { isLogged } = useHomeAuth(); // null | true | false

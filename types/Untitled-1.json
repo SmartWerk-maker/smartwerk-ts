@@ -310,7 +310,7 @@
 			},
 			{
 				"name": "useHomeAuth",
-				"module": "@/app/components/useHomeAuth",
+				"module": "@/components/useHomeAuth",
 				"isDefault": false
 			}
 		],
@@ -611,7 +611,7 @@
 		"usePlan": [
 			{
 				"name": "usePlan",
-				"module": "@/app/hooks/usePlan",
+				"module": "@/hooks/usePlan",
 				"isDefault": false
 			},
 			{
