@@ -1,5 +1,9 @@
 import type { Metadata } from "next";
-import AnalyticsClient from "./AnalyticsClient";
+import dynamic from "next/dynamic";
+
+const AnalyticsClient = dynamic(() => import("./AnalyticsClient"), {
+  ssr: false, // 🔥 ВАЖЛИВО — вимикає SSR
+});
 
 export const metadata: Metadata = {
   title: "📊 SmartWerk — Analytics",
