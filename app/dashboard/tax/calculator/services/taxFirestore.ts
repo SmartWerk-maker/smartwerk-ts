@@ -11,7 +11,7 @@ import {
   deleteDoc,
 } from "firebase/firestore";
 import { TaxInput } from "../types/TaxInput";
-import { db } from "@/firebase";
+import { db } from "@/lib/firebase";
 import { TaxResultSuccess } from "../types/TaxResult";
 
 /* ======================

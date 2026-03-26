@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { auth, db } from "@/firebase";
+import { auth, db } from "@/lib/firebase";
 import { doc, setDoc } from "firebase/firestore";
 import {
   createUserWithEmailAndPassword,

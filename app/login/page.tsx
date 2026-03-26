@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { auth, db } from "@/firebase";
+import { auth, db } from "@/lib/firebase";
 import { doc, setDoc, getDoc } from "firebase/firestore";
 
 import {

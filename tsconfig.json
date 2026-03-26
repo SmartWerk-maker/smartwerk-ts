@@ -24,7 +24,7 @@
       "@/lib/*": ["lib/*"],
       "@/hooks/*": ["app/hooks/*"],
       "@/contexts/*": ["app/contexts/*"],
-      "@/firebase/*": ["firebase/*"],
+      "@/lib/firebase/*": ["firebase/*"],
       "@/utils/*": ["utils/*"]
     },
 

@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { auth, db } from "@/firebase";
+import { auth, db } from "@/lib/firebase";
 import { doc, onSnapshot } from "firebase/firestore";
 
 export function usePlan() {

@@ -13,7 +13,7 @@ import {
 } from "firebase/firestore";
 import Chart from "chart.js/auto";
 
-import { auth, db } from "@/firebase";
+import { auth, db } from "@/lib/firebase";
 import { useLanguage } from "@/app/providers/LanguageProvider";
 import { useTranslation } from "@/app/i18n";
 import { generateContractPdf } from "@/lib/utils/contracts/generateContractPdf";

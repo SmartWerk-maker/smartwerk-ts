@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { auth } from "@/firebase";
+import { auth } from "@/lib/firebase";
 
 export default function BillingPage() {
   const [loading, setLoading] = useState(false);

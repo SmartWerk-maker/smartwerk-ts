@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { collection, getDocs } from "firebase/firestore";
-import { auth, db } from "@/firebase";
+import { auth, db } from "@/lib/firebase";
 
 import { filterByPeriod } from "../utils/period";
 import { normalizeInvoice, normalizeExpense } from "../utils/normalize";

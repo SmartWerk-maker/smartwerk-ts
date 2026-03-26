@@ -12,7 +12,7 @@ import {
   query,
 } from "firebase/firestore";
 
-import { auth, db } from "@/firebase";
+import { auth, db } from "@/lib/firebase";
 import { useLanguage } from "@/app/providers/LanguageProvider";
 import { useTranslation } from "@/app/i18n";
 

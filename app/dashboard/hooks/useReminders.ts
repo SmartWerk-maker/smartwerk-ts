@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { collection, onSnapshot, orderBy, query } from "firebase/firestore";
-import { db } from "@/firebase";
+import { db } from "@/lib/firebase";
 
 export type ReminderStatus = "draft" | "sent" | "paid";
 

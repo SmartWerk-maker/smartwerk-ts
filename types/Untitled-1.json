@@ -52,7 +52,7 @@
 		"db": [
 			{
 				"name": "db",
-				"module": "@/firebase",
+				"module": "@/lib/firebase",
 				"isDefault": false
 			},
 			{
@@ -70,7 +70,7 @@
 		"auth": [
 			{
 				"name": "auth",
-				"module": "@/firebase",
+				"module": "@/lib/firebase",
 				"isDefault": false
 			},
 			{

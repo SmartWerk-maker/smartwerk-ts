@@ -4,7 +4,7 @@ import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { onAuthStateChanged } from "firebase/auth";
 
-import { auth } from "@/firebase";
+import { auth } from "@/lib/firebase";
 import { useLanguage } from "@/app/providers/LanguageProvider";
 import { useTranslation, type TranslationDictionary } from "app/i18n";
 import { useAnalytics } from "./hooks/useAnalytics";

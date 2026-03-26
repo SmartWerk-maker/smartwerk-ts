@@ -12,7 +12,7 @@ import {
   setDoc,
 } from "firebase/firestore";
 
-import { auth, db } from "@/firebase";
+import { auth, db } from "@/lib/firebase";
 
 
 import { useLanguage } from "@/app/providers/LanguageProvider";

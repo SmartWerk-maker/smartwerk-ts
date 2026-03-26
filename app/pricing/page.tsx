@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { auth } from "@/firebase";
+import { auth } from "@/lib/firebase";
 import "./pricing.css"; // підключення твого стилю
 
 export default function PricingPage() {

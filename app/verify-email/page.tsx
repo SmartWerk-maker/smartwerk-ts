@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { auth } from "@/firebase";
+import { auth } from "@/lib/firebase";
 import {
   onAuthStateChanged,
   sendEmailVerification,
@@ -12,7 +12,7 @@ import {
   setDoc,
   serverTimestamp,
 } from "firebase/firestore";
-import { db } from "@/firebase";
+import { db } from "@/lib/firebase";
 
 import "./verify-email.css";
 
