@@ -39,43 +39,51 @@ interface BillingPortalResponse {
 }
 
 type ProfileI18n = {
-  loading?: string;
-  loadError?: string;
-  saved?: string;
+  actions?: {
+    back?: string;
+    save?: string;
+    saving?: string;
+  };
 
-  backToDashboard?: string;
+  sections?: {
+    account?: string;
+    basic?: string;
+    plan?: string;
+    details?: string;
+  };
 
-  account?: string;
-  basic?: string;
-  status?: string;
-  emailVerified?: string;
-  emailNotVerified?: string;
-  resendVerification?: string;
+  status?: {
+    label?: string;
+    emailVerified?: string;
+    emailNotVerified?: string;
+    resendVerification?: string;
+  };
 
-  plan?: string;
-  currentPlan?: string;
-  trialStatus?: string;
-  upgrade?: string;
-  manageBilling?: string;
+  plan?: {
+    current?: string;
+    trialStatus?: string;
+    upgrade?: string;
+    manageBilling?: string;
+  };
 
-   planFree?: string;
-  planTrial?: string;
-  planPro?: string;
+  fields?: {
+    fullName?: string;
+    fullNamePlaceholder?: string;
+    companyName?: string;
+    companyNamePlaceholder?: string;
+    phone?: string;
+    city?: string;
+    country?: string;
+    kvk?: string;
+    iban?: string;
+    vat?: string;
+  };
 
-  details?: string;
-
-  fullName?: string;
-  fullNamePlaceholder?: string;
-  companyName?: string;
-  companyNamePlaceholder?: string;
-  phone?: string;
-  city?: string;
-  country?: string;
-  kvk?: string;
-  iban?: string;
-  vat?: string;
-
-  save?: string;
+  messages?: {
+    loading?: string;
+    saved?: string;
+    loadError?: string;
+  };
 };
 
 type CommonI18n = {
@@ -179,7 +187,7 @@ const tCommon: CommonI18n = tRoot.common ?? {};
         setVatNumber(merged.vatNumber || "");
       } catch (err) {
         console.error("Profile load error:", err);
-      showError("Could not load profile.");
+      showError(tProfile.messages?.loadError ?? "Could not load profile.");
       } finally {
         setLoading(false);
       }
@@ -262,7 +270,7 @@ const tCommon: CommonI18n = tRoot.common ?? {};
 
       if (!data.ok) return showError("Could not save profile.");
 
-     showSuccess(tProfile.saved ?? "Profile saved.");
+    showSuccess(tProfile.messages?.saved ?? "Profile saved.");
       setProfile((p) => ({
   ...p,
   fullName,
@@ -319,7 +327,7 @@ const tCommon: CommonI18n = tRoot.common ?? {};
     return (
       <div className="profile-page loading-state">
         <div className="profile-card">
-          <p>{tProfile.loading ?? "Loading profile…"}</p>
+         <p>{tProfile.messages?.loading ?? "Loading profile…"}</p>
         </div>
       </div>
     );
@@ -331,11 +339,11 @@ const tCommon: CommonI18n = tRoot.common ?? {};
 
   const planLabel =
   plan === "FREE"
-    ? tProfile.planFree ?? "FREE"
+    ? "FREE"
     : plan === "TRIAL"
-    ? tProfile.planTrial ?? "TRIAL"
+    ? "TRIAL"
     : plan === "PRO"
-    ? tProfile.planPro ?? "PRO"
+    ? "PRO"
     : plan;
 
   return (
@@ -344,31 +352,30 @@ const tCommon: CommonI18n = tRoot.common ?? {};
     
       <div className="profile-topbar">
         <Link href="/dashboard" className="link-ghost">
-          ← {tCommon.backToDashboard ?? "Back to Dashboard"}
+          ← {tProfile.actions?.back ?? "Back to Dashboard"}
         </Link>
       </div>
 
     <main className="profile-layout">
       {/* SUMMARY */}
       <section className="profile-summary">
-        <h2>{tProfile.account ?? "Account"}</h2>
-
+       <h2>{tProfile.sections?.account ?? "Account"}</h2>
         {/* BASIC */}
         <div className="summary-block">
-          <h3>{tProfile.basic ?? "Basic"}</h3>
+         <h3>{tProfile.sections?.basic ?? "Basic"}</h3>
 
           <p className="summary-email">{firebaseUser.email}</p>
 
           <p className="summary-label">
-            {tProfile.status ?? "Status"}:{" "}
+           {tProfile.status?.label ?? "Status"}:{" "}
             <span
               className={
                 emailVerified ? "chip chip-ok" : "chip chip-warn"
               }
             >
               {emailVerified
-                ? tProfile.emailVerified ?? "Email verified"
-                : tProfile.emailNotVerified ?? "Email not verified"}
+                ? tProfile.status?.emailVerified ?? "Email verified"
+                : tProfile.status?.emailNotVerified ?? "Email not verified"}
             </span>
           </p>
 
@@ -378,17 +385,17 @@ const tCommon: CommonI18n = tRoot.common ?? {};
               className="btn-secondary"
               onClick={resendVerification}
             >
-              {tProfile.resendVerification ?? "Resend verification email"}
+              {tProfile.status?.resendVerification ?? "Resend verification email"}
             </button>
           )}
         </div>
 
         {/* PLAN */}
         <div className="summary-block">
-          <h3>{tProfile.plan ?? "Plan"}</h3>
+          <h3>{tProfile.sections?.plan ?? "Plan"}</h3>
 
           <p className="summary-label">
-            {tProfile.currentPlan ?? "Current plan"}:{" "}
+            {tProfile.plan?.current ?? "Current plan"}:{" "}
             <span
               className={
                 plan === "PRO"
@@ -404,14 +411,14 @@ const tCommon: CommonI18n = tRoot.common ?? {};
 
           {trialInfo && (
             <p className="summary-trial">
-              {tProfile.trialStatus ?? "Trial status"}:{" "}
+              {tProfile.plan?.trialStatus ?? "Trial status"}:{" "}
               <strong>{trialInfo}</strong>
             </p>
           )}
 
           <div className="summary-actions">
             <Link href="/pricing" className="btn-primary">
-              {tProfile.upgrade ?? "Upgrade / Change plan"}
+              {tProfile.plan?.upgrade ?? "Upgrade / Change plan"}
             </Link>
 
             <button
@@ -422,7 +429,7 @@ const tCommon: CommonI18n = tRoot.common ?? {};
             >
               {billingLoading
                 ? tCommon.opening ?? "Opening…"
-                : tProfile.manageBilling ?? "Manage billing"}
+                : tProfile.plan?.manageBilling ?? "Manage billing"}
             </button>
           </div>
         </div>
@@ -430,7 +437,7 @@ const tCommon: CommonI18n = tRoot.common ?? {};
 
       {/* FORM */}
       <section className="profile-form-card">
-        <h2>{tProfile.details ?? "Profile details"}</h2>
+       <h2>{tProfile.sections?.details ?? "Profile details"}</h2>
 
         {error && <div className="alert alert-error">{error}</div>}
         {ok && <div className="alert alert-ok">{ok}</div>}
@@ -438,30 +445,30 @@ const tCommon: CommonI18n = tRoot.common ?? {};
         <form onSubmit={handleSave} className="profile-form">
           <div className="form-grid">
             <div className="field">
-              <label>{tProfile.fullName ?? "Full name"}</label>
+              <label>{tProfile.fields?.fullName ?? "Full name"}</label>
               <input
                 type="text"
                 value={fullName}
                 onChange={(e) => setFullName(e.target.value)}
-                placeholder={tProfile.fullNamePlaceholder ?? "Your full name"}
+                placeholder={tProfile.fields?.fullNamePlaceholder ?? "Your full name"}
               />
             </div>
 
             <div className="field">
-              <label>{tProfile.companyName ?? "Company name"}</label>
+              <label>{tProfile.fields?.companyName ?? "Company name"}</label>
               <input
                 type="text"
                 value={companyName}
                 onChange={(e) => setCompanyName(e.target.value)}
                 placeholder={
-                  tProfile.companyNamePlaceholder ??
+                tProfile.fields?.companyNamePlaceholder ??
                   "Business / brand name"
-                }
+                    }
               />
             </div>
 
             <div className="field">
-              <label>{tProfile.phone ?? "Phone"}</label>
+              <label>{tProfile.fields?.phone ?? "Phone"}</label>
               <input
                 type="tel"
                 value={phone}
@@ -471,7 +478,7 @@ const tCommon: CommonI18n = tRoot.common ?? {};
             </div>
 
             <div className="field">
-              <label>{tProfile.city ?? "City"}</label>
+              <label>{tProfile.fields?.city ?? "City"}</label>
               <input
                 type="text"
                 value={city}
@@ -481,7 +488,7 @@ const tCommon: CommonI18n = tRoot.common ?? {};
             </div>
 
             <div className="field">
-              <label>{tProfile.country ?? "Country"}</label>
+              <label>{tProfile.fields?.country ?? "Country"}</label>
               <input
                 type="text"
                 value={country}
@@ -491,7 +498,7 @@ const tCommon: CommonI18n = tRoot.common ?? {};
             </div>
 
             <div className="field">
-              <label>{tProfile.kvk ?? "KVK"}</label>
+              <label>{tProfile.fields?.kvk ?? "KVK"}</label>
               <input
                 type="text"
                 value={kvk}
@@ -501,7 +508,7 @@ const tCommon: CommonI18n = tRoot.common ?? {};
             </div>
 
             <div className="field">
-              <label>{tProfile.iban ?? "IBAN"}</label>
+              <label>{tProfile.fields?.iban ?? "IBAN"}</label>
               <input
                 type="text"
                 value={iban}
@@ -511,7 +518,7 @@ const tCommon: CommonI18n = tRoot.common ?? {};
             </div>
 
             <div className="field">
-              <label>{tProfile.vat ?? "VAT / BTW number"}</label>
+              <label>{tProfile.fields?.vat ?? "VAT / BTW number"}</label>
               <input
                 type="text"
                 value={vatNumber}
@@ -529,7 +536,7 @@ const tCommon: CommonI18n = tRoot.common ?? {};
             >
               {saving
                 ? tCommon.saving ?? "Saving…"
-                : tProfile.save ?? "Save profile"}
+                : tProfile.actions?.save ?? "Save profile"}
             </button>
           </div>
         </form>

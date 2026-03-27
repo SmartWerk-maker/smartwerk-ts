@@ -827,6 +827,11 @@
     "plan": "Plan",
     "details": "Profile details"
   },
+  "common": {
+  "backToDashboard": "Back to Dashboard",
+  "saving": "Saving…",
+  "opening": "Opening…"
+},
 
   "status": {
     "label": "Status",
