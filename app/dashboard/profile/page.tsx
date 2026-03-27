@@ -99,7 +99,11 @@ export default function ProfilePage() {
   const { language } = useLanguage();
  
 
-const tRoot = (useTranslation(language) ?? {}) as {
+const tRootRaw = useTranslation(language);
+
+const tRoot = (tRootRaw && typeof tRootRaw === "object"
+  ? tRootRaw
+  : {}) as {
   profile?: ProfileI18n;
   common?: CommonI18n;
 };
