@@ -876,79 +876,55 @@
     }
   },
   "profile": {
-    "title": "Профиль",
-    "loading": "Загрузка профиля…",
-    "loadError": "Не удалось загрузить профиль.",
-    "saved": "Профиль сохранён.",
+    "title": "Профиль", 
     "account": "Аккаунт",
     "basic": "Основное",
     "status": {
-      "label": "TODO_TRANSLATE: Status",
-      "emailVerified": "TODO_TRANSLATE: Email verified",
-      "emailNotVerified": "TODO_TRANSLATE: Email not verified",
-      "resendVerification": "TODO_TRANSLATE: Resend verification email"
+      "label": "статус",
+      "emailVerified": "Email подтверждён",
+      "emailNotVerified": "Email не подтверждён",
+      "resendVerification": "Отправить письмо повторно"
     },
-    "emailVerified": "Email подтверждён",
-    "emailNotVerified": "Email не подтверждён",
-    "resendVerification": "Отправить письмо повторно",
     "plan": {
-      "current": "TODO_TRANSLATE: Current plan",
-      "trialStatus": "TODO_TRANSLATE: Trial status",
-      "upgrade": "TODO_TRANSLATE: Upgrade / Change plan",
-      "manageBilling": "TODO_TRANSLATE: Manage billing"
+      "current": "Текущий тариф",
+      "trialStatus": "Статус пробного периода",
+      "upgrade": "Обновить / изменить тариф",
+      "manageBilling": "Управление оплатой"
     },
-    "currentPlan": "Текущий тариф",
-    "trialStatus": "Статус пробного периода",
-    "upgrade": "Обновить / изменить тариф",
-    "manageBilling": "Управление оплатой",
     "planFree": "Бесплатный",
     "planTrial": "Пробный",
     "planPro": "Профессиональный",
-    "details": "Данные профиля",
-    "fullName": "Полное имя",
-    "fullNamePlaceholder": "Ваше полное имя",
-    "companyName": "Название компании",
-    "companyNamePlaceholder": "Бизнес / бренд",
-    "phone": "Телефон",
-    "city": "Город",
-    "country": "Страна",
-    "kvk": "KVK",
-    "iban": "IBAN",
-    "vat": "Номер НДС / BTW",
-    "save": "Сохранить профиль",
+    
+
     "actions": {
-      "back": "TODO_TRANSLATE: 🏠 Back to Dashboard",
-      "save": "TODO_TRANSLATE: Save profile",
-      "saving": "TODO_TRANSLATE: Saving…"
+      "backToDashboard": "Назад в дашборд",
+      "save": "Сохранить профиль",
+      "saving": "Сохранение…"
     },
     "sections": {
-      "account": "TODO_TRANSLATE: Account",
-      "basic": "TODO_TRANSLATE: Basic",
+     "account": "Аккаунт",
+      "basic": "Основное",
       "plan": "TODO_TRANSLATE: Plan",
-      "details": "TODO_TRANSLATE: Profile details"
+      "details": "Данные профиля"
     },
     "fields": {
-      "fullName": "TODO_TRANSLATE: Full name",
-      "fullNamePlaceholder": "TODO_TRANSLATE: Your full name",
-      "companyName": "TODO_TRANSLATE: Company name",
-      "companyNamePlaceholder": "TODO_TRANSLATE: Business / brand name",
-      "phone": "TODO_TRANSLATE: Phone",
-      "city": "TODO_TRANSLATE: City",
-      "country": "TODO_TRANSLATE: Country",
-      "kvk": "TODO_TRANSLATE: KVK",
-      "iban": "TODO_TRANSLATE: IBAN",
-      "vat": "TODO_TRANSLATE: VAT / BTW number"
+      "fullName": "Полное имя",
+      "fullNamePlaceholder": "Ваше полное имя",
+      "companyName": "Название компании",
+      "companyNamePlaceholder": "Бизнес / бренд",
+      "phone": "Телефон",
+      "city": "Город",
+      "country": "Страна",
+      "kvk": "KVK",
+      "iban": "IBAN",
+    "vat": "Номер НДС / BTW"
     },
     "messages": {
-      "loading": "TODO_TRANSLATE: Loading profile…",
-      "saved": "TODO_TRANSLATE: Profile saved.",
-      "loadError": "TODO_TRANSLATE: Could not load profile."
+      "loading": "Загрузка профиля…",
+       "saved": "Профиль сохранён.",
+      "loadError": "Не удалось загрузить профиль."
     }
-  },
-  "commons": {
-    "backToDashboard": "Назад в дашборд",
-    "saving": "Сохранение…",
-    "opening": "Открытие…"
+  
   },
   "analytics": {
     "title": "Аналитика",
