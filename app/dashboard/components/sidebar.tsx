@@ -100,22 +100,13 @@ const SIDEBAR_CONFIG: SidebarSection[] = [
     children: [
       { id: "calculator", href: "/dashboard/tax/calculator" },
       { id: "analytics", href: "/dashboard/tax/analytics" },
-      { id: "guide", href: "/dashboard/tax/guide" },
     ],
   },
   {
     key: "templates",
     children: [
-      { id: "email", href: "/dashboard/templates/email" },
       { id: "cv", href: "/dashboard/templates/cv" },
     
-    ],
-  },
-  {
-    key: "settings",
-    children: [
-      { id: "profile", href: "/dashboard/profile" },
-      { id: "theme" },
     ],
   },
   {
