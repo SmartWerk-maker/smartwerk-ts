@@ -65,6 +65,15 @@
   height: 100vh;
   transform: translateX(-100%);
   transition: transform 0.2s ease-out, box-shadow 0.2s ease-out;
+   overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  display: flex;
+  flex-direction: column;
+
+}
+.dash-sidebar-nav {
+  flex: 1;
+  overflow-y: auto;
 }
 
 .dash-sidebar.mobile.open {
