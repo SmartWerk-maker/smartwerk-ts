@@ -560,7 +560,7 @@
   }
 
   .user-pill {
-    display: none; /* можна сховати на дуже малих екранах */
+    display: none; /* РјРѕР¶РЅР° СЃС…РѕРІР°С‚Рё РЅР° РґСѓР¶Рµ РјР°Р»РёС… РµРєСЂР°РЅР°С… */
   }
 }
 /* ============================
@@ -632,4 +632,73 @@
   justify-content: center;
   font-size: 14px;
   opacity: 0.6;
+}
+
+
+/* ================= ULTRA PREMIUM 2030 EXTENSIONS ================= */
+
+/* Glass glow hover */
+.dash-card:hover,
+.profile-summary:hover,
+.profile-form-card:hover {
+  transform: translateY(-4px) scale(1.01);
+  box-shadow: 0 30px 80px rgba(0,0,0,0.6);
+  transition: all 0.35s ease;
+}
+
+/* Smooth fade animation */
+@keyframes fadeIn {
+  from {opacity:0; transform:translateY(10px);}
+  to {opacity:1; transform:translateY(0);}
+}
+
+.dash-card,
+.profile-summary,
+.profile-form-card {
+  animation: fadeIn 0.5s ease;
+}
+
+/* Inputs premium focus */
+.field input:focus {
+  border-color:#6366f1;
+  box-shadow:0 0 0 2px rgba(99,102,241,0.3), 0 10px 25px rgba(0,0,0,0.3);
+}
+
+/* Button micro interaction */
+.btn-primary:active {
+  transform: scale(0.97);
+}
+
+/* Scrollbar premium */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(99,102,241,0.5);
+  border-radius: 999px;
+}
+
+/* Gradient text */
+.gradient-text {
+  background: linear-gradient(90deg,#6366f1,#38bdf8);
+ 
+  -webkit-text-fill-color: transparent;
+}
+
+/* Skeleton loading */
+.skeleton {
+  background: linear-gradient(
+    90deg,
+    rgba(255,255,255,0.05) 25%,
+    rgba(255,255,255,0.1) 37%,
+    rgba(255,255,255,0.05) 63%
+  );
+  background-size: 400% 100%;
+  animation: shimmer 1.4s ease infinite;
+  border-radius: 12px;
+}
+
+@keyframes shimmer {
+  0% {background-position: 100% 0}
+  100% {background-position: -100% 0}
 }
