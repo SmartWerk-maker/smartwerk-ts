@@ -62,14 +62,17 @@
 .dash-sidebar.mobile {
   position: fixed;
   inset: 0 auto 0 0;
+  width: 260px;
   height: 100vh;
+
   transform: translateX(-100%);
-  transition: transform 0.2s ease-out, box-shadow 0.2s ease-out;
-   overflow-y: auto;
+  transition: transform 0.25s ease;
+
+  overflow-y: auto;
   -webkit-overflow-scrolling: touch;
+
   display: flex;
   flex-direction: column;
-
 }
 .dash-sidebar-nav {
   flex: 1;
