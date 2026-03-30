@@ -73,10 +73,14 @@
   justify-content: space-between;
   align-items: flex-start;
   padding: 18px 32px;
-  border-bottom: 1px solid rgba(148, 163, 184, 0.3);
+  border-bottom: 1px solid rgba(255,255,255,0.05);
   gap: 24px;
   position: relative;
   z-index: 10;
+
+   backdrop-filter: blur(12px);
+   background: rgba(2,6,23,0.7);
+
 }
 
 .dash-theme-light .dash-topbar {
@@ -220,7 +224,14 @@
 .dash-card {
   border-radius: 16px;
   padding: 16px;
-  background: rgba(15, 23, 42, 0.96);
+  background: linear-gradient(
+    180deg,
+    rgba(15,23,42,0.95),
+    rgba(2,6,23,0.95) 
+     );
+      box-shadow:
+    0 10px 30px rgba(0,0,0,0.6),
+    inset 0 1px 0 rgba(255,255,255,0.04); 
   color: #e5e7eb;
   box-shadow: 0 18px 40px rgba(15, 23, 42, 0.7);
 }
@@ -243,6 +254,11 @@
   display: flex;
   flex-direction: column;
   gap: 6px;
+  transition: all 0.25s ease;
+}
+.kpi-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 20px 50px rgba(0,0,0,0.4);
 }
 
 .kpi-label {
@@ -468,7 +484,7 @@
 
 /* scrollbar */
 .dash-sidebar-nav::-webkit-scrollbar {
-  width: 6px;
+  width: 4px;
 }
 
 .dash-sidebar-nav::-webkit-scrollbar-thumb {
@@ -533,23 +549,41 @@
 
 .dash-sidebar-link {
   width: 100%;
-  padding: 10px 12px;
-  border-radius: 10px;
+  padding: 10px 14px;
+  border-radius: 12px;
   border: 1px solid transparent;
-  background: transparent;
+   background: rgba(255,255,255,0.02);
   color: inherit;
   text-align: left;
   cursor: pointer;
   font-size: 14px;
+   font-weight: 500;
 
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
+.dash-sidebar-link,
+.dash-sidebar-child {
+  transition: all 0.2s ease;
+}
 
 .dash-sidebar-link:hover {
-  background: rgba(15, 23, 42, 0.9);
+  transform: translateX(4px);
+}
+
+.dash-sidebar-link:hover {
+  background: rgba(59,130,246,0.12);
   border-color: rgba(37, 99, 235, 0.5);
+}
+
+.dash-sidebar-link.active {
+  background: linear-gradient(
+    90deg,
+    rgba(59,130,246,0.25),
+    rgba(59,130,246,0.05)
+  );
+  border-left: 3px solid #3b82f6;
 }
 
 .dash-sidebar-link.has-children {
