@@ -62,15 +62,15 @@ export default function KPIGroup({
     v.toLocaleString("en-GB", { maximumFractionDigits: 0 });
 
   const Card = (
-    label: string,
-    value: React.ReactNode,
-    highlight?: boolean
-  ) => (
-    <div className="dash-card kpi-card">
-      <p className="kpi-label">{label}</p>
-      <p className="kpi-value">{value}</p>
-    </div>
-  );
+  label: string,
+  value: React.ReactNode,
+  highlight?: boolean
+) => (
+  <div className={`dash-card kpi-card ${highlight ? "highlight" : ""}`}>
+    <p className="kpi-label">{label}</p>
+    <p className="kpi-value">{value}</p>
+  </div>
+);
 
   return (
     <>

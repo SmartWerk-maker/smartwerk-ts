@@ -97,13 +97,20 @@ export default function InvoiceStatusChart({
     background: isDark ? "#020617" : "#ffffff",
     border: "1px solid rgba(99,102,241,0.2)",
     borderRadius: 12,
-    color: isDark ? "#ffffff" : "#111827",
-              }}
-              formatter={(value: number, name: string) => [
-                `€${value.toLocaleString("en-GB")}`,
-                name,
-              ]}
-            />
+    boxShadow: "0 20px 40px rgba(0,0,0,0.25)",
+  }}
+  labelStyle={{
+    color: isDark ? "#fff" : "#111827",
+    fontWeight: 600,
+  }}
+  itemStyle={{
+    color: isDark ? "#e5e7eb" : "#111827",
+  }}
+  formatter={(value, name) => [
+    `€${Number(value).toLocaleString("en-GB")}`,
+    String(name),
+  ]}
+/>
           </PieChart>
         </ResponsiveContainer>
 
