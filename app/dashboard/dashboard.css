@@ -637,11 +637,6 @@
     border-radius: 14px;
   }
 
-  .user-pill {
-    display: none; /* РјРѕР¶РЅР° СЃС…РѕРІР°С‚Рё РЅР° РґСѓР¶Рµ РјР°Р»РёС… РµРєСЂР°РЅР°С… */
-  }
-}
-@media (max-width: 600px) {
   .user-meta {
     display: none; /* ховаємо текст */
   }
@@ -650,6 +645,7 @@
     padding: 4px;
   }
 }
+
 /* ============================
    LANGUAGE SWITCHER (Pill Select)
 ============================ */
