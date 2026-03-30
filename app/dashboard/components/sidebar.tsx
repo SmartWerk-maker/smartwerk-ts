@@ -169,12 +169,7 @@ export default function Sidebar({
   return (
     <aside
       className={sidebarClass}
-      style={{
-        background: isDark ? "rgba(15,23,42,0.96)" : "#ffffff",
-        boxShadow: isDark
-          ? "0 20px 45px rgba(0,0,0,0.55)"
-          : "0 20px 45px rgba(0,0,0,0.15)",
-      }}
+     
     >
       {isMobile && (
         <div className="dash-sidebar-header">

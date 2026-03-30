@@ -5,12 +5,12 @@
   min-height: 100vh;
   height: 100dvh;
 
-  overflow: hidden;
+  overflow: visible;
 }
 
 @media (max-width: 900px) {
   .dash-root {
-    overflow: hidden;
+    overflow: visible;
   }
 }
 
@@ -87,6 +87,7 @@
   flex-direction: column;
 
   overflow: hidden; /* 🔥 must */
+   z-index: 100;
 }
 .dash-sidebar-header {
   flex-shrink: 0;
@@ -96,7 +97,7 @@
 }
 .dash-sidebar-footer {
   flex-shrink: 0;
-  margin-top: 8px;
+  padding-bottom: 20px;
 }
 
 
@@ -133,7 +134,7 @@
   overflow-x: hidden;
 
   padding-right: 6px;
-  padding-bottom: 40px;
+  padding-bottom: 80px;
 
   -webkit-overflow-scrolling: touch;
   touch-action: pan-y;
