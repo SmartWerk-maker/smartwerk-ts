@@ -2,8 +2,8 @@
 
 import React from "react";
 import {
-  LineChart,
-  Line,
+  AreaChart,
+  Area,
   XAxis,
   YAxis,
   Tooltip,
@@ -21,43 +21,22 @@ interface RevenueChartProps {
   data: { month: string; value: number }[];
 }
 
-type RevenueLabels = {
-  title: string;
-  tooltip: string;
-};
-
-type ChartItem = {
-  month: string;
-  value: number;
-  [key: string]: string | number;
-};
-
 /* ================= COMPONENT ================= */
 
 export default function RevenueChart({ data }: RevenueChartProps) {
   const { language } = useLanguage();
   const { isDark } = useTheme();
 
-  const t = useTranslation(language) as {
-    charts?: {
-      revenue?: Partial<RevenueLabels>;
-    };
-  } | null;
+  const t = useTranslation(language) as any;
 
   if (!t) return null;
 
-  /* ================= LABELS ================= */
-
-  const dict = t.charts?.revenue ?? {};
-
-  const labels: RevenueLabels = {
-    title: dict.title ?? "Revenue trend",
-    tooltip: dict.tooltip ?? "Revenue",
+  const labels = {
+    title: t?.charts?.revenue?.title ?? "Revenue trend",
+    tooltip: t?.charts?.revenue?.tooltip ?? "Revenue",
   };
 
-  /* ================= DATA ================= */
-
-  const chartData: ChartItem[] =
+  const chartData =
     data.length > 0
       ? data
       : [
@@ -67,39 +46,67 @@ export default function RevenueChart({ data }: RevenueChartProps) {
           { month: "Apr", value: 0 },
         ];
 
-  const gridColor = isDark
-    ? "rgba(255,255,255,0.1)"
-    : "rgba(0,0,0,0.1)";
+  /* ================= COLORS ================= */
 
-  const textColor = isDark ? "#e5e7eb" : "#111827";
+  const gridColor = isDark
+    ? "rgba(148,163,184,0.12)"
+    : "rgba(0,0,0,0.08)";
+
+  const textColor = isDark
+    ? "rgba(226,232,240,0.8)"
+    : "#374151";
 
   /* ================= RENDER ================= */
 
   return (
-    <div
-      className="dash-card chart-card"
-      style={{
-        background: isDark ? "rgba(15,23,42,0.96)" : "#ffffff",
-        boxShadow: isDark
-          ? "0 18px 40px rgba(15,23,42,0.7)"
-          : "0 16px 40px rgba(148,163,184,0.25)",
-      }}
-    >
-      <h3 className="chart-header">{labels.title}</h3>
+    <div className="dash-card chart-card">
+      <div className="chart-header-row">
+        <h3 className="chart-header">{labels.title}</h3>
+        <span className="chart-badge">+12%</span>
+      </div>
 
-      <ResponsiveContainer width="100%" height={240}>
-        <LineChart data={chartData}>
-          <CartesianGrid stroke={gridColor} strokeDasharray="4 4" />
+      <ResponsiveContainer width="100%" height={300}>
+        <AreaChart data={chartData}>
+          {/* 🔥 GRADIENT */}
+          <defs>
+            <linearGradient id="revenueGradient" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stopColor="#4f46e5" stopOpacity={0.35} />
+              <stop offset="60%" stopColor="#3b82f6" stopOpacity={0.15} />
+              <stop offset="100%" stopColor="#0f172a" stopOpacity={0.02} />
+            </linearGradient>
+          </defs>
 
-          <XAxis dataKey="month" stroke={textColor} />
-          <YAxis stroke={textColor} />
+          <CartesianGrid
+            strokeDasharray="3 3"
+            stroke={gridColor}
+            vertical={false}
+          />
+
+          <XAxis
+            dataKey="month"
+            tick={{ fill: textColor, fontSize: 12 }}
+            axisLine={{ stroke: gridColor }}
+            tickLine={false}
+          />
+
+          <YAxis
+            tick={{ fill: textColor, fontSize: 12 }}
+            axisLine={false}
+            tickLine={false}
+          />
 
           <Tooltip
             contentStyle={{
-              background: isDark ? "#1e293b" : "#ffffff",
-              borderRadius: 8,
-              border: "none",
-              color: textColor,
+              background: isDark
+                ? "rgba(15,23,42,0.96)"
+                : "#ffffff",
+              border: "1px solid rgba(99,102,241,0.2)",
+              borderRadius: 12,
+              boxShadow: "0 20px 40px rgba(0,0,0,0.3)",
+            }}
+            labelStyle={{
+              color: "#fff",
+              fontWeight: 600,
             }}
             formatter={(value: number) => [
               `€${value.toLocaleString("en-GB")}`,
@@ -107,15 +114,21 @@ export default function RevenueChart({ data }: RevenueChartProps) {
             ]}
           />
 
-          <Line
+          <Area
             type="monotone"
             dataKey="value"
-            stroke="#3b82f6"
+            stroke="#4f46e5"
             strokeWidth={3}
-            dot={{ r: 4, fill: "#3b82f6" }}
-            activeDot={{ r: 6 }}
+            fill="url(#revenueGradient)"
+            dot={false}
+            activeDot={{
+              r: 6,
+              stroke: "#fff",
+              strokeWidth: 2,
+              fill: "#4f46e5",
+            }}
           />
-        </LineChart>
+        </AreaChart>
       </ResponsiveContainer>
     </div>
   );
