@@ -93,13 +93,11 @@ export default function InvoiceStatusChart({
             </Pie>
 
             <Tooltip
-              contentStyle={{
-                background: isDark
-                  ? "rgba(15,23,42,0.96)"
-                  : "#ffffff",
-                border: "1px solid rgba(99,102,241,0.2)",
-                borderRadius: 12,
-                boxShadow: "0 20px 40px rgba(0,0,0,0.3)",
+  contentStyle={{
+    background: isDark ? "#020617" : "#ffffff",
+    border: "1px solid rgba(99,102,241,0.2)",
+    borderRadius: 12,
+    color: isDark ? "#ffffff" : "#111827",
               }}
               formatter={(value: number, name: string) => [
                 `€${value.toLocaleString("en-GB")}`,

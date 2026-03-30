@@ -28,7 +28,6 @@ export default function RevenueChart({ data }: RevenueChartProps) {
   const { isDark } = useTheme();
 
   const t = useTranslation(language) as any;
-
   if (!t) return null;
 
   const labels = {
@@ -56,6 +55,9 @@ export default function RevenueChart({ data }: RevenueChartProps) {
     ? "rgba(226,232,240,0.8)"
     : "#374151";
 
+  const tooltipBg = isDark ? "#020617" : "#ffffff";
+  const tooltipText = isDark ? "#ffffff" : "#111827";
+
   /* ================= RENDER ================= */
 
   return (
@@ -67,13 +69,24 @@ export default function RevenueChart({ data }: RevenueChartProps) {
 
       <ResponsiveContainer width="100%" height={300}>
         <AreaChart data={chartData}>
-          {/* 🔥 GRADIENT */}
+          {/* 🔥 PREMIUM GRADIENT + GLOW */}
           <defs>
             <linearGradient id="revenueGradient" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stopColor="#4f46e5" stopOpacity={0.35} />
-              <stop offset="60%" stopColor="#3b82f6" stopOpacity={0.15} />
-              <stop offset="100%" stopColor="#0f172a" stopOpacity={0.02} />
+              <stop offset="0%" stopColor="#6366f1" stopOpacity={0.45} />
+              <stop offset="50%" stopColor="#3b82f6" stopOpacity={0.2} />
+              <stop offset="100%" stopColor="#0f172a" stopOpacity={0} />
             </linearGradient>
+
+            {/* glow */}
+            <filter id="revenueGlow" height="200%">
+              <feDropShadow
+                dx="0"
+                dy="6"
+                stdDeviation="8"
+                floodColor="#6366f1"
+                floodOpacity="0.35"
+              />
+            </filter>
           </defs>
 
           <CartesianGrid
@@ -95,17 +108,17 @@ export default function RevenueChart({ data }: RevenueChartProps) {
             tickLine={false}
           />
 
+          {/* 🔥 FIX TOOLTIP */}
           <Tooltip
             contentStyle={{
-              background: isDark
-                ? "rgba(15,23,42,0.96)"
-                : "#ffffff",
+              background: tooltipBg,
               border: "1px solid rgba(99,102,241,0.2)",
               borderRadius: 12,
-              boxShadow: "0 20px 40px rgba(0,0,0,0.3)",
+              boxShadow: "0 20px 40px rgba(0,0,0,0.25)",
+              color: tooltipText,
             }}
             labelStyle={{
-              color: "#fff",
+              color: tooltipText,
               fontWeight: 600,
             }}
             formatter={(value: number) => [
@@ -114,18 +127,20 @@ export default function RevenueChart({ data }: RevenueChartProps) {
             ]}
           />
 
+          {/* 🔥 PREMIUM AREA */}
           <Area
             type="monotone"
             dataKey="value"
-            stroke="#4f46e5"
+            stroke="#6366f1"
             strokeWidth={3}
             fill="url(#revenueGradient)"
+            filter="url(#revenueGlow)"
             dot={false}
             activeDot={{
-              r: 6,
-              stroke: "#fff",
+              r: 7,
+              stroke: "#ffffff",
               strokeWidth: 2,
-              fill: "#4f46e5",
+              fill: "#6366f1",
             }}
           />
         </AreaChart>

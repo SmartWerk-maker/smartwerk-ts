@@ -66,7 +66,7 @@ export default function KPIGroup({
     value: React.ReactNode,
     highlight?: boolean
   ) => (
-    <div className={`kpi-card ${highlight ? "highlight" : ""}`}>
+    <div className="dash-card kpi-card">
       <p className="kpi-label">{label}</p>
       <p className="kpi-value">{value}</p>
     </div>
