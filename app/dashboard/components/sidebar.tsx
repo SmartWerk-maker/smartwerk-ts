@@ -189,67 +189,70 @@ export default function Sidebar({
         <div className="dash-logo-text">SmartWerk</div>
       </div>
 
-      <div className="dash-sidebar-group">
-        <button
-          type="button"
-          className="dash-sidebar-link"
-          onClick={() => router.push("/dashboard")}
-        >
-          {labels.home ?? "Home"}
-        </button>
-      </div>
+      <div className="dash-sidebar-nav">
+
+  <div className="dash-sidebar-group">
+    <button
+      type="button"
+      className="dash-sidebar-link"
+      onClick={() => router.push("/dashboard")}
+    >
+      {labels.home ?? "Home"}
+    </button>
+  </div>
 
       {SIDEBAR_CONFIG.map((section) => {
-        const sectionLabels = labels[section.key];
-        const title =
-          sectionLabels?.label ??
-          section.key.charAt(0).toUpperCase() +
-            section.key.slice(1);
+    const sectionLabels = labels[section.key];
+    const title =
+      sectionLabels?.label ??
+      section.key.charAt(0).toUpperCase() +
+        section.key.slice(1);
 
-        return (
-          <div key={section.key} className="dash-sidebar-group">
-            <button
-              type="button"
-              className="dash-sidebar-link has-children"
-              onClick={() => toggleSection(section.key)}
-            >
-              <span>{title}</span>
-              <span
-                className={`chevron ${
-                  openSections.includes(section.key) ? "open" : ""
-                }`}
-              >
-                ▾
-              </span>
-            </button>
+       return (
+      <div key={section.key} className="dash-sidebar-group">
+        <button
+          type="button"
+          className="dash-sidebar-link has-children"
+          onClick={() => toggleSection(section.key)}
+        >
+          <span>{title}</span>
+          <span
+            className={`chevron ${
+              openSections.includes(section.key) ? "open" : ""
+            }`}
+          >
+            ▾
+          </span>
+        </button>
 
-            {openSections.includes(section.key) && section.children && (
-              <div className="dash-sidebar-children">
-                {section.children.map((child) => {
-                  const label =
-                    sectionLabels?.[child.id] ??
-                    child.id.charAt(0).toUpperCase() +
-                      child.id.slice(1);
+           {openSections.includes(section.key) && section.children && (
+          <div className="dash-sidebar-children">
+            {section.children.map((child) => {
+              const label =
+                sectionLabels?.[child.id] ??
+                child.id.charAt(0).toUpperCase() +
+                  child.id.slice(1);
 
-                  return (
-                    <button
-                      key={child.id}
-                      type="button"
-                      className="dash-sidebar-child"
-                      onClick={() => {
-                        if (child.href) router.push(child.href);
-                      }}
-                    >
-                      {label}
-                    </button>
-                  );
-                })}
-              </div>
-            )}
+              return (
+                <button
+                  key={child.id}
+                  type="button"
+                  className="dash-sidebar-child"
+                  onClick={() => {
+                    if (child.href) router.push(child.href);
+                  }}
+                >
+                  {label}
+                </button>
+              );
+            })}
           </div>
-        );
-      })}
+        )}
+      </div>
+    );
+  })}
 
+</div>
       <div className="dash-sidebar-footer">
         <button className="dash-logout-btn" onClick={onLogout}>
           {labels.logout ?? "Logout"}

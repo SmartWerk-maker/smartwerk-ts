@@ -96,6 +96,7 @@
 }
 .dash-sidebar-footer {
   flex-shrink: 0;
+  margin-top: 8px;
 }
 
 
@@ -125,7 +126,7 @@
 
 
 .dash-sidebar-nav {
-  flex: 1;
+   flex: 1 1 auto;
   min-height: 0;
 
   overflow-y: auto;
@@ -151,9 +152,7 @@
 
 .dash-sidebar-header,
 .dash-sidebar-logo,
-.dash-sidebar-footer {
-  flex-shrink: 0;
-}
+
 
 .dash-sidebar-backdrop {
   position: fixed;
@@ -271,9 +270,7 @@
   transform: rotate(180deg);
 }
 
-.dash-sidebar-footer {
-  margin-top: 8px;
-}
+
 
 .dash-logout-btn {
   width: 100%;
@@ -297,10 +294,10 @@
   display: flex;
   flex-direction: column;
 
-
   min-width: 0;
-  min-height: 100dvh;
-  overflow: hidden;
+  min-height: 0; /* 🔥 КРИТИЧНО */
+
+  overflow: auto; /* 🔥 КРИТИЧНО */
 }
 
 /* TOPBAR */
