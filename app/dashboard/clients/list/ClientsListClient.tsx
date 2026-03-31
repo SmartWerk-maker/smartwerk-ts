@@ -16,6 +16,13 @@ import {
   type DocumentData,
 } from "firebase/firestore";
 
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+
 
 import { auth, db } from "@/lib/firebase";
 import { useLanguage } from "@/app/providers/LanguageProvider";
@@ -645,6 +652,84 @@ export default function ClientsListClient() {
       <div className="client-card-meta">{c.email}</div>
 
       <div className="client-card-footer">
+  <div className="client-card-left"></div>
+  <div className="client-card-actions">
+  <DropdownMenu>
+    <DropdownMenuTrigger asChild>
+      <button
+        className="client-card-menu-btn"
+        onClick={(e) => e.stopPropagation()}
+      >
+        ⋯
+      </button>
+    </DropdownMenuTrigger>
+
+    <DropdownMenuContent align="end">
+      <DropdownMenuItem
+        onClick={(e) => {
+          e.stopPropagation();
+          handleCreateInvoice(c.id);
+        }}
+      >
+        📄 Invoice
+      </DropdownMenuItem>
+
+      <DropdownMenuItem
+        onClick={(e) => {
+          e.stopPropagation();
+          handleCreateQuote(c.id);
+        }}
+      >
+        💼 Quote
+      </DropdownMenuItem>
+
+      <DropdownMenuItem
+        onClick={(e) => {
+          e.stopPropagation();
+          handleCreateReminder(c.id);
+        }}
+      >
+        📬 Reminder
+      </DropdownMenuItem>
+
+      <DropdownMenuItem
+        onClick={(e) => {
+          e.stopPropagation();
+          handleExportPdf(c.id, true);
+        }}
+      >
+        📄 PDF
+      </DropdownMenuItem>
+
+      <DropdownMenuItem
+        onClick={(e) => {
+          e.stopPropagation();
+          handleExportPdf(c.id, false);
+        }}
+      >
+        💎 PRO PDF
+      </DropdownMenuItem>
+
+      <DropdownMenuItem
+        onClick={(e) => {
+          e.stopPropagation();
+          handleEditClient(c.id);
+        }}
+      >
+        ✏️ Edit
+      </DropdownMenuItem>
+
+      <DropdownMenuItem
+        onClick={(e) => {
+          e.stopPropagation();
+          handleDeleteClient(c.id);
+        }}
+      >
+        🗑 Delete
+      </DropdownMenuItem>
+    </DropdownMenuContent>
+  </DropdownMenu>
+</div>
         <span
   className={[
     "clients-status-badge",
@@ -759,86 +844,97 @@ export default function ClientsListClient() {
                           </TableCell>
 
                           <TableCell className="clients-cell-actions">
-                            <div className="clients-actions">
-                              <Button
-                                size="sm"
-                                variant="secondary"
-                                className="clients-action-btn"
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  handleCreateInvoice(c.id);
-                                }}
-                              >
-                                📄 <span>Invoice</span>
-                              </Button>
-                              <Button
-                                size="sm"
-                                variant="secondary"
-                                className="clients-action-btn"
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  handleCreateQuote(c.id);
-                                }}
-                              >
-                                💼 <span>Quote</span>
-                              </Button>
-                              <Button
-                                size="sm"
-                                variant="outline"
-                                className="clients-action-btn"
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  handleCreateReminder(c.id);
-                                }}
-                              >
-                                📬 <span>Reminder</span>
-                              </Button>
-                              <Button
-                                size="sm"
-                                variant="outline"
-                                className="clients-action-btn"
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  handleEditClient(c.id);
-                                } }
-                              >
-                                ✏️ <span>Edit</span>
-                              </Button>
-                              <Button
-                                size="sm"
-                                variant="destructive"
-                                className="clients-action-btn"
-                                onClick={(e) => {
-                                   e.stopPropagation();
-                                  void handleDeleteClient(c.id);
-                                }}
-                              >
-                                🗑 <span>Delete</span>
-                              </Button>
-                              <Button
-  size="sm"
-  variant="outline"
-  className="clients-action-btn"
-  onClick={(e) => {
-    e.stopPropagation();
-   handleExportPdf(c.id, true)
-   }}
->
-  📄 <span>PDF</span>
-</Button>
+                           <div className="clients-actions">
+  {/* PRIMARY ACTIONS */}
+  <Button
+    size="sm"
+    variant="secondary"
+    className="clients-action-btn"
+    onClick={(e) => {
+      e.stopPropagation();
+      handleCreateInvoice(c.id);
+    }}
+  >
+    📄 <span>Invoice</span>
+  </Button>
 
-<Button
-  size="sm"
-  variant="secondary"
-  className="clients-action-btn"
-  onClick={(e) => {
-     e.stopPropagation();
-   handleExportPdf(c.id, false)
-   }}
->
-  💎 <span>PRO</span>
-</Button>
-                            </div>
+  <Button
+    size="sm"
+    variant="outline"
+    className="clients-action-btn"
+    onClick={(e) => {
+      e.stopPropagation();
+      handleEditClient(c.id);
+    }}
+  >
+    ✏️ <span>Edit</span>
+  </Button>
+
+  <Button
+    size="sm"
+    variant="destructive"
+    className="clients-action-btn"
+    onClick={(e) => {
+      e.stopPropagation();
+      void handleDeleteClient(c.id);
+    }}
+  >
+    🗑 <span>Delete</span>
+  </Button>
+
+  {/* DROPDOWN */}
+  <DropdownMenu>
+    <DropdownMenuTrigger asChild>
+      <Button
+        size="sm"
+        variant="ghost"
+        className="clients-action-btn"
+        onClick={(e) => e.stopPropagation()}
+      >
+        ⋯
+      </Button>
+    </DropdownMenuTrigger>
+
+    <DropdownMenuContent align="end">
+      <DropdownMenuItem
+        onClick={(e) => {
+          e.stopPropagation();
+          handleCreateQuote(c.id);
+        }}
+      >
+        💼 Quote
+      </DropdownMenuItem>
+
+      <DropdownMenuItem
+        onClick={(e) => {
+          e.stopPropagation();
+          handleCreateReminder(c.id);
+        }}
+      >
+        📬 Reminder
+      </DropdownMenuItem>
+
+      <DropdownMenuItem
+        onClick={(e) => {
+          e.stopPropagation();
+          handleExportPdf(c.id, true);
+        }}
+      >
+        📄 PDF
+      </DropdownMenuItem>
+
+      <DropdownMenuItem
+        onClick={(e) => {
+          e.stopPropagation();
+          handleExportPdf(c.id, false);
+        }}
+      >
+        💎 PRO PDF
+      </DropdownMenuItem>
+    </DropdownMenuContent>
+  </DropdownMenu>
+</div>
+                            
                           </TableCell>
                         </TableRow>
                       ))}

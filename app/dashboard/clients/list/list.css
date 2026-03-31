@@ -42,6 +42,42 @@
   font-size: 0.875rem;
 }
 
+.client-card-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.client-card-actions {
+  display: flex;
+  gap: 6px;
+}
+
+.client-card-actions button {
+  border: none;
+  background: transparent;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.clients-action-btn {
+  min-width: 32px;
+  justify-content: center;
+}
+
+.client-card-menu-btn {
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 4px 8px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.client-card-menu-btn:hover {
+  background: rgba(59, 130, 246, 0.1);
+}
+
 /* ===== HEADER ===== */
 
 .clients-header {
