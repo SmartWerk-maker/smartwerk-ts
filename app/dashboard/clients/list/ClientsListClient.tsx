@@ -560,7 +560,7 @@ export default function ClientsListClient() {
     const data = payload[0];
 
     return (
-      <div className="rounded-lg border bg-white px-3 py-2 text-sm shadow">
+      <div className="rounded-lg border bg-white px-3 py-2 ">
         <div className="font-medium">{data.payload.status}</div>
         <div className="text-muted-foreground">
           {data.value} clients
