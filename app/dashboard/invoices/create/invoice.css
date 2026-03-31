@@ -36,6 +36,21 @@ body.dash-theme-light {
   border-bottom: 1px solid rgba(0,0,0,0.1);
 }
 
+@media (max-width: 600px) {
+  .topbar {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .actions-right {
+    width: 100%;
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+}
+
 body.dash-theme-dark .topbar {
   background: rgba(2,6,23,0.55);
   border-bottom-color: rgba(255,255,255,0.07);
@@ -65,6 +80,13 @@ body.dash-theme-light .topbar {
   align-items: center;
   gap: 6px;
   transition: 0.15s ease;
+}
+
+@media (max-width: 768px) {
+  .btn {
+    padding: 12px 16px;
+    font-size: 15px;
+  }
 }
 
 /* DARK */
@@ -140,6 +162,15 @@ body.dash-theme-light .section-toggle {
 .section-content.open {
   display: block;
 }
+@media (max-width: 768px) {
+  .section-content {
+    padding: 16px 14px;
+  }
+
+  input, select {
+    margin-bottom: 10px;
+  }
+}
 
 /*****************************************************
  *  FORM-FIELDS (compact)
@@ -187,6 +218,13 @@ table {
   overflow: hidden;
   margin-top: 6px;
 }
+@media (max-width: 768px) {
+  table {
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+}
 
 /* HEADERS */
 thead th {
@@ -217,7 +255,8 @@ tbody td {
  *  SIGNATURES (clean compact)
  *****************************************************/
 canvas.signature {
-  width: 280px;
+  width: 100%;
+  max-width: 300px;
   height: 140px;
   border-radius: 8px;
   background: #fff;
@@ -229,11 +268,22 @@ canvas.signature {
   gap: 30px;
   flex-wrap: wrap;
   margin-top: 16px;
-  
+}
+@media (max-width: 768px) {
+  .signatures-wrap {
+    flex-direction: column;
+  }
+}
+
+.invoice-content {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 0 12px;
 }
 
 .signature-box {
-  width: 500px;
+  width: 100%;
+  max-width: 500px;
   display: flex;
   flex-direction: column;
   gap: 10px;
