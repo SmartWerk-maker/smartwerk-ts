@@ -72,7 +72,9 @@
 .clients-title {
   font-size: 1.4rem;
   line-height: 1.25;
-  font-weight: 600;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  
 }
 
 @media (min-width: 640px) {
@@ -129,6 +131,11 @@
   height: 2.25rem;
 }
 
+button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
 /* ===== OVERVIEW CARD (KPI + CHART) ===== */
 
 .clients-overview-card {
@@ -180,6 +187,18 @@
   margin-top: 0.15rem;
   font-size: 1.35rem;
   font-weight: 600;
+}
+
+.clients-kpi-active {
+  color: #4ade80;
+}
+
+.clients-kpi-prospect {
+  color: #fbbf24;
+}
+
+.clients-kpi-inactive {
+  color: #fb7185;
 }
 
 .clients-chart {
@@ -299,7 +318,52 @@
   padding: 0;
   font-size: 0.75rem;
 }
+.clients-mobile-list {
+  display: none;
+}
 
+@media (max-width: 768px) {
+  .clients-table-section {
+    display: none;
+  }
+
+  .clients-mobile-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .client-card {
+    padding: 14px;
+    border-radius: 12px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    cursor: pointer;
+     transition: all 0.15s ease;
+  }
+
+  .client-card:hover {
+  transform: translateY(-2px);
+  border-color: rgba(59,130,246,0.4);
+}
+
+  .client-card-title {
+    font-weight: 600;
+    font-size: 14px;
+  }
+
+  .client-card-meta {
+    font-size: 12px;
+    color: var(--muted-foreground);
+  }
+
+  .client-card-footer {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 8px;
+    font-size: 12px;
+  }
+}
 /* ===== TABLE SECTION ===== */
 
 .clients-table-section {
@@ -376,7 +440,20 @@
 }
 
 .clients-row:hover {
-  background: color-mix(in srgb, var(--muted) 18%, transparent);
+  background: linear-gradient(
+    90deg,
+    rgba(59,130,246,0.08),
+    transparent
+  );
+}
+
+.clients-empty {
+  padding: 40px;
+  text-align: center;
+  color: var(--muted-foreground);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
 }
 
 .clients-cell-id {

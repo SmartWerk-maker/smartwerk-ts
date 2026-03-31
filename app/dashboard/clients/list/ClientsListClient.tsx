@@ -150,9 +150,19 @@ export default function ClientsListClient() {
   const [statusFilter, setStatusFilter] =
     useState<ClientStatusFilter>("all");
   const [toast, setToast] = useState<{
+    
     type: "ok" | "error";
     text: string;
   } | null>(null);
+  const countryMap: Record<string, string> = {
+  nl: "🇳🇱 Netherlands",
+  be: "🇧🇪 Belgium",
+  de: "🇩🇪 Germany",
+  fr: "🇫🇷 France",
+  es: "🇪🇸 Spain",
+  pl: "🇵🇱 Poland",
+  uk: "🇬🇧 United Kingdom",
+};
 
   const label = (fallback: string | undefined, def: string) =>
     fallback ?? def;
@@ -195,7 +205,9 @@ export default function ClientsListClient() {
           });
         });
         setClients(arr);
-        showToast("ok", t.messages?.synced ?? "Synced with cloud");
+        if (!showSpinner) {
+          showToast("ok", t.messages?.synced ?? "Synced with cloud");
+          }
       } catch (e) {
         console.error("Load clients error:", e);
         const msg = t.messages?.loadError ?? "Error loading clients.";
@@ -503,7 +515,20 @@ export default function ClientsListClient() {
               ].map((item) => (
                 <div key={item.label} className="clients-kpi">
                   <div className="clients-kpi-label">{item.label}</div>
-                  <div className="clients-kpi-value">{item.value}</div>
+                  <div
+                 className={`clients-kpi-value ${
+                 item.label === "Active"
+                   ? "clients-kpi-active"
+                  : item.label === "Prospect"
+                   ? "clients-kpi-prospect"
+                  : item.label === "Inactive"
+                  ? "clients-kpi-inactive"
+                   : ""
+                    }`}
+                      >
+                        {item.value}
+                    </div>
+                  
                 </div>
               ))}
             </div>
@@ -608,12 +633,41 @@ export default function ClientsListClient() {
         </section>
 
         {/* ===== TABLE ===== */}
-        <section className="clients-table-section">
+       
+          <div className="clients-mobile-list">
+  {filteredClients.map((c) => (
+    <div
+      key={c.id}
+      className="client-card"
+      onClick={() => handleEditClient(c.id)}
+    >
+      <div className="client-card-title">{c.clientName}</div>
+      <div className="client-card-meta">{c.email}</div>
+
+      <div className="client-card-footer">
+        <span
+  className={[
+    "clients-status-badge",
+    c.status === "Active" && "clients-status-badge--active",
+    c.status === "Prospect" && "clients-status-badge--prospect",
+    c.status === "Inactive" && "clients-status-badge--inactive",
+  ]
+    .filter(Boolean)
+    .join(" ")}
+>
+  {c.status}
+</span>
+        <span>{countryMap[c.country ?? ""] ?? c.country}</span>
+      </div>
+    </div>
+  ))}
+</div>
+ <section className="clients-table-section">
           <Card className="clients-table-card">
             <CardHeader className="clients-table-header">
               <div>
                 <CardTitle className="clients-table-title">
-                  {label(t.table?.actions, "Clients")}
+              {label(t.listTitle, "Clients")}
                 </CardTitle>
               </div>
             </CardHeader>
@@ -628,8 +682,9 @@ export default function ClientsListClient() {
                   {error}
                 </div>
               ) : filteredClients.length === 0 ? (
-                <div className="clients-table-empty">
-                  {label(t.messages?.noClients, "No clients found.")}
+                <div className="clients-empty">
+                 <div>🚀 No clients yet</div>
+                   <div>Create your first client to start invoicing</div>
                 </div>
               ) : (
                 <div className="clients-table-scroll">
@@ -665,6 +720,7 @@ export default function ClientsListClient() {
                         <TableRow
                           key={c.id}
                           className="clients-row"
+                          onClick={() => handleEditClient(c.id)}
                         >
                           <TableCell className="clients-cell-id">
                             {c.clientId ?? "—"}
@@ -699,7 +755,7 @@ export default function ClientsListClient() {
                           </TableCell>
 
                           <TableCell className="clients-cell-text">
-                            {c.country ?? ""}
+                            {countryMap[c.country ?? ""] ?? c.country}
                           </TableCell>
 
                           <TableCell className="clients-cell-actions">
@@ -708,9 +764,10 @@ export default function ClientsListClient() {
                                 size="sm"
                                 variant="secondary"
                                 className="clients-action-btn"
-                                onClick={() =>
-                                  handleCreateInvoice(c.id)
-                                }
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  handleCreateInvoice(c.id);
+                                }}
                               >
                                 📄 <span>Invoice</span>
                               </Button>
@@ -718,9 +775,10 @@ export default function ClientsListClient() {
                                 size="sm"
                                 variant="secondary"
                                 className="clients-action-btn"
-                                onClick={() =>
-                                  handleCreateQuote(c.id)
-                                }
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  handleCreateQuote(c.id);
+                                }}
                               >
                                 💼 <span>Quote</span>
                               </Button>
@@ -728,9 +786,10 @@ export default function ClientsListClient() {
                                 size="sm"
                                 variant="outline"
                                 className="clients-action-btn"
-                                onClick={() =>
-                                  handleCreateReminder(c.id)
-                                }
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  handleCreateReminder(c.id);
+                                }}
                               >
                                 📬 <span>Reminder</span>
                               </Button>
@@ -738,9 +797,10 @@ export default function ClientsListClient() {
                                 size="sm"
                                 variant="outline"
                                 className="clients-action-btn"
-                                onClick={() =>
-                                  handleEditClient(c.id)
-                                }
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  handleEditClient(c.id);
+                                } }
                               >
                                 ✏️ <span>Edit</span>
                               </Button>
@@ -748,9 +808,10 @@ export default function ClientsListClient() {
                                 size="sm"
                                 variant="destructive"
                                 className="clients-action-btn"
-                                onClick={() =>
-                                  void handleDeleteClient(c.id)
-                                }
+                                onClick={(e) => {
+                                   e.stopPropagation();
+                                  void handleDeleteClient(c.id);
+                                }}
                               >
                                 🗑 <span>Delete</span>
                               </Button>
@@ -758,7 +819,10 @@ export default function ClientsListClient() {
   size="sm"
   variant="outline"
   className="clients-action-btn"
-  onClick={() => handleExportPdf(c.id, true)}
+  onClick={(e) => {
+    e.stopPropagation();
+   handleExportPdf(c.id, true)
+   }}
 >
   📄 <span>PDF</span>
 </Button>
@@ -767,7 +831,10 @@ export default function ClientsListClient() {
   size="sm"
   variant="secondary"
   className="clients-action-btn"
-  onClick={() => handleExportPdf(c.id, false)}
+  onClick={(e) => {
+     e.stopPropagation();
+   handleExportPdf(c.id, false)
+   }}
 >
   💎 <span>PRO</span>
 </Button>
