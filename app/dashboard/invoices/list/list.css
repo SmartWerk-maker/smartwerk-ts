@@ -21,8 +21,9 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 1rem 1.5rem 0.5rem; /* Зменшено верхній та нижній відступ */
+    padding: 12px 20px;
     flex-wrap: wrap;
+     max-width: 100%;
   }
   header h1 {
     font-size: 24px;
@@ -96,13 +97,13 @@
   .filters {
     display: flex;
     flex-wrap: wrap;
-    gap: 16px;
-
+    gap: 12px;
+    align-items: flex-end;
     background: var(--card);
     padding: 1.2rem;
     border-radius: 16px;
     border: 1px solid var(--line);
-
+    margin-bottom: 20px;
     box-shadow: 0 8px 24px rgba(0,0,0,0.25);
   }
 
@@ -134,6 +135,7 @@
     border-radius: 16px;
     overflow: hidden;
     box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+    margin-top: 10px;
   }
 
   .invoices-table th {
@@ -188,6 +190,10 @@
     color: var(--text);
   }
 
+  .filters-reset {
+  height: 38px;
+}
+
 
 
   @media (max-width: 768px) {
@@ -195,11 +201,15 @@
       display: none;
     }
 
+    .dash-content {
+    padding: 0 12px;
+  }
+
     .invoices-table tr {
       display: block;
       background: var(--card);
       border-radius: 14px;
-      padding: 12px;
+      padding: 10px;
       margin-bottom: 12px;
       border: 1px solid var(--line);
       margin-left: 0;
@@ -240,6 +250,7 @@
     }
 
     .invoices-actions .btn {
+      white-space: nowrap;
       width: 100%;
        font-size: 12px;
   padding: 6px 8px;
@@ -256,6 +267,8 @@
   .actions-right .btn {
     width: 100%;
   }
+  
+
 }
 
 
@@ -274,6 +287,7 @@
     .filters {
       flex-direction: column;
       align-items: stretch;
+      padding: 1rem;
     }
 
     header {
@@ -438,19 +452,19 @@
     background-color: var(--accent-hover);
   }
   .topbar {
-    position: sticky;
-    top: 0;
-    z-index: 10;
-    background: var(--bg);
-    backdrop-filter: blur(10px);
-    border-bottom: 1px solid var(--line);
-  }
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background: var(--bg);
+  border-bottom: 1px solid var(--line);
+  padding: 12px 20px;
+}
 
   .dash-content {
   width: 100%;
-  max-width: 1400px; /* або 1600 */
-  margin: 0 auto;
-  padding: 0 16px;
+  max-width: 100%;
+  margin: 0;
+  padding: 0 20px;
 }
 
 
