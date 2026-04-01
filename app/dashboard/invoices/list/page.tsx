@@ -173,14 +173,22 @@ export default function InvoiceListPage() {
       const colRef = collection(db, "users", firebaseUser.uid, "invoices");
       const q = query(colRef, orderBy("createdAt", "desc"));
 
-      unsubInvoices = onSnapshot(q, (snap) => {
-        const data: InvoiceWithId[] = snap.docs.map((d) => {
-          const docData = d.data() as InvoiceData;
-          return { id: d.id, ...docData };
-        });
-        setInvoices(data);
-        setLoading(false);
+      unsubInvoices = onSnapshot(
+        q,
+        (snap) => {
+       const data: InvoiceWithId[] = snap.docs.map((d) => {
+      const docData = d.data() as InvoiceData;
+      return { id: d.id, ...docData };
       });
+
+      setInvoices(data);
+      setLoading(false);
+      },
+         (error) => {
+     console.error("Invoices listener error:", error);
+    setLoading(false);
+      }
+);
     });
 
     return () => {
@@ -293,7 +301,12 @@ export default function InvoiceListPage() {
     const msg = tInvList.messages?.confirmDelete ?? "Delete this invoice?";
     if (!window.confirm(msg)) return;
     if (!user) return;
+    try {
     await deleteDoc(doc(db, "users", user.uid, "invoices", id));
+    } catch (e) {
+  console.error("Delete failed:", e);
+  alert("❌ Failed to delete invoice");
+}
   };
 
   const handleDownloadPdf = async (id: string, withBranding: boolean) => {
@@ -528,12 +541,18 @@ export default function InvoiceListPage() {
                 ) : (
                   filteredInvoices.map((inv) => (
                     <tr key={inv.id}>
-                      <td>{inv.invoiceNumber || "—"}</td>
-                      <td>{inv.clientName || "—"}</td>
-                      <td>{prettyStatus(inv.status)}</td>
-                      <td>{inv.invoiceDate || "—"}</td>
-                      <td>€{(Number(inv.grandTotal ?? 0) || 0).toFixed(2)}</td>
-                      <td className="invoices-actions">
+                     <td data-label="Invoice">{inv.invoiceNumber || "—"}</td>
+                      <td data-label="Client">{inv.clientName || "—"}</td>
+                      <td data-label="Status">
+                        <span className={`status-badge status-${inv.status}`}>
+                           {prettyStatus(inv.status)}
+                            </span>
+                          </td>
+                       <td data-label="Date">{inv.invoiceDate || "—"}</td>
+                     <td data-label="Total">
+                        €{(Number(inv.grandTotal ?? 0) || 0).toFixed(2)}
+                          </td>
+                      <td data-label="Actions" className="invoices-actions">
                         <button type="button" className="btn btn-sm" onClick={() => handleEdit(inv.id)}>
                           {tInvList.actions?.edit ?? "Edit"}
                         </button>

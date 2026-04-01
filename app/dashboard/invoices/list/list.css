@@ -36,20 +36,28 @@ header h1 {
   gap: 10px;
 }
 .btn {
-  padding: 8px 16px;
+  padding: 8px 14px;
   background: var(--accent);
   color: white;
   border: none;
-  border-radius: 6px;
-  text-decoration: none;
+  border-radius: 8px;
   cursor: pointer;
   font-size: 14px;
-  box-shadow: 0 4px 10px var(--shadow);
-  transition: background 0.2s ease;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  box-shadow: 0 6px 16px rgba(59, 121, 255, 0.25);
+  transition: all 0.2s ease;
 }
+
 .btn:hover {
   background: var(--accent-hover);
+  transform: translateY(-1px);
+  box-shadow: 0 8px 20px rgba(59, 121, 255, 0.35);
 }
+
 .btn-danger {
   background: var(--danger);
 }
@@ -85,16 +93,23 @@ main, .wrap {
   box-sizing: border-box;
 }
 
+.filters input:focus,
+.filters select:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 2px rgba(59,121,255,0.2);
+}
+
 .filters {
   display: flex;
   flex-wrap: wrap;
-  gap: 14px; /* <-- більше відстані між From / To */
-  align-items: flex-end;
+  gap: 16px;
+
   background: var(--card);
-  padding: 1rem;
-  border-radius: 12px;
+  padding: 1.2rem;
+  border-radius: 16px;
   border: 1px solid var(--line);
-  margin-bottom: 1.5rem;
+
+  box-shadow: 0 8px 24px rgba(0,0,0,0.25);
 }
 
 .filters button {
@@ -120,54 +135,77 @@ main, .wrap {
   cursor: pointer;
 }
 
-table {
+.invoices-table {
   width: 100%;
   border-collapse: collapse;
   background: var(--card);
-  border: 1px solid var(--line);
-  border-radius: 10px;
+  border-radius: 16px;
   overflow: hidden;
-  width: 100%;
-  margin: 1.5rem 0;
-}
-table th, table td {
-  padding: 12px 14px;
-  text-align: left;
-  font-size: 14px;
-  border-bottom: 1px solid var(--line);
-}
-table th {
-  background: var(--card);
-  color: var(--muted);
-  font-weight: 600;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.25);
 }
 
-table td button {
-  padding: 6px 10px;
-  font-size: 13px;
-  border-radius: 6px;
-  margin-right: 4px;
-  border: none;
-  cursor: pointer;
-  background: var(--accent);
-  color: white;
+.invoices-table th {
+  background: rgba(255,255,255,0.03);
+  color: var(--muted);
+  font-weight: 600;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+}
+
+
+.invoices-table tbody tr {
   transition: background 0.2s ease;
 }
-table td button:hover {
-  background: var(--accent-hover);
+
+.invoices-table tbody tr:hover {
+  background: rgba(59, 121, 255, 0.08);
 }
-table td button.btn-danger {
-  background: var(--danger);
+.status-badge {
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+  display: inline-block;
 }
-table td button.btn-danger:hover {
-  background: #d9363b;
+
+.status-draft {
+  background: rgba(255,255,255,0.1);
 }
+
+.status-sent {
+  background: rgba(59,121,255,0.2);
+  color: #6ea8ff;
+}
+
+.status-paid {
+  background: rgba(34,197,94,0.2);
+  color: #4ade80;
+}
+
+
 
 footer {
   text-align: center;
   font-size: 13px;
   color: var(--muted);
   margin: 2rem 0;
+}
+
+.actions-right {
+  display: flex;
+  gap: 10px;
+}
+
+@media (max-width: 768px) {
+  .actions-right {
+    width: 100%;
+    flex-direction: column;
+  }
+
+  .actions-right .btn {
+    width: 100%;
+  }
 }
 
 /* Responsive */
@@ -193,15 +231,9 @@ footer {
     text-align: center;
   }
 
-  table {
-    font-size: 13px;
-  }
+ 
 
-  table td button {
-    margin-top: 4px;
-    display: block;
-    width: 100%;
-  }
+  
 }
 .flatpickr-input {
   padding: 10px 14px;
@@ -318,36 +350,21 @@ footer {
   width: 100%;
   box-sizing: border-box;
 }
-section table {
-  width: 100%;
-  border-collapse: collapse;
-  background: var(--card);
-  border: 1px solid var(--line);
-  border-radius: 10px;
-  overflow: hidden;
-  box-shadow: 0 2px 8px var(--shadow);
-  margin-top: 1rem;
-}
 
-section table th,
-section table td {
-  padding: 12px 14px;
-  text-align: left;
-  font-size: 14px;
-  border-bottom: 1px solid var(--line);
-  color: var(--text);
-}
-
-section table th {
-  background: var(--card);
-  color: var(--muted);
-  font-weight: 600;
-  text-transform: uppercase;
-  font-size: 13px;
-  letter-spacing: 0.5px;
-}
 
 /* Actions column styling */
+.invoices-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.invoices-actions .btn {
+  padding: 6px 10px;
+  font-size: 12px;
+  border-radius: 6px;
+}
+
 .actions {
   display: flex;
   flex-wrap: wrap;
@@ -462,4 +479,54 @@ button {
 
 button:hover {
   background-color: var(--accent-hover);
+}
+.topbar {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background: rgba(14, 16, 20, 0.85);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--line);
+}
+
+.dash-content {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+@media (max-width: 768px) {
+  .invoices-table thead {
+    display: none;
+  }
+
+  .invoices-table,
+  .invoices-table tbody,
+  .invoices-table tr,
+  .invoices-table td {
+    display: block;
+    width: 100%;
+  }
+
+  .invoices-table tr {
+    margin-bottom: 14px;
+    background: var(--card);
+    border-radius: 12px;
+    padding: 10px;
+    border: 1px solid var(--line);
+  }
+
+  .invoices-table td {
+    display: flex;
+    justify-content: space-between;
+    padding: 6px 0;
+    border: none;
+  }
+}
+
+@media (max-width: 768px) {
+  .invoices-table td::before {
+    content: attr(data-label);
+    font-weight: 600;
+    color: var(--muted);
+  }
 }
