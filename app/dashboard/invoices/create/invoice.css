@@ -34,6 +34,7 @@ body.dash-theme-light {
   padding: 14px 22px;
   margin-bottom: 14px;
   border-bottom: 1px solid rgba(0,0,0,0.1);
+  backdrop-filter: blur(10px);
 }
 
 @media (max-width: 600px) {
@@ -49,6 +50,12 @@ body.dash-theme-light {
     gap: 8px;
     flex-wrap: wrap;
   }
+}
+
+h2 {
+  margin-top: 20px;
+  margin-bottom: 10px;
+  font-size: 18px;
 }
 
 body.dash-theme-dark .topbar {
@@ -80,6 +87,13 @@ body.dash-theme-light .topbar {
   align-items: center;
   gap: 6px;
   transition: 0.15s ease;
+   min-height: 40px;
+}
+
+.btn-primary {
+  background: #4f46e5;
+  color: white;
+  border: none;
 }
 
 @media (max-width: 768px) {
@@ -119,6 +133,15 @@ body.dash-theme-light .btn:hover {
   border-radius: 10px;
   margin: 12px 0;
   overflow: hidden;
+}
+
+section {
+  margin-bottom: 20px;
+}
+
+#grandTotal {
+  font-size: 20px;
+  font-weight: 700;
 }
 
 /* DARK */
@@ -247,7 +270,7 @@ body.dash-theme-light thead th {
 
 /* ROWS */
 tbody td {
-  padding: 6px 8px;
+  padding: 10px 12px;
   border-bottom: 1px solid rgba(0,0,0,0.08);
   font-size: 14px;
 }
@@ -257,8 +280,8 @@ tbody td {
  *****************************************************/
 canvas.signature {
   width: 100%;
-  max-width: 300px;
-  height: 140px;
+  max-width: 100%;
+  height: 160px;
   border-radius: 8px;
   background: #fff;
   border: 1px solid var(--border);
@@ -277,14 +300,36 @@ canvas.signature {
 }
 
 .invoice-content {
-  max-width: 900px;
+  max-width: 1100px;
   margin: 0 auto;
-  padding: 0 12px;
+  padding: 0 16px;
+}
+
+@media (min-width: 1200px) {
+  .invoice-content {
+    max-width: 1200px;
+  }
+}
+
+@media (min-width: 900px) {
+  .invoice-content form {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+
+  .invoice-content section {
+    grid-column: span 2;
+  }
+
+  .collapsible {
+    grid-column: span 1;
+  }
 }
 
 .signature-box {
   width: 100%;
-  max-width: 500px;
+  max-width: 420px;
   display: flex;
   flex-direction: column;
   gap: 10px;
