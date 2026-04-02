@@ -1,9 +1,9 @@
 /*****************************************************
  *  BASE (GLOBAL)
  *****************************************************/
-* { box-sizing: border-box; }
 
-html, body {
+
+.invoice-page  {
   margin: 0;
   padding: 0;
   min-height: 100vh;
@@ -11,23 +11,28 @@ html, body {
   line-height: 1.35;
 }
 
+.invoice-page,
+.invoice-page * {
+  box-sizing: border-box;
+}
+
 /*****************************************************
  *  THEME BACKGROUND
  *****************************************************/
-body.dash-theme-dark {
+body.dash-theme-dark .invoice-page {
   background: radial-gradient(circle at top, #020617, #020617 55%, #000 100%);
   color: #e5e7eb;
 }
 
-body.dash-theme-light {
+body.dash-theme-light .invoice-page {
   background: #f5f6f8;
-  color: #111827;
+  color: var(--text);
 }
 
 /*****************************************************
  *  TOPBAR (compact)
  *****************************************************/
-.topbar {
+.invoice-page .topbar {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -37,7 +42,7 @@ body.dash-theme-light {
   backdrop-filter: blur(10px);
 }
 
-.actions {
+.invoice-page .actions {
   display: flex;
   gap: 12px;
   flex-wrap: wrap;
@@ -45,13 +50,13 @@ body.dash-theme-light {
 }
 
 @media (max-width: 600px) {
-  .topbar {
+  .invoice-page .topbar {
     flex-direction: column;
     align-items: flex-start;
     gap: 10px;
   }
 
-  .actions-right {
+  .invoice-page .actions-right {
     width: 100%;
     display: flex;
     gap: 8px;
@@ -59,22 +64,22 @@ body.dash-theme-light {
   }
 }
 
-h2 {
+.invoice-page h2 {
   margin-top: 20px;
   margin-bottom: 10px;
   font-size: 18px;
 }
 
-body.dash-theme-dark .topbar {
+body.dash-theme-dark .invoice-page .topbar {
   background: rgba(2,6,23,0.55);
   border-bottom-color: rgba(255,255,255,0.07);
 }
 
-body.dash-theme-light .topbar {
-  background: #ffffff;
+body.dash-theme-light .invoice-page .topbar {
+  background: var(--card);
 }
 
-.invoice-title {
+.invoice-page .invoice-title {
   font-size: 20px;
   font-weight: 700;
   margin: 0;
@@ -83,7 +88,8 @@ body.dash-theme-light .topbar {
 /*****************************************************
  *  BUTTONS (compact)
  *****************************************************/
-.btn, button {
+.invoice-page .btn,
+.invoice-page button {
   appearance: none;
   padding: 8px 14px;
   border-radius: 8px;
@@ -97,77 +103,78 @@ body.dash-theme-light .topbar {
    min-height: 40px;
 }
 
-.btn-primary {
+.invoice-page .btn-primary {
   background: #4f46e5;
   color: white;
   border: none;
 }
 
 @media (max-width: 768px) {
-  .btn {
+  .invoice-page .btn {
     padding: 12px 16px;
     font-size: 15px;
   }
 }
 
 /* DARK */
-body.dash-theme-dark .btn,
-body.dash-theme-dark button {
+body.dash-theme-dark .invoice-page .btn,
+body.dash-theme-dark .invoice-page button {
   background: #232a42;
   border: 1px solid #3a4565;
   color: #e5e7eb;
 }
-body.dash-theme-dark .btn:hover {
+body.dash-theme-dark .invoice-page .btn:hover {
   filter: brightness(1.12);
 }
 
 /* LIGHT */
-body.dash-theme-light .btn,
-body.dash-theme-light button {
-  background: #ffffff;
+body.dash-theme-light .invoice-page .btn,
+body.dash-theme-light .invoice-page button {
+  background: var(--card);
   border: 1px solid rgba(0,0,0,0.15);
-  color: #111827;
+  color: var(--text);
 }
-body.dash-theme-light .btn:hover {
+body.dash-theme-light .invoice-page .btn:hover {
   background: rgba(0,0,0,0.06);
 }
 
 /*****************************************************
  *  COLLAPSIBLE SECTIONS (more compact)
  *****************************************************/
-.collapsible {
+.invoice-page .collapsible {
   border: 1px solid rgba(0,0,0,0.15);
   border-radius: 10px;
   margin: 12px 0;
   overflow: hidden;
 }
 
-section {
+.invoice-page section {
   margin-bottom: 20px;
   width: 100%;
+  
 }
 
-#grandTotal {
+.invoice-page #grandTotal {
   font-size: 20px;
   font-weight: 700;
 }
 
 /* DARK */
-body.dash-theme-dark .collapsible {
+body.dash-theme-dark .invoice-page .collapsible {
   background: #131a30;
   border-color: rgba(255,255,255,0.08);
 }
 
 /* LIGHT */
-body.dash-theme-light .collapsible {
-  background: #ffffff;
+body.dash-theme-light .invoice-page .collapsible {
+  background: var(--card);
 }
 
-body.dash-theme-light canvas.signature {
+body.dash-theme-light .invoice-page canvas.signature {
   border: 1px solid rgba(0,0,0,0.18);
 }
 
-.section-toggle {
+.invoice-page .section-toggle {
   width: 100%;
   padding: 10px 14px;
   font-size: 15px;
@@ -179,31 +186,31 @@ body.dash-theme-light canvas.signature {
 }
 
 /* DARK */
-body.dash-theme-dark .section-toggle {
+body.dash-theme-dark .invoice-page .section-toggle {
   background: #1a2233;
   color: #e5e7eb;
 }
 
 /* LIGHT */
-body.dash-theme-light .section-toggle {
+body.dash-theme-light .invoice-page .section-toggle {
   background: #f3f4f6;
-  color: #111827;
+  color: var(--text);
 }
 
-.section-content {
+.invoice-page .section-content {
   padding: 14px 16px;
   display: none;
 }
-.section-content.open {
+.invoice-page .section-content.open {
   display: block;
 }
 
 @media (max-width: 768px) {
-  .section-content {
+  .invoice-page .section-content {
     padding: 16px 14px;
   }
 
-  input, select {
+  .invoice-page input, .invoice-page select {
     margin-bottom: 10px;
   }
 }
@@ -211,14 +218,14 @@ body.dash-theme-light .section-toggle {
 /*****************************************************
  *  FORM-FIELDS (compact)
  *****************************************************/
-label {
+.invoice-page label {
   display: block;
   margin: 4px 0;
   font-size: 13px;
   opacity: 0.85;
 }
 
-input, select, textarea {
+.invoice-page input, .invoice-page select, .invoice-page textarea {
   width: 100%;
   padding: 8px 10px;
   border-radius: 8px;
@@ -228,78 +235,76 @@ input, select, textarea {
 }
 
 /* DARK */
-body.dash-theme-dark input,
-body.dash-theme-dark select,
-body.dash-theme-dark textarea {
+body.dash-theme-dark .invoice-page input,
+body.dash-theme-dark .invoice-page select,
+body.dash-theme-dark .invoice-page textarea {
   background: #121728;
   border-color: #2b3350;
   color: #e5e7eb;
 }
 
 /* LIGHT */
-body.dash-theme-light input,
-body.dash-theme-light select,
-body.dash-theme-light textarea {
-  background: #ffffff;
+body.dash-theme-light .invoice-page input,
+body.dash-theme-light .invoice-page select,
+body.dash-theme-light .invoice-page textarea {
+  background: var(--card);
   border-color: rgba(0,0,0,0.18);
 }
 
 /*****************************************************
  *  ITEMS TABLE (tighter, cleaner)
  *****************************************************/
-table {
+.invoice-page table{
   width: 100%;
   border-collapse: collapse;
   border-radius: 10px;
   overflow: hidden;
   margin-top: 6px;
-}
-
-section table {
-  width: 100%;
-}
-
-table {
   table-layout: fixed;
 }
 
-td input,
-td select {
+
+
+
+
+.invoice-page td input,
+.invoice-page td select {
   width: 100%;
 }
 
-thead th,
-tbody td {
+.invoice-page thead th,
+.invoice-page tbody td {
   vertical-align: middle;
 }
 @media (max-width: 768px) {
-  table {
+  .invoice-page table {
     display: block;
     overflow-x: auto;
     white-space: nowrap;
+    
   }
 }
 
 /* HEADERS */
-thead th {
+.invoice-page thead th {
   text-align: left;
   padding: 10px 8px;
   font-size: 13px;
   font-weight: 600;
 }
 
-body.dash-theme-dark thead th {
+body.dash-theme-dark .invoice-page thead th {
   background: #131a30;
   color: #b7c2de;
 }
 
-body.dash-theme-light thead th {
+body.dash-theme-light .invoice-page thead th {
   background: #eef0f3;
-  color: #111827;
+  color: var(--text);
 }
 
 /* ROWS */
-tbody td {
+.invoice-page tbody td {
   padding: 10px 12px;
   border-bottom: 1px solid rgba(0,0,0,0.08);
   font-size: 14px;
@@ -308,7 +313,7 @@ tbody td {
 /*****************************************************
  *  SIGNATURES (clean compact)
  *****************************************************/
-canvas.signature {
+.invoice-page canvas.signature {
   width: 100%;
   max-width: 320px;
   height: 150px;
@@ -317,7 +322,7 @@ canvas.signature {
   border: 1px solid rgba(255,255,255,0.12);
 }
 
-.signatures-wrap {
+.invoice-page .signatures-wrap {
   display: flex;
   gap: 48px;
   align-items: flex-start;
@@ -325,32 +330,32 @@ canvas.signature {
   margin-top: 20px;
 }
 @media (max-width: 768px) {
-  .signatures-wrap {
+  .invoice-page .signatures-wrap {
     flex-direction: column;
     gap: 24px;
   }
 }
 
-.invoice-content {
+.invoice-page .invoice-content {
   max-width: 100%;
   margin: 0 auto;
   padding: 0 32px;
 }
-.invoice-content form {
+.invoice-page .invoice-content form {
   display: flex;
   flex-direction: column;
   gap: 0;
 }
 
 @media (min-width: 1200px) {
-  .invoice-content {
+  .invoice-page .invoice-content {
      padding: 0 14px;
   }
 }
 
 
 
-.signature-box {
+.invoice-page .signature-box {
   flex: 1 1 0;
    max-width: 100%;
   display: flex;
@@ -358,13 +363,13 @@ canvas.signature {
   gap: 10px;
   }
 
-.signature-box button {
+.invoice-page .signature-box button {
   width: fit-content;
   min-width: 108px;
   padding: 8px 12px;
 }
 
-.signature-box p {
+.invoice-page .signature-box p {
   font-size: 13px;
   margin: 0;
   opacity: 0.8;
@@ -373,7 +378,7 @@ canvas.signature {
 /*****************************************************
  *  FOOTER
  *****************************************************/
-footer {
+.invoice-page footer {
   padding: 16px;
   text-align: center;
   font-size: 13px;

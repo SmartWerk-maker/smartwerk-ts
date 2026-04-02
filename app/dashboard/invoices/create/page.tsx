@@ -35,6 +35,7 @@ import "./invoice.css";
 // ===== TYPES =====
 
 interface InvoiceItem {
+  
   desc: string;
   qty: number;
   price: number;
@@ -121,7 +122,9 @@ export default function InvoiceCreatePage() {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
 
-  const [itemsState, setItemsState] = useState<InvoiceItem[]>([]);
+  const [itemsState, setItemsState] = useState<InvoiceItem[]>([
+  { desc: "", qty: 1, price: 0, vat: 21 }
+]);
   const [saving, setSaving] = useState(false);
 
   const { language } = useLanguage();
@@ -132,8 +135,18 @@ export default function InvoiceCreatePage() {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const tInv: any = tRoot.invoices || {};
 
-  // дрібний хелпер
-  const $ = (id: string) => document.getElementById(id);
+  const [openSections, setOpenSections] = useState({
+  business: false,
+  client: false
+});
+
+const toggleSection = (key: "business" | "client") => {
+  setOpenSections((prev) => ({
+    ...prev,
+    [key]: !prev[key]
+  }));
+};
+ 
 
   const totals = React.useMemo(() => {
   let subtotal = 0;
@@ -154,226 +167,70 @@ export default function InvoiceCreatePage() {
   };
 }, [itemsState]);
 
+ const [form, setForm] = useState({
+  businessName: "",
+  kvk: "",
+  iban: "",
+  btw: "",
+  email: "",
+  businessAddress: "",
+  businessPhone: "",
+
+  clientName: "",
+  clientEmail: "",
+  clientPhone: "",
+  clientAddress: "",
+
+  invoiceDate: "",
+  dueDate: "",
+  invoiceNumber: "",
+  status: "draft" as InvoiceStatus,
+  note: ""
+});
+
+const businessCanvasRef = React.useRef<HTMLCanvasElement | null>(null);
+const clientCanvasRef = React.useRef<HTMLCanvasElement | null>(null);
+
+const [signatures, setSignatures] = useState({
+  business: "",
+  client: "",
+  businessDate: "",
+  clientDate: ""
+});
+
   /* ========== ITEMS & TOTALS ========== */
 
-  function syncItemsFromDOM() {
-  const rows: InvoiceItem[] = [];
+const addItem = () => {
+  setItemsState((prev) => [
+    ...prev,
+    { desc: "", qty: 1, price: 0, vat: 21 }
+  ]);
+};
 
-  document.querySelectorAll<HTMLTableRowElement>("#itemsBody tr").forEach(
-    (tr) => {
-      rows.push({
-        desc:
-          tr.querySelector<HTMLInputElement>(".desc")?.value ?? "",
-        qty:
-          parseFloat(
-            tr.querySelector<HTMLInputElement>(".qty")?.value ?? "0"
-          ) || 0,
-        price:
-          parseFloat(
-            tr.querySelector<HTMLInputElement>(".price")?.value ?? "0"
-          ) || 0,
-        vat:
-          parseFloat(
-            tr.querySelector<HTMLSelectElement>(".vat")?.value ?? "0"
-          ) || 0,
-      });
-    }
-  );
+const removeItem = (index: number) => {
+  setItemsState((prev) => prev.filter((_, i) => i !== index));
+};
 
-  setItemsState(rows);
-}
-
-  function updateTotals() {
-    let subtotal = 0;
-    let totalVat = 0;
-
-    document.querySelectorAll<HTMLTableRowElement>("#itemsBody tr").forEach(
-      (tr) => {
-        const qty =
-          parseFloat(
-            (tr.querySelector<HTMLInputElement>(".qty")?.value ?? "0")
-          ) || 0;
-        const price =
-          parseFloat(
-            (tr.querySelector<HTMLInputElement>(".price")?.value ?? "0")
-          ) || 0;
-        const vat =
-          parseFloat(
-            (tr.querySelector<HTMLSelectElement>(".vat")?.value ?? "0")
-          ) || 0;
-
-        const line = qty * price;
-        const v = (line * vat) / 100;
-        subtotal += line;
-        totalVat += v;
-
-        const totalCell = tr.querySelector<HTMLTableCellElement>(".item-total");
-        if (totalCell) {
-          totalCell.innerText = "€" + (line + v).toFixed(2);
-        }
-      }
-    );
-
-    const subtotalEl = $("subtotal");
-    const totalVatEl = $("totalVat");
-    const grandTotalEl = $("grandTotal");
-
-    if (subtotalEl) subtotalEl.innerText = "€" + subtotal.toFixed(2);
-    if (totalVatEl) totalVatEl.innerText = "€" + totalVat.toFixed(2);
-    if (grandTotalEl) {
-      grandTotalEl.innerText = "€" + (subtotal + totalVat).toFixed(2);
-    }
-  }
-
-  function addItem(desc = "", qty = 1, price = 0, vat = 21) {
-    const itemId = Date.now();
-    const tr = document.createElement("tr");
-    tr.innerHTML = `
-      <td><input class="desc" name="itemDesc[]" id="desc-${itemId}" value="${desc}" /></td>
-      <td><input class="qty" name="itemQty[]" id="qty-${itemId}" type="number" value="${qty}" min="1" /></td>
-      <td><input class="price" name="itemPrice[]" id="price-${itemId}" type="number" value="${price}" step="0.01" /></td>
-      <td>
-        <select class="vat" name="itemVat[]" id="vat-${itemId}">
-          <option value="0"${vat === 0 ? " selected" : ""}>0</option>
-          <option value="9"${vat === 9 ? " selected" : ""}>9</option>
-          <option value="21"${vat === 21 ? " selected" : ""}>21</option>
-        </select>
-      </td>
-      <td class="item-total">€0.00</td>
-      <td><button type="button" class="btn-del">❌</button></td>
-    `;
-
-    tr.querySelectorAll<HTMLInputElement | HTMLSelectElement>(
-      "input,select"
-    ).forEach((el) => {
-      el.addEventListener("input", () => {
-  updateTotals();
-  syncItemsFromDOM();
-});
-    });
-
-    tr.querySelector<HTMLButtonElement>(".btn-del")?.addEventListener(
-      "click",
-      () => {
-       tr.remove();
-      updateTotals();
-      syncItemsFromDOM();
-      }
-    );
-
-    document.getElementById("itemsBody")?.appendChild(tr);
-    updateTotals();
-    syncItemsFromDOM();
-    
-  }
-
+const updateItem = (
+  index: number,
+  field: keyof InvoiceItem,
+  value: number | string
+) => {
+  setItemsState((prev) => {
+    const copy = [...prev];
+    copy[index] = { ...copy[index], [field]: value };
+    return copy;
+  });
+};
   /* ========== SIGNATURES ========== */
 
-  function setupSignature(canvasId: string, dateId: string) {
-    const canvas = document.getElementById(
-      canvasId
-    ) as HTMLCanvasElement | null;
-    if (!canvas) return;
+  
 
-    const ctx = canvas.getContext("2d");
-    if (!ctx) return;
-
-    let drawing = false;
-
-    const getPos = (e: MouseEvent | TouchEvent) => {
-      const rect = canvas.getBoundingClientRect();
-      const clientX =
-        "touches" in e
-          ? e.touches[0]?.clientX ?? e.changedTouches[0]?.clientX ?? 0
-          : (e as MouseEvent).clientX;
-      const clientY =
-        "touches" in e
-          ? e.touches[0]?.clientY ?? e.changedTouches[0]?.clientY ?? 0
-          : (e as MouseEvent).clientY;
-
-      return { x: clientX - rect.left, y: clientY - rect.top };
-    };
-
-    const start = (e: MouseEvent | TouchEvent) => {
-      e.preventDefault();
-      drawing = true;
-      const { x, y } = getPos(e);
-      ctx.beginPath();
-      ctx.moveTo(x, y);
-    };
-
-    const move = (e: MouseEvent | TouchEvent) => {
-      if (!drawing) return;
-      e.preventDefault();
-      const { x, y } = getPos(e);
-      ctx.lineWidth = 2;
-      ctx.lineCap = "round";
-      ctx.strokeStyle = "#000";
-      ctx.lineTo(x, y);
-      ctx.stroke();
-    };
-
-    const end = () => {
-      if (!drawing) return;
-      drawing = false;
-      const dateSpan = document.getElementById(dateId);
-      if (dateSpan) {
-        dateSpan.textContent = new Date().toLocaleDateString("nl-NL");
-      }
-    };
-
-    // MOUSE
-    canvas.addEventListener("mousedown", start);
-    canvas.addEventListener("mousemove", move);
-    window.addEventListener("mouseup", end);
-
-    // TOUCH
-    canvas.addEventListener("touchstart", start, { passive: false });
-    canvas.addEventListener("touchmove", move, { passive: false });
-    window.addEventListener("touchend", end, { passive: false });
-  }
-
-  function clearSignature(id: string) {
-    const canvas = document.getElementById(id) as HTMLCanvasElement | null;
-    if (!canvas) return;
-
-    const ctx = canvas.getContext("2d");
-    if (!ctx) return;
-
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-    if (id === "signatureBusiness") {
-      const span = document.getElementById("signatureBusinessDate");
-      if (span) span.textContent = "";
-    }
-
-    if (id === "signatureClient") {
-      const span = document.getElementById("signatureClientDate");
-      if (span) span.textContent = "";
-    }
-  }
+ 
 
   /* ========== DATES (без flatpickr) ========== */
 
-  function initDates() {
-    const inv = $("invoiceDate") as HTMLInputElement | null;
-    const due = $("dueDate") as HTMLInputElement | null;
-    if (!inv || !due) return;
-
-    inv.type = "date";
-    due.type = "date";
-
-    inv.addEventListener("change", () => {
-      if (!inv.value) return;
-      const d = new Date(inv.value);
-      if (Number.isNaN(d.getTime())) return;
-      d.setDate(d.getDate() + 14);
-      const y = d.getFullYear();
-      const m = String(d.getMonth() + 1).padStart(2, "0");
-      const dd = String(d.getDate()).padStart(2, "0");
-      due.value = `${y}-${m}-${dd}`;
-    });
-  }
+  
 
   /* ========== FIRESTORE: номер інвойсу ========== */
 
@@ -389,10 +246,14 @@ export default function InvoiceCreatePage() {
         3,
         "0"
       )}`;
-      const invoiceNumberInput = $("invoiceNumber") as HTMLInputElement | null;
-      if (invoiceNumberInput && !invoiceNumberInput.value) {
-        invoiceNumberInput.placeholder = preview;
-      }
+      
+
+      setForm((prev) => {
+  if (!prev.invoiceNumber) {
+    return { ...prev, invoiceNumber: preview };
+  }
+  return prev;
+});
     } catch {
       // ігноруємо
     }
@@ -419,45 +280,28 @@ export default function InvoiceCreatePage() {
   /* ========== PROFILE → авто-заповнення ========== */
 
   async function loadProfileData(uid: string, userEmail?: string | null) {
-    try {
-      const ref = doc(db, "users", uid);
-      const snap = await getDoc(ref);
-      if (!snap.exists()) return;
+  try {
+    const ref = doc(db, "users", uid);
+    const snap = await getDoc(ref);
+    if (!snap.exists()) return;
 
-      const p = snap.data() as UserProfileDoc;
+    const p = snap.data() as UserProfileDoc;
+    const addressParts = [p.city, p.country].filter(Boolean).join(", ");
 
-      if (userEmail && $("email")) {
-        ($("email") as HTMLInputElement).value = userEmail;
-      }
-
-      if (p.companyName && $("businessName")) {
-        ($("businessName") as HTMLInputElement).value = p.companyName;
-      }
-
-      if (p.kvk && $("kvk")) {
-        ($("kvk") as HTMLInputElement).value = p.kvk;
-      }
-
-      if (p.iban && $("iban")) {
-        ($("iban") as HTMLInputElement).value = p.iban;
-      }
-
-      if (p.vatNumber && $("btw")) {
-        ($("btw") as HTMLInputElement).value = p.vatNumber;
-      }
-
-      if (p.phone && $("businessPhone")) {
-        ($("businessPhone") as HTMLInputElement).value = p.phone;
-      }
-
-      const addressParts = [p.city, p.country].filter(Boolean).join(", ");
-      if (addressParts && $("businessAddress")) {
-        ($("businessAddress") as HTMLInputElement).value = addressParts;
-      }
-    } catch (e) {
-      console.error("Profile load error:", e);
-    }
+    setForm((prev) => ({
+      ...prev,
+      businessName: p.companyName ?? prev.businessName,
+      kvk: p.kvk ?? prev.kvk,
+      iban: p.iban ?? prev.iban,
+      btw: p.vatNumber ?? prev.btw,
+      email: userEmail ?? prev.email,
+      businessPhone: p.phone ?? prev.businessPhone,
+      businessAddress: addressParts || prev.businessAddress,
+    }));
+  } catch (e) {
+    console.error("Profile load error:", e);
   }
+}
 
   /* ========== CLIENT → localStorage.selectedClient ========== */
 
@@ -469,10 +313,13 @@ export default function InvoiceCreatePage() {
     const c = JSON.parse(savedClient);
 
     // UI
-    ($("clientName") as HTMLInputElement | null)!.value = c.clientName ?? "";
-    ($("clientEmail") as HTMLInputElement | null)!.value = c.email ?? "";
-    ($("clientPhone") as HTMLInputElement | null)!.value = c.phone ?? "";
-    ($("clientAddress") as HTMLInputElement | null)!.value = c.address ?? "";
+   setForm((prev) => ({
+  ...prev,
+  clientName: c.clientName ?? "",
+  clientEmail: c.email ?? "",
+  clientPhone: c.phone ?? "",
+  clientAddress: c.address ?? ""
+}));
 
     // 🔑 ЗБЕРІГАЄМО clientId ДЛЯ FIRESTORE
     localStorage.setItem("invoiceClientId", c.clientId);
@@ -484,23 +331,9 @@ export default function InvoiceCreatePage() {
   }
 }
 
-  /* ========== COLLAPSIBLES ========== */
+  
 
-  function initCollapsibles() {
-    document
-      .querySelectorAll<HTMLButtonElement>(".section-toggle")
-      .forEach((button) => {
-        button.addEventListener("click", () => {
-          const content = button.nextElementSibling as HTMLElement | null;
-          const icon = button.querySelector<HTMLElement>(".toggle-icon");
-          if (!content) return;
-          const isOpen = content.classList.toggle("open");
-          if (icon) icon.textContent = isOpen ? "🔽" : "▶️";
-        });
-      });
-  }
-
- 
+  
 
   /* ========== LOAD FOR EDIT ========== */
 
@@ -512,6 +345,7 @@ export default function InvoiceCreatePage() {
     const snap = await getDoc(ref);
     if (!snap.exists()) {
       localStorage.removeItem("editInvoiceId");
+      localStorage.removeItem("invoiceClientId");
       return;
     }
     const inv = snap.data() as InvoiceData & {
@@ -522,81 +356,64 @@ export default function InvoiceCreatePage() {
   localStorage.setItem("invoiceClientId", inv.clientId);
 }
     
+  setForm({
+  businessName: inv.businessName ?? "",
+  kvk: inv.kvk ?? "",
+  iban: inv.iban ?? "",
+  btw: inv.btw ?? "",
+  email: inv.email ?? "",
+  businessAddress: inv.businessAddress ?? "",
+  businessPhone: inv.businessPhone ?? "",
 
-    (($("businessName") as HTMLInputElement | null)!).value =
-      inv.businessName ?? "";
-    (($("kvk") as HTMLInputElement | null)!).value = inv.kvk ?? "";
-    (($("iban") as HTMLInputElement | null)!).value = inv.iban ?? "";
-    (($("btw") as HTMLInputElement | null)!).value = inv.btw ?? "";
-    (($("email") as HTMLInputElement | null)!).value = inv.email ?? "";
-    (($("businessAddress") as HTMLInputElement | null)!).value =
-      inv.businessAddress ?? "";
-    (($("businessPhone") as HTMLInputElement | null)!).value =
-      inv.businessPhone ?? "";
+  clientName: inv.clientName ?? "",
+  clientEmail: inv.clientEmail ?? "",
+  clientPhone: inv.clientPhone ?? "",
+  clientAddress: inv.clientAddress ?? "",
 
-    (($("clientName") as HTMLInputElement | null)!).value =
-      inv.clientName ?? "";
-    (($("clientEmail") as HTMLInputElement | null)!).value =
-      inv.clientEmail ?? "";
-    (($("clientPhone") as HTMLInputElement | null)!).value =
-      inv.clientPhone ?? "";
-    (($("clientAddress") as HTMLInputElement | null)!).value =
-      inv.clientAddress ?? "";
+  invoiceDate: inv.invoiceDate ?? "",
+  dueDate: inv.dueDate ?? "",
+  invoiceNumber: inv.invoiceNumber ?? "",
+  status: inv.status ?? "draft",
+  note: inv.note ?? ""
+});
+   
+    if (inv.items && inv.items.length > 0) {
+  setItemsState(inv.items);
+} else {
+  setItemsState([{ desc: "", qty: 1, price: 0, vat: 21 }]);
+}
 
-    (($("invoiceDate") as HTMLInputElement | null)!).value =
-      inv.invoiceDate ?? "";
-    (($("dueDate") as HTMLInputElement | null)!).value = inv.dueDate ?? "";
-    (($("invoiceNumber") as HTMLInputElement | null)!).value =
-      inv.invoiceNumber ?? "";
-    (($("status") as HTMLSelectElement | null)!).value =
-      inv.status ?? "draft";
-    (($("note") as HTMLTextAreaElement | null)!).value = inv.note ?? "";
+   if (inv.signatures) {
+  setSignatures({
+    business: inv.signatures.business || "",
+    client: inv.signatures.client || "",
+    businessDate: inv.signatures.businessDate || "",
+    clientDate: inv.signatures.clientDate || ""
+  });
+}
 
-    const itemsBody = $("itemsBody");
-    if (itemsBody) {
-      itemsBody.innerHTML = "";
-      (inv.items ?? []).forEach((it: InvoiceItem) =>
-        addItem(it.desc, it.qty, it.price, it.vat)
-      );
-      if ((inv.items ?? []).length === 0) addItem();
-    }
-
-    if (inv.signatures?.business) {
-      const img = new Image();
-      img.onload = () => {
-        const c = $("signatureBusiness") as HTMLCanvasElement | null;
-        if (!c) return;
-        const ctx = c.getContext("2d");
-        if (!ctx) return;
-        c.width = c.offsetWidth;
-        c.height = c.offsetHeight;
-        ctx.clearRect(0, 0, c.width, c.height);
-        ctx.drawImage(img, 0, 0, c.width, c.height);
-      };
-      img.src = inv.signatures.business;
-      const span = $("signatureBusinessDate");
-      if (span) span.textContent = inv.signatures.businessDate ?? "";
-    }
-
-    if (inv.signatures?.client) {
-      const img = new Image();
-      img.onload = () => {
-        const c = $("signatureClient") as HTMLCanvasElement | null;
-        if (!c) return;
-        const ctx = c.getContext("2d");
-        if (!ctx) return;
-        c.width = c.offsetWidth;
-        c.height = c.offsetHeight;
-        ctx.clearRect(0, 0, c.width, c.height);
-        ctx.drawImage(img, 0, 0, c.width, c.height);
-      };
-      img.src = inv.signatures.client;
-      const span = $("signatureClientDate");
-      if (span) span.textContent = inv.signatures.clientDate ?? "";
-    }
-
-    updateTotals();
+    
   }
+
+
+  const updateForm = (field: string, value: string) => {
+  setForm((prev) => {
+    const next = { ...prev, [field]: value };
+
+    if (field === "invoiceDate" && value) {
+      const d = new Date(value);
+      if (!Number.isNaN(d.getTime())) {
+        d.setDate(d.getDate() + 14);
+        const y = d.getFullYear();
+        const m = String(d.getMonth() + 1).padStart(2, "0");
+        const dd = String(d.getDate()).padStart(2, "0");
+        next.dueDate = `${y}-${m}-${dd}`;
+      }
+    }
+
+    return next;
+  });
+};
 
   /* ========== SAVE (create/update) ========== */
   /**
@@ -628,53 +445,38 @@ export default function InvoiceCreatePage() {
 
     const clientId = localStorage.getItem("invoiceClientId") ?? null;
 
-    const items: InvoiceItem[] = [];
+    const items = itemsState;
 
-    document.querySelectorAll<HTMLTableRowElement>("#itemsBody tr").forEach(
-      (tr) => {
-        items.push({
-          desc:
-            tr.querySelector<HTMLInputElement>(".desc")?.value ?? "",
-          qty:
-            parseFloat(
-              tr.querySelector<HTMLInputElement>(".qty")?.value ?? "0"
-            ) || 0,
-          price:
-            parseFloat(
-              tr.querySelector<HTMLInputElement>(".price")?.value ?? "0"
-            ) || 0,
-          vat:
-            parseFloat(
-              tr.querySelector<HTMLSelectElement>(".vat")?.value ?? "0"
-            ) || 0,
-        });
-      }
-    );
+   
+
+    
 
     // ✅ VALIDATION
     if (!items.length) {
-      alert("Add at least one item");
-      return;
-    }
-
-    if (!items.some((i) => i.qty > 0 && i.price > 0)) {
-      alert("Items must have quantity and price");
-      return;
-    }
-
-    const clientName =
-  ($("clientName") as HTMLInputElement | null)?.value.trim() ?? "";
-
-if (!clientName) {
-  alert("Client name is required");
+  alert("Add at least one item");
+  setSaving(false);
   return;
 }
 
-const invoiceDate =
-  ($("invoiceDate") as HTMLInputElement | null)?.value ?? "";
+    if (!items.some((i) => i.qty > 0 && i.price > 0)) {
+      alert("Items must have quantity and price");
+      setSaving(false);
+      return;
+    }
+
+    const clientName = form.clientName.trim();
+
+if (!clientName) {
+  alert("Client name is required");
+  setSaving(false);
+  return;
+}
+
+const invoiceDate = form.invoiceDate;
 
 if (!invoiceDate) {
   alert("Invoice date is required");
+  setSaving(false);
   return;
 }
 
@@ -695,31 +497,24 @@ items.forEach((i) => {
 
 const grandTotal = subtotal + totalVat;
 
-    const businessCanvas = $(
-      "signatureBusiness"
-    ) as HTMLCanvasElement | null;
-    const clientCanvas = $("signatureClient") as HTMLCanvasElement | null;
+    
 
-    const businessSig = businessCanvas?.toDataURL() ?? "";
-    const clientSig = clientCanvas?.toDataURL() ?? "";
+    const businessSig = signatures.business;
+  const clientSig = signatures.client;
+    
 
     const editingId = localStorage.getItem("editInvoiceId") || null;
 
-    let invoiceNumber = (
-      (($("invoiceNumber") as HTMLInputElement | null) ?? { value: "" })
-        .value || ""
-    ).trim();
+    let invoiceNumber = form.invoiceNumber.trim();
 
     if (!editingId && !invoiceNumber) {
-      invoiceNumber = await generateInvoiceNumber(uid);
-      const invoiceInput = $("invoiceNumber") as HTMLInputElement | null;
-      if (invoiceInput) invoiceInput.value = invoiceNumber;
-    }
+  invoiceNumber = await generateInvoiceNumber(uid);
+  setForm((prev) => ({ ...prev, invoiceNumber }));
+}
 
-    const statusRaw =
-  (($("status") as HTMLSelectElement | null)?.value ?? "draft");
+   const statusRaw = form.status;
 
-const normalizedStatus = statusRaw.toLowerCase() as
+const normalizedStatus = (statusRaw || "draft").toLowerCase() as
   | "draft"
   | "sent"
   | "paid";
@@ -737,7 +532,7 @@ const data: InvoiceFirestoreMeta & InvoiceData = {
 
   /* ================= DASHBOARD CONTRACT ================= */
   uid,                             // 🔑 для useInvoices
-  number: invoiceNumber,           // 🔑
+  number: invoiceNumber,          // 🔑
   status: normalizedStatus,        // 🔑 lowercase
   total: grandTotal,               // 🔑
   createdAt: createdAtValue, // 🔑
@@ -745,33 +540,23 @@ const data: InvoiceFirestoreMeta & InvoiceData = {
   clientId,               // 🔑
 
   /* ================= FORM / UI DATA ================= */
-  businessName:
-    (($("businessName") as HTMLInputElement | null)?.value ?? ""),
-  kvk: (($("kvk") as HTMLInputElement | null)?.value ?? ""),
-  iban: (($("iban") as HTMLInputElement | null)?.value ?? ""),
-  btw: (($("btw") as HTMLInputElement | null)?.value ?? ""),
-  email: (($("email") as HTMLInputElement | null)?.value ?? ""),
-  businessAddress:
-    (($("businessAddress") as HTMLInputElement | null)?.value ?? ""),
-  businessPhone:
-    (($("businessPhone") as HTMLInputElement | null)?.value ?? ""),
+  businessName: form.businessName,
+kvk: form.kvk,
+iban: form.iban,
+btw: form.btw,
+email: form.email,
+businessAddress: form.businessAddress,
+businessPhone: form.businessPhone,
 
-  clientName:
-    (($("clientName") as HTMLInputElement | null)?.value ?? ""),
-  clientEmail:
-    (($("clientEmail") as HTMLInputElement | null)?.value ?? ""),
-  clientPhone:
-    (($("clientPhone") as HTMLInputElement | null)?.value ?? ""),
-  clientAddress:
-    (($("clientAddress") as HTMLInputElement | null)?.value ?? ""),
+clientName: form.clientName,
+clientEmail: form.clientEmail,
+clientPhone: form.clientPhone,
+clientAddress: form.clientAddress,
 
-  invoiceDate:
-    (($("invoiceDate") as HTMLInputElement | null)?.value ?? ""),
-  dueDate:
-    (($("dueDate") as HTMLInputElement | null)?.value ?? ""),
-  invoiceNumber,
-  note:
-    (($("note") as HTMLTextAreaElement | null)?.value ?? ""),
+invoiceDate: form.invoiceDate,
+dueDate: form.dueDate,
+invoiceNumber,
+note: form.note,
 
   items,
   subtotal,
@@ -782,13 +567,11 @@ const data: InvoiceFirestoreMeta & InvoiceData = {
   grandTotalFormatted: "€" + grandTotal.toFixed(2),
 
   signatures: {
-    business: businessSig,
-    client: clientSig,
-    businessDate:
-      $("signatureBusinessDate")?.textContent ?? "",
-    clientDate:
-      $("signatureClientDate")?.textContent ?? "",
-  },
+  business: businessSig,
+  client: clientSig,
+  businessDate: signatures.businessDate,
+  clientDate: signatures.clientDate,
+},
 };
 
     if (editingId) {
@@ -839,23 +622,24 @@ localStorage.removeItem("invoiceClientId");
 useEffect(() => {
   const unsub = onAuthStateChanged(auth, async (firebaseUser) => {
     if (!firebaseUser) {
+      setLoading(false);
       router.push("/login");
       return;
     }
 
     setUser(firebaseUser);
 
-    initDates();
-    if (!document.querySelector("#itemsBody tr")) addItem();
-    updateTotals();
-    syncItemsFromDOM();
+   
+    
+      await previewNextInvoiceNumber(firebaseUser.uid);
+      await loadProfileData(firebaseUser.uid, firebaseUser.email);
+      await loadForEdit(firebaseUser.uid);
 
-    await previewNextInvoiceNumber(firebaseUser.uid);
-    await loadProfileData(firebaseUser.uid, firebaseUser.email);
-    await loadForEdit(firebaseUser.uid);
-
-    autofillClientFromLocalStorage();
-    initCollapsibles();
+if (!localStorage.getItem("editInvoiceId")) {
+  await previewNextInvoiceNumber(firebaseUser.uid);
+}
+      autofillClientFromLocalStorage();
+   
 
     setLoading(false);
   });
@@ -865,16 +649,241 @@ useEffect(() => {
 /* eslint-enable react-hooks/exhaustive-deps */
 
   // ініціалізація підписів після того, як DOM готовий
-  useEffect(() => {
-    if (!user || loading) return;
-    setupSignature("signatureBusiness", "signatureBusinessDate");
-    setupSignature("signatureClient", "signatureClientDate");
-    return () => {
-    window.removeEventListener("mouseup", () => {});
-    window.removeEventListener("touchend", () => {});
+  
+
+   useEffect(() => {
+  const canvas = businessCanvasRef.current;
+  if (!canvas) return;
+
+  const ctx = canvas.getContext("2d");
+  if (!ctx) return;
+
+  let drawing = false;
+
+  const start = (e: MouseEvent) => {
+  drawing = true;
+
+  const rect = canvas.getBoundingClientRect();
+  const x = e.clientX - rect.left;
+  const y = e.clientY - rect.top;
+
+  ctx.beginPath();
+  ctx.moveTo(x, y);
+  
+};
+
+  const move = (e: MouseEvent) => {
+  if (!drawing) return;
+
+  const rect = canvas.getBoundingClientRect();
+  const x = e.clientX - rect.left;
+  const y = e.clientY - rect.top;
+
+  ctx.lineTo(x, y);
+  ctx.stroke();
+
+  
+};
+
+  const end = () => {
+    if (!drawing) return;
+    drawing = false;
+    ctx.beginPath();
+
+    setSignatures((prev) => ({
+      ...prev,
+      businessDate: new Date().toLocaleDateString("nl-NL"),
+      business: canvas.toDataURL()
+    }));
   };
-  },
-   [user, loading]);
+
+  canvas.addEventListener("mousedown", start);
+  canvas.addEventListener("mousemove", move);
+  window.addEventListener("mouseup", end);
+
+  const startTouch = (e: TouchEvent) => {
+  e.preventDefault();
+  drawing = true;
+
+  const rect = canvas.getBoundingClientRect();
+  const touch = e.touches[0];
+
+  const x = touch.clientX - rect.left;
+  const y = touch.clientY - rect.top;
+
+  ctx.beginPath();
+  ctx.moveTo(x, y);
+};
+
+const moveTouch = (e: TouchEvent) => {
+  if (!drawing) return;
+
+  const rect = canvas.getBoundingClientRect();
+  const touch = e.touches[0];
+
+  const x = touch.clientX - rect.left;
+  const y = touch.clientY - rect.top;
+
+  ctx.lineTo(x, y);
+  ctx.stroke();
+  ctx.lineWidth = 2;
+ctx.lineCap = "round";
+ctx.strokeStyle = "#000";
+};
+
+const endTouch = () => {
+  if (!drawing) return;
+  drawing = false;
+
+  setSignatures((prev) => ({
+    ...prev,
+    businessDate: new Date().toLocaleDateString("nl-NL"),
+    business: canvas.toDataURL()
+  }));
+};
+
+canvas.addEventListener("touchstart", startTouch);
+canvas.addEventListener("touchmove", moveTouch);
+window.addEventListener("touchend", endTouch);
+
+ return () => {
+  canvas.removeEventListener("mousedown", start);
+  canvas.removeEventListener("mousemove", move);
+  window.removeEventListener("mouseup", end);
+
+  canvas.removeEventListener("touchstart", startTouch);
+  canvas.removeEventListener("touchmove", moveTouch);
+  window.removeEventListener("touchend", endTouch);
+};
+}, []);
+
+
+useEffect(() => {
+  const canvas = clientCanvasRef.current;
+  if (!canvas) return;
+
+  const ctx = canvas.getContext("2d");
+  if (!ctx) return;
+
+  let drawing = false;
+
+  // ===== MOUSE =====
+  const start = (e: MouseEvent) => {
+    drawing = true;
+
+    const rect = canvas.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+
+    ctx.beginPath();
+    ctx.moveTo(x, y);
+  };
+
+  const move = (e: MouseEvent) => {
+    if (!drawing) return;
+
+    const rect = canvas.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+
+    ctx.lineTo(x, y);
+    ctx.stroke();
+  };
+
+  const end = () => {
+    if (!drawing) return;
+    drawing = false;
+
+    setSignatures((prev) => ({
+      ...prev,
+      clientDate: new Date().toLocaleDateString("nl-NL"),
+      client: canvas.toDataURL()
+    }));
+  };
+
+  // ===== TOUCH =====
+  const startTouch = (e: TouchEvent) => {
+    e.preventDefault();
+    drawing = true;
+
+    const rect = canvas.getBoundingClientRect();
+    const touch = e.touches[0];
+
+    const x = touch.clientX - rect.left;
+    const y = touch.clientY - rect.top;
+
+    ctx.beginPath();
+    ctx.moveTo(x, y);
+  };
+
+  const moveTouch = (e: TouchEvent) => {
+    if (!drawing) return;
+
+    const rect = canvas.getBoundingClientRect();
+    const touch = e.touches[0];
+
+    const x = touch.clientX - rect.left;
+    const y = touch.clientY - rect.top;
+
+    ctx.lineTo(x, y);
+    ctx.stroke();
+    ctx.lineWidth = 2;
+ctx.lineCap = "round";
+ctx.strokeStyle = "#000";
+  };
+
+  const endTouch = () => {
+    if (!drawing) return;
+    drawing = false;
+
+    setSignatures((prev) => ({
+      ...prev,
+      clientDate: new Date().toLocaleDateString("nl-NL"),
+      client: canvas.toDataURL()
+    }));
+  };
+
+  // ===== ADD LISTENERS =====
+  canvas.addEventListener("mousedown", start);
+  canvas.addEventListener("mousemove", move);
+  window.addEventListener("mouseup", end);
+
+  canvas.addEventListener("touchstart", startTouch);
+  canvas.addEventListener("touchmove", moveTouch);
+  window.addEventListener("touchend", endTouch);
+
+  // ===== CLEANUP =====
+  return () => {
+    canvas.removeEventListener("mousedown", start);
+    canvas.removeEventListener("mousemove", move);
+    window.removeEventListener("mouseup", end);
+
+    canvas.removeEventListener("touchstart", startTouch);
+    canvas.removeEventListener("touchmove", moveTouch);
+    window.removeEventListener("touchend", endTouch);
+  };
+}, []);
+
+
+useEffect(() => {
+  const draw = (canvas: HTMLCanvasElement | null, dataUrl: string) => {
+    if (!canvas || !dataUrl) return;
+
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
+
+    const img = new Image();
+    img.onload = () => {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+    };
+    img.src = dataUrl;
+  };
+
+  draw(businessCanvasRef.current, signatures.business);
+  draw(clientCanvasRef.current, signatures.client);
+}, [signatures]);
+
 
   /* ========== HANDLЕРИ ДЛЯ JSX ========== */
 
@@ -885,10 +894,39 @@ useEffect(() => {
     void saveInvoice();
   };
 
-  const handleClearBusinessSignature = () =>
-    clearSignature("signatureBusiness");
-  const handleClearClientSignature = () =>
-    clearSignature("signatureClient");
+  
+
+
+  const clearBusinessSignature = () => {
+  const canvas = businessCanvasRef.current;
+  if (!canvas) return;
+
+  const ctx = canvas.getContext("2d");
+  if (!ctx) return;
+
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  setSignatures((prev) => ({
+    ...prev,
+    business: "",
+    businessDate: ""
+  }));
+};
+  const clearClientSignature = () => {
+  const canvas = clientCanvasRef.current;
+  if (!canvas) return;
+
+  const ctx = canvas.getContext("2d");
+  if (!ctx) return;
+
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  setSignatures((prev) => ({
+    ...prev,
+    client: "",
+    clientDate: ""
+  }));
+};
 
   const handleBackDashboard = () => router.push("/dashboard");
   const handleGoToList = () =>
@@ -901,6 +939,8 @@ useEffect(() => {
       </div>
     );
   }
+
+  
 
   /* ========== RENDER ========== */
 
@@ -933,23 +973,26 @@ useEffect(() => {
           <form id="invoiceForm" onSubmit={(e) => e.preventDefault()}>
             {/* Business Info */}
             <section className="collapsible">
-              <button type="button" className="section-toggle">
+              <button
+            type="button"
+             className="section-toggle"
+             onClick={() => toggleSection("business")}
+                >
                 <span>
                   {label(tInv.businessSection, "Business Info")}
                 </span>
-                <span className="toggle-icon">▶️</span>
+               <span className="toggle-icon">
+                 {openSections.business ? "🔽" : "▶️"}
+                </span>
               </button>
-              <div className="section-content">
+              <div className={`section-content ${openSections.business ? "open" : ""}`}>
                 <label htmlFor="businessName">
                   {label(tInv.businessName, "Business Name")}
                 </label>
                 <input
-                  id="businessName"
-                  name="businessName"
-                  placeholder={label(
-                    tInv.businessName,
-                    "Full Name / Business Name"
-                  )}
+                 value={form.businessName}
+                   onChange={(e) => updateForm("businessName", e.target.value)}
+                  
                   autoComplete="organization"
                 />
 
@@ -957,94 +1000,87 @@ useEffect(() => {
                   {label(tInv.kvk, "KvK Number")}
                 </label>
                 <input
-                  id="kvk"
-                  name="kvk"
+                  value={form.kvk}
+                 onChange={(e) => updateForm("kvk", e.target.value)}
                   placeholder={label(tInv.kvk, "KvK Number")}
                   autoComplete="off"
-                />
+                    />
 
                 <label htmlFor="iban">
                   {label(tInv.iban, "IBAN")}
                 </label>
                 <input
-                  id="iban"
-                  name="iban"
-                  placeholder={label(tInv.iban, "IBAN")}
+                  value={form.iban}
+                  onChange={(e) => updateForm("iban", e.target.value)}
+                   placeholder={label(tInv.iban, "IBAN")}
                   autoComplete="iban"
-                />
+                      />
 
                 <label htmlFor="btw">
                   {label(tInv.btw, "VAT Number")}
                 </label>
-                <input
-                  id="btw"
-                  name="btw"
-                  placeholder={label(tInv.btw, "VAT Number")}
-                  autoComplete="off"
-                />
+               <input
+                    value={form.btw}
+                    onChange={(e) => updateForm("btw", e.target.value)}
+                      placeholder={label(tInv.btw, "VAT Number")}
+                    autoComplete="off"
+                      />
 
                 <label htmlFor="email">
                   {label(tInv.email, "Email")}
                 </label>
                 <input
-                  id="email"
-                  name="email"
-                  type="email"
-                  placeholder={label(
-                    tInv.email,
-                    "Business Email"
-                  )}
-                  autoComplete="email"
-                />
+                    type="email"
+                 value={form.email}
+                 onChange={(e) => updateForm("email", e.target.value)}
+                  placeholder={label(tInv.email, "Business Email")}
+                   autoComplete="email"
+                  />
 
                 <label htmlFor="businessAddress">
                   {label(tInv.address, "Business Address")}
                 </label>
                 <input
-                  id="businessAddress"
-                  name="businessAddress"
-                  placeholder={label(
-                    tInv.address,
-                    "Business Address"
-                  )}
-                  autoComplete="street-address"
-                />
+                     value={form.businessAddress}
+                    onChange={(e) => updateForm("businessAddress", e.target.value)}
+                      placeholder={label(tInv.address, "Business Address")}
+                 autoComplete="street-address"
+                  />
 
                 <label htmlFor="businessPhone">
                   {label(tInv.phone, "Business Phone")}
                 </label>
                 <input
-                  id="businessPhone"
-                  name="businessPhone"
-                  placeholder={label(
-                    tInv.phone,
-                    "Business Phone"
-                  )}
-                  type="tel"
-                  autoComplete="tel"
-                />
+                   type="tel"
+                     value={form.businessPhone}
+               onChange={(e) => updateForm("businessPhone", e.target.value)}
+                  placeholder={label(tInv.phone, "Business Phone")}
+               autoComplete="tel"
+                    />
               </div>
             </section>
 
             {/* Client Info */}
             <section className="collapsible">
-              <button type="button" className="section-toggle">
+             <button
+                type="button"
+              className="section-toggle"
+               onClick={() => toggleSection("client")}
+                  >
                 <span>
                   {label(tInv.clientSection, "Client Info")}
                 </span>
-                <span className="toggle-icon">▶️</span>
+                <span className="toggle-icon">
+                        {openSections.client ? "🔽" : "▶️"}
+                            </span>
               </button>
-              <div className="section-content">
+              <div className={`section-content ${openSections.client ? "open" : ""}`}>
                 <label htmlFor="clientName">
                   {label(tInv.clientName, "Client Name")}
                 </label>
                 <input
-                  id="clientName"
-                  name="clientName"
-                  placeholder={label(
-                    tInv.clientName,
-                    "Client Name"
-                  )}
+                  value={form.clientName}
+                  onChange={(e) => updateForm("clientName", e.target.value)}        
                   autoComplete="organization"
                 />
 
@@ -1052,49 +1088,47 @@ useEffect(() => {
                   {label(tInv.clientEmail, "Client Email")}
                 </label>
                 <input
-                  id="clientEmail"
-                  name="clientEmail"
-                  type="email"
-                  placeholder={label(
-                    tInv.clientEmail,
-                    "Client Email"
-                  )}
+                    value={form.clientEmail}
+                onChange={(e) => updateForm("clientEmail", e.target.value)}
+                  
                   autoComplete="email"
                 />
 
                 <label htmlFor="clientPhone">
                   {label(tInv.clientPhone, "Client Phone")}
                 </label>
-                <input
-                  id="clientPhone"
-                  name="clientPhone"
-                  type="tel"
-                  placeholder="+31 6 12345678"
+               <input
+              value={form.clientPhone}
+                onChange={(e) => updateForm("clientPhone", e.target.value)}
+
                   autoComplete="tel"
                 />
 
                 <label htmlFor="clientAddress">
                   {label(tInv.clientAddress, "Client Address")}
                 </label>
-                <input
-                  id="clientAddress"
-                  name="clientAddress"
-                  placeholder={label(
-                    tInv.clientAddress,
-                    "Client Address"
-                  )}
+               <input
+                      value={form.clientAddress}
+                  onChange={(e) => updateForm("clientAddress", e.target.value)}
                   autoComplete="street-address"
                 />
 
                 <label htmlFor="invoiceDate">
                   {label(tInv.invoiceDate, "Invoice Date")}
                 </label>
-                <input id="invoiceDate" type="date" />
+                <input type="date"
+                    value={form.invoiceDate}
+                  onChange={(e) => updateForm("invoiceDate", e.target.value)}
+                        />
 
                 <label htmlFor="dueDate">
                   {label(tInv.dueDate, "Due Date")}
                 </label>
-                <input id="dueDate" type="date" />
+                <input
+                type="date"
+                   value={form.dueDate}
+                     onChange={(e) => updateForm("dueDate", e.target.value)}
+                    />
 
                 <label htmlFor="invoiceNumber">
                   {label(
@@ -1103,21 +1137,19 @@ useEffect(() => {
                   )}
                 </label>
                 <input
-                  id="invoiceNumber"
-                  name="invoiceNumber"
-                  readOnly
-                  placeholder={label(
-                    tInv.invoiceNumber,
-                    "Invoice Number"
-                  )}
-                />
+                  value={form.invoiceNumber}
+  readOnly
+                    />
 
                 <label htmlFor="status">
                   {label(tInv.status, "status")}
                 </label>
                 <select
-                  id="status"
-                  name="status"
+                value={form.status}
+                  onChange={(e) =>
+  updateForm("status", e.target.value as InvoiceStatus)
+}
+
                   autoComplete="off"
                 >
                   <option value="draft">
@@ -1152,7 +1184,66 @@ useEffect(() => {
                     <th>{label(tInv.action, "Action")}</th>
                   </tr>
                 </thead>
-                <tbody id="itemsBody" data-managed="imperative" />
+                <tbody>
+  {itemsState.map((item, i) => {
+    const line = item.qty * item.price;
+    const vat = (line * item.vat) / 100;
+
+    return (
+      <tr key={`${i}-${item.desc}-${item.price}`}>
+        <td>
+          <input
+            value={item.desc}
+            onChange={(e) =>
+              updateItem(i, "desc", e.target.value)
+            }
+          />
+        </td>
+
+        <td>
+          <input
+            type="number"
+            value={item.qty}
+            onChange={(e) =>
+              updateItem(i, "qty", Number(e.target.value) || 0)
+            }
+          />
+        </td>
+
+        <td>
+          <input
+            type="number"
+            value={item.price}
+            onChange={(e) =>
+              updateItem(i, "price", Number(e.target.value) || 0)
+            }
+          />
+        </td>
+
+        <td>
+          <select
+            value={item.vat}
+            onChange={(e) =>
+              updateItem(i, "vat", Number(e.target.value))
+            }
+          >
+            <option value={0}>0</option>
+            <option value={9}>9</option>
+            <option value={21}>21</option>
+          </select>
+        </td>
+
+        <td>€{(line + vat).toFixed(2)}</td>
+
+        <td>
+          <button type="button" onClick={() => removeItem(i)}>
+            ❌
+          </button>
+        </td>
+      </tr>
+    );
+  })}
+</tbody>
               </table>
               <button
                 type="button"
@@ -1168,21 +1259,20 @@ useEffect(() => {
               <h2>{label(tInv.summarySection, "Summary")}</h2>
               <p>
                 {label(tInv.subtotal, "Subtotal")}:{" "}
-                <span id="subtotal">€0.00</span>
+               <span>€{totals.subtotal.toFixed(2)}</span>
               </p>
               <p>
                 {label(tInv.totalVat, "Total VAT")}:{" "}
-                <span id="totalVat">€0.00</span>
+                <span>€{totals.totalVat.toFixed(2)}</span>
               </p>
               <p>
                 {label(tInv.grandTotal, "Total")}:{" "}
-                <span id="grandTotal">€0.00</span>
+                <span>€{totals.grandTotal.toFixed(2)}</span>
               </p>
               <textarea
-                id="note"
-                name="note"
-                placeholder={label(tInv.note, "Note...")}
-                autoComplete="off"
+            value={form.note}
+            onChange={(e) => updateForm("note", e.target.value)}
+             placeholder={label(tInv.note, "Note...")}
               />
             </section>
 
@@ -1195,40 +1285,40 @@ useEffect(() => {
               <div className="signature-box">
                 <h3>{label(tInv.business, "Business")}</h3>
                 <canvas
-                  id="signatureBusiness"
+                  ref={businessCanvasRef}
                   width={300}
                   height={150}
                   className="signature"
                 />
                 <button
                   type="button"
-                  onClick={handleClearBusinessSignature}
+                  onClick={clearBusinessSignature}
                 >
                   {label(tInv.clear, "Clear")}
                 </button>
                 <p>
                   {label(tInv.date, "Date")}:{" "}
-                  <span id="signatureBusinessDate" />
+                 <span>{signatures.businessDate}</span>
                 </p>
               </div>
 
               <div className="signature-box">
                 <h3>{label(tInv.client, "Client")}</h3>
                 <canvas
-                  id="signatureClient"
+                  ref={clientCanvasRef}
                   width={300}
                   height={150}
-                  className="signature"
-                />
+                 className="signature"
+                    />
                 <button
                   type="button"
-                  onClick={handleClearClientSignature}
+                  onClick={clearClientSignature}
                 >
                   {label(tInv.clear, "Clear")}
                 </button>
                 <p>
                   {label(tInv.date, "Date")}:{" "}
-                  <span id="signatureClientDate" />
+                 <span>{signatures.clientDate}</span>
                 </p>
               </div>
             </section>
