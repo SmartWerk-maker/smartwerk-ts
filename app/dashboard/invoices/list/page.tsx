@@ -139,13 +139,7 @@ type JsPdfWithAutoTable = InstanceType<typeof JsPdfCtor> & {
   lastAutoTable?: { finalY?: number };
 };
 
-useEffect(() => {
-  document.body.classList.add("theme-light");
 
-  return () => {
-    document.body.classList.remove("theme-light");
-  };
-}, []);
 
 export default function InvoiceListPage() {
   const router = useRouter();
