@@ -202,14 +202,7 @@ export default function AddClientPage() {
   return () => clearTimeout(t);
 }, [hint]);
 
-  useEffect(() => {
-  if (typeof window !== "undefined") {
-    const path = window.location.pathname;
-    if (path.includes("/create")) {
-      localStorage.removeItem("editClientId");
-    }
-  }
-}, []);
+  
 
   // ---- LOAD (new / edit) ----
   // ---- LOAD (new / edit) ----
