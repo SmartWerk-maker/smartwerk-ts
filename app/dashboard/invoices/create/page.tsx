@@ -1216,9 +1216,9 @@ useSignaturePad(clientCanvasRef, handleClientSignatureSave);
            
 
             {/* Signatures */}
+             <h2>{label(tInv.signSection, "Signatures")}</h2>
             <section className="signatures-wrap">
-              <h2>{label(tInv.signSection, "Signatures")}</h2>
-
+              
               <div className="signature-box">
                 <h3>{label(tInv.business, "Business")}</h3>
                 <canvas
