@@ -172,13 +172,16 @@ const useSignaturePad = (
     canvas.style.touchAction = "none";
 
     const getPos = (clientX: number, clientY: number) => {
-      const rect = canvas.getBoundingClientRect();
+  const rect = canvas.getBoundingClientRect();
 
-      return {
-        x: clientX - rect.left,
-        y: clientY - rect.top,
-      };
-    };
+  const scaleX = canvas.width / rect.width;
+  const scaleY = canvas.height / rect.height;
+
+  return {
+    x: (clientX - rect.left) * scaleX,
+    y: (clientY - rect.top) * scaleY,
+  };
+};
 
     const start = (x: number, y: number) => {
       drawing = true;
