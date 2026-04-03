@@ -198,8 +198,9 @@ body.dash-theme-light .invoice-page .section-toggle {
 }
 
 .invoice-page .section-content {
-  padding: 14px 16px;
-  display: none;
+  overflow: visible !important;
+  
+ 
 }
 .invoice-page .section-content.open {
   display: block;
@@ -315,14 +316,16 @@ body.dash-theme-light .invoice-page thead th {
  *****************************************************/
 .invoice-page canvas.signature {
   
-  
+   pointer-events: auto !important;
+  position: relative;
+  z-index: 999;
   display: block;
   background: #fff;
   border: 1px solid rgba(0,0,0,0.18);
   border-radius: 8px;
   touch-action: none;
-  position: relative;
-  z-index: 10;
+  
+  
 }
 
 .invoice-page .signatures-wrap {
@@ -332,7 +335,7 @@ body.dash-theme-light .invoice-page thead th {
   flex-wrap: nowrap;
   margin-top: 20px;
   position: relative;
-  z-index: 1;
+  z-index: 0;
 }
 @media (max-width: 768px) {
   .invoice-page .signatures-wrap {
