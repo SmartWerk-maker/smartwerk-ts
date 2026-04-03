@@ -131,51 +131,54 @@ const useSignaturePad = (
     let drawing = false;
     let savedImage: string | null = null;
 
-    const resizeCanvas = () => {
-  const rect = canvas.getBoundingClientRect();
-  if (!rect.width || !rect.height) return;
+    const setupCanvas = () => {
+      const rect = canvas.getBoundingClientRect();
+      if (!rect.width || !rect.height) return null;
 
-  const ratio = window.devicePixelRatio || 1;
+      const ratio = window.devicePixelRatio || 1;
 
-  const data = canvas.toDataURL();
-  savedImage = data !== "data:," ? data : null;
+      const data = canvas.toDataURL();
+      savedImage = data !== "data:," ? data : null;
 
-  canvas.width = rect.width * ratio;
-  canvas.height = rect.height * ratio;
+      canvas.width = rect.width * ratio;
+      canvas.height = rect.height * ratio;
 
-  ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
+      canvas.style.width = `${rect.width}px`;
+      canvas.style.height = `${rect.height}px`;
 
-  ctx.lineWidth = 2.5;
-  ctx.lineCap = "round";
-  ctx.strokeStyle = "#000";
-
-  if (savedImage) {
-    const img = new Image();
-    img.onload = () => {
+      ctx.setTransform(1, 0, 0, 1, 0, 0);
       ctx.clearRect(0, 0, canvas.width, canvas.height);
-      ctx.drawImage(img, 0, 0, rect.width, rect.height);
-    };
-    img.src = savedImage;
-  }
-};
+      ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
 
-    resizeCanvas();
-    window.addEventListener("resize", resizeCanvas);
+      ctx.lineWidth = 2.5;
+      ctx.lineCap = "round";
+      ctx.lineJoin = "round";
+      ctx.strokeStyle = "#000";
+
+      if (savedImage) {
+        const img = new Image();
+        img.onload = () => {
+          ctx.drawImage(img, 0, 0, rect.width, rect.height);
+        };
+        img.src = savedImage;
+      }
+
+      return rect;
+    };
+
+    setupCanvas();
+    window.addEventListener("resize", setupCanvas);
 
     canvas.style.touchAction = "none";
 
-    ctx.lineWidth = 2.5;
-    ctx.lineCap = "round";
-    ctx.strokeStyle = "#000";
-
     const getPos = (clientX: number, clientY: number) => {
-  const rect = canvas.getBoundingClientRect();
+      const rect = canvas.getBoundingClientRect();
 
-  return {
-    x: clientX - rect.left,
-    y: clientY - rect.top,
-  };
-};
+      return {
+        x: clientX - rect.left,
+        y: clientY - rect.top,
+      };
+    };
 
     const start = (x: number, y: number) => {
       drawing = true;
@@ -196,38 +199,35 @@ const useSignaturePad = (
       onSave(canvas.toDataURL());
     };
 
-    // ===== POINTER EVENTS =====
+    const onPointerDown = (e: PointerEvent) => {
+      e.preventDefault();
+      const { x, y } = getPos(e.clientX, e.clientY);
+      start(x, y);
+    };
 
-const onPointerDown = (e: PointerEvent) => {
-  e.preventDefault();
-  const { x, y } = getPos(e.clientX, e.clientY);
-  drawing = true;
-  ctx.beginPath();
-  ctx.moveTo(x, y);
-};
+    const onPointerMove = (e: PointerEvent) => {
+      if (!drawing) return;
+      e.preventDefault();
+      const { x, y } = getPos(e.clientX, e.clientY);
+      move(x, y);
+    };
 
-const onPointerMove = (e: PointerEvent) => {
-  if (!drawing) return;
-  const { x, y } = getPos(e.clientX, e.clientY);
-  ctx.lineTo(x, y);
-  ctx.stroke();
-};
+    const onPointerUp = () => {
+      end();
+    };
 
-const onPointerUp = () => {
-  if (!drawing) return;
-  drawing = false;
-  ctx.beginPath();
-  onSave(canvas.toDataURL());
-};
-
-canvas.addEventListener("pointerdown", onPointerDown);
-canvas.addEventListener("pointermove", onPointerMove);
-window.addEventListener("pointerup", onPointerUp);
+    canvas.addEventListener("pointerdown", onPointerDown);
+    canvas.addEventListener("pointermove", onPointerMove);
+    window.addEventListener("pointerup", onPointerUp);
+    window.addEventListener("pointercancel", onPointerUp);
 
     return () => {
+      window.removeEventListener("resize", setupCanvas);
+
       canvas.removeEventListener("pointerdown", onPointerDown);
-    canvas.removeEventListener("pointermove", onPointerMove);
+      canvas.removeEventListener("pointermove", onPointerMove);
       window.removeEventListener("pointerup", onPointerUp);
+      window.removeEventListener("pointercancel", onPointerUp);
     };
   }, [canvasRef, onSave]);
 };
