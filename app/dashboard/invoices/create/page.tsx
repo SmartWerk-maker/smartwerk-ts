@@ -169,15 +169,13 @@ const useSignaturePad = (
     ctx.strokeStyle = "#000";
 
     const getPos = (clientX: number, clientY: number) => {
-      const rect = canvas.getBoundingClientRect();
-      const scaleX = canvas.width / rect.width;
-      const scaleY = canvas.height / rect.height;
+  const rect = canvas.getBoundingClientRect();
 
-      return {
-        x: (clientX - rect.left) * scaleX,
-        y: (clientY - rect.top) * scaleY,
-      };
-    };
+  return {
+    x: clientX - rect.left,
+    y: clientY - rect.top,
+  };
+};
 
     const start = (x: number, y: number) => {
       drawing = true;
