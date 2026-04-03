@@ -661,14 +661,15 @@ const useSignaturePad = (
       const ctx = canvas.getContext("2d");
       if (!ctx) return;
 
-      // ✅ ФІКСОВАНИЙ розмір (без retina магії поки)
+      // ✅ розмір
       canvas.width = 320;
       canvas.height = 150;
 
       canvas.style.width = "320px";
       canvas.style.height = "150px";
 
-      ctx.lineWidth = 2.5;
+      // ✅ стиль
+      ctx.lineWidth = 2.2;
       ctx.lineCap = "round";
       ctx.lineJoin = "round";
       ctx.strokeStyle = "#000";
@@ -677,7 +678,10 @@ const useSignaturePad = (
 
       let drawing = false;
 
-      // ✅ БЕЗ scale — чисті координати
+      // ✅ ВАЖЛИВО
+      let lastX = 0;
+      let lastY = 0;
+
       const getPos = (e: PointerEvent) => {
         const rect = canvas.getBoundingClientRect();
 
@@ -689,7 +693,11 @@ const useSignaturePad = (
 
       const down = (e: PointerEvent) => {
         drawing = true;
+
         const { x, y } = getPos(e);
+
+        lastX = x;
+        lastY = y;
 
         ctx.beginPath();
         ctx.moveTo(x, y);
@@ -700,8 +708,15 @@ const useSignaturePad = (
 
         const { x, y } = getPos(e);
 
-        ctx.lineTo(x, y);
+        // ✨ SMOOTHING (Bezier)
+        const midX = (lastX + x) / 2;
+        const midY = (lastY + y) / 2;
+
+        ctx.quadraticCurveTo(lastX, lastY, midX, midY);
         ctx.stroke();
+
+        lastX = x;
+        lastY = y;
       };
 
       const up = () => {
@@ -713,14 +728,19 @@ const useSignaturePad = (
         onSave(canvas.toDataURL());
       };
 
+      // ✅ events
       canvas.addEventListener("pointerdown", down);
       canvas.addEventListener("pointermove", move);
       window.addEventListener("pointerup", up);
+      window.addEventListener("pointercancel", up);
+      canvas.addEventListener("pointerleave", up);
 
       return () => {
         canvas.removeEventListener("pointerdown", down);
         canvas.removeEventListener("pointermove", move);
         window.removeEventListener("pointerup", up);
+        window.removeEventListener("pointercancel", up);
+        canvas.removeEventListener("pointerleave", up);
       };
     };
 
