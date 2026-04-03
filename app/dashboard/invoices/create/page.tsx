@@ -121,86 +121,84 @@ const useSignaturePad = (
   canvasRef: React.RefObject<HTMLCanvasElement | null>,
   onSave: (dataUrl: string) => void
 ) => {
-  
-
   useLayoutEffect(() => {
-  console.log("🔥 effect start");
+    const canvas = canvasRef.current;
 
-  const canvas = canvasRef.current;
-  if (!canvas) return;
+    // 🛑 чекати поки canvas реально є
+    if (!canvas) return;
 
-  console.log("✅ canvas ready");
+    console.log("✅ canvas mounted");
 
-  const ctx = canvas.getContext("2d");
-  if (!ctx) return;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
 
-  let drawing = false;
+    let drawing = false;
 
-  // ✅ базові налаштування
-  ctx.lineWidth = 2.5;
-  ctx.lineCap = "round";
-  ctx.lineJoin = "round";
-  ctx.strokeStyle = "#000";
+    // ✅ clean canvas (важливо!)
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-  // ❗ ВАЖЛИВО: фіксований розмір canvas
-  canvas.width = 320;
-  canvas.height = 150;
+    // ✅ стиль
+    ctx.lineWidth = 2.5;
+    ctx.lineCap = "round";
+    ctx.lineJoin = "round";
+    ctx.strokeStyle = "#000";
 
-  canvas.style.touchAction = "none";
+    canvas.style.touchAction = "none";
 
-  const getPos = (clientX: number, clientY: number) => {
-    const rect = canvas.getBoundingClientRect();
+    const getPos = (e: PointerEvent) => {
+      const rect = canvas.getBoundingClientRect();
 
-    return {
-      x: clientX - rect.left,
-      y: clientY - rect.top,
+      return {
+        x: e.clientX - rect.left,
+        y: e.clientY - rect.top,
+      };
     };
-  };
 
-  const start = (x: number, y: number) => {
-    drawing = true;
-    ctx.beginPath();
-    ctx.moveTo(x, y);
-  };
+    const onPointerDown = (e: PointerEvent) => {
+      console.log("⬇️ DOWN");
+      drawing = true;
 
-  const move = (x: number, y: number) => {
-    if (!drawing) return;
-    ctx.lineTo(x, y);
-    ctx.stroke();
-  };
+      const { x, y } = getPos(e);
 
-  const end = () => {
-    if (!drawing) return;
-    drawing = false;
-    ctx.beginPath();
-    onSave(canvas.toDataURL());
-  };
+      ctx.beginPath();
+      ctx.moveTo(x, y);
+    };
 
-  const onPointerDown = (e: PointerEvent) => {
-    e.preventDefault();
-    const { x, y } = getPos(e.clientX, e.clientY);
-    start(x, y);
-  };
+    const onPointerMove = (e: PointerEvent) => {
+      if (!drawing) return;
 
-  const onPointerMove = (e: PointerEvent) => {
-    if (!drawing) return;
-    e.preventDefault();
-    const { x, y } = getPos(e.clientX, e.clientY);
-    move(x, y);
-  };
+      const { x, y } = getPos(e);
 
-  const onPointerUp = () => end();
+      ctx.lineTo(x, y);
+      ctx.stroke();
+    };
 
-  canvas.addEventListener("pointerdown", onPointerDown);
-  canvas.addEventListener("pointermove", onPointerMove);
-  window.addEventListener("pointerup", onPointerUp);
+    const stopDrawing = () => {
+      if (!drawing) return;
 
-  return () => {
-    canvas.removeEventListener("pointerdown", onPointerDown);
-    canvas.removeEventListener("pointermove", onPointerMove);
-    window.removeEventListener("pointerup", onPointerUp);
-  };
-}, []);
+      console.log("⬆️ UP");
+
+      drawing = false;
+      ctx.beginPath();
+
+      onSave(canvas.toDataURL());
+    };
+
+    // ✅ listeners
+    canvas.addEventListener("pointerdown", onPointerDown);
+    canvas.addEventListener("pointermove", onPointerMove);
+    window.addEventListener("pointerup", stopDrawing);
+    window.addEventListener("pointercancel", stopDrawing);
+    canvas.addEventListener("pointerleave", stopDrawing);
+
+    return () => {
+      canvas.removeEventListener("pointerdown", onPointerDown);
+      canvas.removeEventListener("pointermove", onPointerMove);
+      window.removeEventListener("pointerup", stopDrawing);
+      window.removeEventListener("pointercancel", stopDrawing);
+      canvas.removeEventListener("pointerleave", stopDrawing);
+    };
+  }, [canvasRef, onSave]); // ✅ ПРАВИЛЬНО
 };
 
 export default function InvoiceCreatePage() {
