@@ -118,7 +118,151 @@ interface InvoiceFirestoreMeta {
 const label = (value: string | undefined, fallback: string) =>
   value ?? fallback;
 
+const useSignaturePad = (
+  canvasRef: React.RefObject<HTMLCanvasElement | null>,
+  onSave: (dataUrl: string) => void
+) => {
+  useLayoutEffect(() => {
+    let raf: number;
 
+    const init = () => {
+      const canvas = canvasRef.current;
+
+      if (!canvas) {
+        raf = requestAnimationFrame(init);
+        return;
+      }
+
+      console.log("✅ canvas READY");
+
+      const ctx = canvas.getContext("2d");
+      if (!ctx) return;
+
+      // ✅ розмір
+      canvas.width = 320;
+      canvas.height = 150;
+
+      canvas.style.width = "320px";
+      canvas.style.height = "150px";
+
+      // ✅ стиль
+      ctx.lineWidth = 2.2;
+      ctx.lineCap = "round";
+      ctx.lineJoin = "round";
+      ctx.strokeStyle = "#000";
+      ctx.globalAlpha = 1.2;
+
+      canvas.style.touchAction = "none";
+
+      let drawing = false;
+
+      // 🔥 координати
+      let lastX = 0;
+      let lastY = 0;
+
+      let smoothX = 0;
+      let smoothY = 0;
+
+      const SMOOTH = 0.2;
+
+      const getPos = (e: PointerEvent) => {
+        const rect = canvas.getBoundingClientRect();
+
+        return {
+          x: e.clientX - rect.left,
+          y: e.clientY - rect.top,
+        };
+      };
+
+      const down = (e: PointerEvent) => {
+        drawing = true;
+
+        const { x, y } = getPos(e);
+
+        lastX = x;
+        lastY = y;
+
+        smoothX = x;
+        smoothY = y;
+
+        ctx.beginPath();
+        ctx.moveTo(x, y);
+      };
+
+      let lastTime = 0;
+
+const move = (e: PointerEvent) => {
+  if (!drawing) return;
+
+  const now = Date.now();
+  const dt = now - lastTime || 16;
+  lastTime = now;
+
+  const { x, y } = getPos(e);
+
+  // 🔥 smoothing
+  smoothX += (x - smoothX) * 0.2;
+  smoothY += (y - smoothY) * 0.2;
+
+  // 🔥 швидкість
+  const dx = smoothX - lastX;
+  const dy = smoothY - lastY;
+  const distance = Math.sqrt(dx * dx + dy * dy);
+
+  const speed = distance / dt;
+
+  // 🔥 товщина як у ручки
+  const minWidth = 1.2;
+  const maxWidth = 2.8;
+
+  const lineWidth = Math.max(
+    maxWidth - speed * 10,
+    minWidth
+  );
+
+  ctx.lineWidth = lineWidth;
+
+  // 🔥 крива
+  const midX = (lastX + smoothX) / 2;
+  const midY = (lastY + smoothY) / 2;
+
+  ctx.quadraticCurveTo(lastX, lastY, midX, midY);
+  ctx.stroke();
+
+  lastX = smoothX;
+  lastY = smoothY;
+};
+
+      const up = () => {
+        if (!drawing) return;
+
+        drawing = false;
+        ctx.beginPath();
+
+        onSave(canvas.toDataURL());
+      };
+
+      // ✅ events
+      canvas.addEventListener("pointerdown", down);
+      canvas.addEventListener("pointermove", move);
+      window.addEventListener("pointerup", up);
+      window.addEventListener("pointercancel", up);
+      canvas.addEventListener("pointerleave", up);
+
+      return () => {
+        canvas.removeEventListener("pointerdown", down);
+        canvas.removeEventListener("pointermove", move);
+        window.removeEventListener("pointerup", up);
+        window.removeEventListener("pointercancel", up);
+        canvas.removeEventListener("pointerleave", up);
+      };
+    };
+
+    raf = requestAnimationFrame(init);
+
+    return () => cancelAnimationFrame(raf);
+  }, [canvasRef, onSave]);
+};
 
 export default function InvoiceCreatePage() {
   const router = useRouter();
@@ -641,151 +785,7 @@ localStorage.removeItem("editInvoiceId");
   
 
   /* ========== HOOKS ========== */
-const useSignaturePad = (
-  canvasRef: React.RefObject<HTMLCanvasElement | null>,
-  onSave: (dataUrl: string) => void
-) => {
-  useLayoutEffect(() => {
-    let raf: number;
 
-    const init = () => {
-      const canvas = canvasRef.current;
-
-      if (!canvas) {
-        raf = requestAnimationFrame(init);
-        return;
-      }
-
-      console.log("✅ canvas READY");
-
-      const ctx = canvas.getContext("2d");
-      if (!ctx) return;
-
-      // ✅ розмір
-      canvas.width = 320;
-      canvas.height = 150;
-
-      canvas.style.width = "320px";
-      canvas.style.height = "150px";
-
-      // ✅ стиль
-      ctx.lineWidth = 2.2;
-      ctx.lineCap = "round";
-      ctx.lineJoin = "round";
-      ctx.strokeStyle = "#000";
-      ctx.globalAlpha = 1.2;
-
-      canvas.style.touchAction = "none";
-
-      let drawing = false;
-
-      // 🔥 координати
-      let lastX = 0;
-      let lastY = 0;
-
-      let smoothX = 0;
-      let smoothY = 0;
-
-      const SMOOTH = 0.2;
-
-      const getPos = (e: PointerEvent) => {
-        const rect = canvas.getBoundingClientRect();
-
-        return {
-          x: e.clientX - rect.left,
-          y: e.clientY - rect.top,
-        };
-      };
-
-      const down = (e: PointerEvent) => {
-        drawing = true;
-
-        const { x, y } = getPos(e);
-
-        lastX = x;
-        lastY = y;
-
-        smoothX = x;
-        smoothY = y;
-
-        ctx.beginPath();
-        ctx.moveTo(x, y);
-      };
-
-      let lastTime = 0;
-
-const move = (e: PointerEvent) => {
-  if (!drawing) return;
-
-  const now = Date.now();
-  const dt = now - lastTime || 16;
-  lastTime = now;
-
-  const { x, y } = getPos(e);
-
-  // 🔥 smoothing
-  smoothX += (x - smoothX) * 0.2;
-  smoothY += (y - smoothY) * 0.2;
-
-  // 🔥 швидкість
-  const dx = smoothX - lastX;
-  const dy = smoothY - lastY;
-  const distance = Math.sqrt(dx * dx + dy * dy);
-
-  const speed = distance / dt;
-
-  // 🔥 товщина як у ручки
-  const minWidth = 1.2;
-  const maxWidth = 2.8;
-
-  const lineWidth = Math.max(
-    maxWidth - speed * 10,
-    minWidth
-  );
-
-  ctx.lineWidth = lineWidth;
-
-  // 🔥 крива
-  const midX = (lastX + smoothX) / 2;
-  const midY = (lastY + smoothY) / 2;
-
-  ctx.quadraticCurveTo(lastX, lastY, midX, midY);
-  ctx.stroke();
-
-  lastX = smoothX;
-  lastY = smoothY;
-};
-
-      const up = () => {
-        if (!drawing) return;
-
-        drawing = false;
-        ctx.beginPath();
-
-        onSave(canvas.toDataURL());
-      };
-
-      // ✅ events
-      canvas.addEventListener("pointerdown", down);
-      canvas.addEventListener("pointermove", move);
-      window.addEventListener("pointerup", up);
-      window.addEventListener("pointercancel", up);
-      canvas.addEventListener("pointerleave", up);
-
-      return () => {
-        canvas.removeEventListener("pointerdown", down);
-        canvas.removeEventListener("pointermove", move);
-        window.removeEventListener("pointerup", up);
-        window.removeEventListener("pointercancel", up);
-        canvas.removeEventListener("pointerleave", up);
-      };
-    };
-
-    raf = requestAnimationFrame(init);
-
-    return () => cancelAnimationFrame(raf);
-  }, [canvasRef, onSave]);
-};
   
 
   // інит даних / форми
