@@ -22,7 +22,7 @@ import { useTranslation } from "@/app/i18n";
 import type { FieldValue, Timestamp } from "firebase/firestore";
 import { serverTimestamp } from "firebase/firestore";
 
-import "./invoice.css";
+import "./invoice1.css";
 
 
 
