@@ -766,3 +766,8 @@ body {
     height: 120px;
   }
 }
+.sw-table td::before {
+  margin-bottom: 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}

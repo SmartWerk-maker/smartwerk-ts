@@ -310,29 +310,44 @@ function SignaturePad({
     };
   };
 
-  const start = (event: React.PointerEvent<HTMLCanvasElement>) => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-    canvas.setPointerCapture(event.pointerId);
-    const ctx = canvas.getContext("2d");
-    if (!ctx) return;
-    drawingRef.current = true;
-    hasDrawnRef.current = true;
-    const { x, y } = getPoint(event);
-    ctx.beginPath();
-    ctx.moveTo(x, y);
-  };
-
   const move = (event: React.PointerEvent<HTMLCanvasElement>) => {
-    if (!drawingRef.current) return;
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-    const ctx = canvas.getContext("2d");
-    if (!ctx) return;
-    const { x, y } = getPoint(event);
-    ctx.lineTo(x, y);
-    ctx.stroke();
-  };
+  if (!drawingRef.current) return;
+
+  const canvas = canvasRef.current;
+  if (!canvas) return;
+
+  const ctx = canvas.getContext("2d");
+  if (!ctx) return;
+
+  const { x, y } = getPoint(event);
+
+  ctx.lineTo(x, y);
+  ctx.stroke();
+
+  // 🔥 КРИТИЧНО
+  ctx.beginPath();
+  ctx.moveTo(x, y);
+};
+
+const start = (event: React.PointerEvent<HTMLCanvasElement>) => {
+  event.preventDefault(); // 🔥 MUST HAVE
+
+  const canvas = canvasRef.current;
+  if (!canvas) return;
+
+  canvas.setPointerCapture(event.pointerId);
+
+  const ctx = canvas.getContext("2d");
+  if (!ctx) return;
+
+  drawingRef.current = true;
+  hasDrawnRef.current = true;
+
+  const { x, y } = getPoint(event);
+
+  ctx.beginPath();
+  ctx.moveTo(x, y);
+};
 
   const end = () => {
     if (!drawingRef.current) return;
@@ -367,6 +382,7 @@ function SignaturePad({
         onPointerMove={move}
         onPointerUp={end}
         onPointerLeave={end}
+        onPointerCancel={end}
       />
       <p className="sw-signature-date">
         {dateLabel}: <span>{date ?? "—"}</span>
@@ -1070,62 +1086,85 @@ if (!editingId) {
                     const total = line + (line * item.vat) / 100;
 
                     return (
-                      <tr key={item.id}>
-                        <td>
-                          <input
-                          name={`desc-${item.id}`}
-                          id={`desc-${item.id}`}
-                            value={item.desc}
-                            onChange={(e) => updateItem(item.id, "desc", e.target.value)}
-                            placeholder="Service / product"
-                          />
-                        </td>
-                        <td>
-                          <input
-                          name={`qty-${item.id}`}
-                          id={`qty-${item.id}`}
-                            type="number"
-                            min="1"
-                            value={item.qty}
-                            onChange={(e) => updateItem(item.id, "qty", e.target.value === "" ? 0 : Number(e.target.value)) }
-                          />
-                        </td>
-                        <td>
-                          <input
-                          name={`price-${item.id}`}
-                          id={`price-${item.id}`}
-                            type="number"
-                            step="0.01"
-                            value={item.price}
-                            onChange={(e) => updateItem(item.id, "price", e.target.value === "" ? 0 : Number(e.target.value))}
-                          />
-                        </td>
-                        <td>
-                          <select
-                          name={`vat-${item.id}`}
-                          id={`vat-${item.id}`}
-                            value={item.vat}
-                            onChange={(e) => updateItem(item.id, "vat", e.target.value === "" ? 0 : Number(e.target.value))}
-                          >
-                            <option value={0}>0</option>
-                            <option value={9}>9</option>
-                            <option value={21}>21</option>
-                          </select>
-                        </td>
-                        <td>
-                          <span className="sw-total-chip">{formatEuro(total)}</span>
-                        </td>
-                        <td>
-                          <button
-                            type="button"
-                            className="sw-btn sw-btn-danger"
-                            onClick={() => removeItem(item.id)}
-                            disabled={items.length === 1}
-                          >
-                            Remove
-                          </button>
-                        </td>
-                      </tr>
+                     <tr key={item.id}>
+  <td data-label={label(tInv.desc, "Description")}>
+    <input
+      name={`desc-${item.id}`}
+      id={`desc-${item.id}`}
+      value={item.desc}
+      onChange={(e) => updateItem(item.id, "desc", e.target.value)}
+      placeholder="Service / product"
+    />
+  </td>
+
+  <td data-label={label(tInv.qty, "Qty")}>
+    <input
+      name={`qty-${item.id}`}
+      id={`qty-${item.id}`}
+      type="number"
+      min="1"
+      value={item.qty}
+      onChange={(e) =>
+        updateItem(
+          item.id,
+          "qty",
+          e.target.value === "" ? 0 : Number(e.target.value)
+        )
+      }
+    />
+  </td>
+
+  <td data-label={label(tInv.price, "Price")}>
+    <input
+      name={`price-${item.id}`}
+      id={`price-${item.id}`}
+      type="number"
+      step="0.01"
+      value={item.price}
+      onChange={(e) =>
+        updateItem(
+          item.id,
+          "price",
+          e.target.value === "" ? 0 : Number(e.target.value)
+        )
+      }
+    />
+  </td>
+
+  <td data-label={label(tInv.vat, "VAT %")}>
+    <select
+      name={`vat-${item.id}`}
+      id={`vat-${item.id}`}
+      value={item.vat}
+      onChange={(e) =>
+        updateItem(
+          item.id,
+          "vat",
+          e.target.value === "" ? 0 : Number(e.target.value)
+        )
+      }
+    >
+      <option value={0}>0</option>
+      <option value={9}>9</option>
+      <option value={21}>21</option>
+    </select>
+  </td>
+
+  <td data-label={label(tInv.total, "Total")}>
+    <span className="sw-total-chip">{formatEuro(total)}</span>
+  </td>
+
+  <td data-label={label(tInv.action, "Action")}>
+    <button
+      type="button"
+      className="sw-btn sw-btn-danger"
+      onClick={() => removeItem(item.id)}
+      disabled={items.length === 1}
+    >
+      Remove
+    </button>
+  </td>
+</tr>
                     );
                   })}
                 </tbody>
