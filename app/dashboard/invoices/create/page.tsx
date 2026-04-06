@@ -22,9 +22,9 @@ import {
 } from "firebase/firestore";
 
 import { ref, uploadString, getDownloadURL } from "firebase/storage";
-import { storage } from "@/lib/firebase";
 
-import { auth, db } from "@/lib/firebase";
+
+import { auth, db, storage } from "@/lib/firebase";
 import { useLanguage } from "@/app/providers/LanguageProvider";
 import { useTranslation } from "@/app/i18n";
 
@@ -198,10 +198,12 @@ const initialForm: FormState = {
 
 
 
+let idCounter = 0;
+
 const makeItem = (
   partial?: Partial<Omit<InvoiceItem, "id">>
 ): InvoiceItem => ({
-  id: `${Date.now()}-${Math.random().toString(36).slice(2)}`,
+  id: `item-${idCounter++}`,
   desc: partial?.desc ?? "",
   qty: partial?.qty ?? 1,
   price: partial?.price ?? 0,
@@ -372,6 +374,8 @@ function SignaturePad({
     </div>
   );
 }
+
+
 
 export default function InvoiceCreatePage() {
   const router = useRouter();
@@ -625,144 +629,143 @@ export default function InvoiceCreatePage() {
 };
 
   const saveInvoice = async () => {
-    const currentUser = auth.currentUser;
-    if (!currentUser) {
-      router.push("/login");
+  if (saving) return;
+
+  const currentUser = auth.currentUser;
+  if (!currentUser) {
+    router.push("/login");
+    return;
+  }
+
+  try {
+    setSaving(true);
+
+    if (!items.length) {
+      alert("Add at least one item");
+      setSaving(false);
       return;
     }
 
-    try {
-      setSaving(true);
-
-      const effectiveClientId =
-        form.clientId ?? (typeof window !== "undefined" ? localStorage.getItem("invoiceClientId") : null);
-
-      if (!items.length) {
-        alert("Add at least one item");
-        return;
-      }
-
-      if (!items.some((item) => item.qty > 0 && item.price > 0)) {
-        alert("Items must have quantity and price");
-        return;
-      }
-
-      if (!form.clientName.trim()) {
-        alert("Client name is required");
-        return;
-      }
-
-      if (!form.invoiceDate) {
-        alert("Invoice date is required");
-        return;
-      }
-
-      let invoiceNumber = form.invoiceNumber.trim();
-      if (!editingId && !invoiceNumber) {
-        invoiceNumber = await generateInvoiceNumber(currentUser.uid);
-      }
-
-      let businessSignatureUrl = signatures.business || "";
-let clientSignatureUrl = signatures.client || "";
-
-try {
-  if (signatures.business?.startsWith("data:image")) {
-    businessSignatureUrl = await uploadSignature(
-      signatures.business,
-      `signatures/${currentUser.uid}/business-${Date.now()}`
-    );
-  }
-
-  if (signatures.client?.startsWith("data:image")) {
-    clientSignatureUrl = await uploadSignature(
-      signatures.client,
-      `signatures/${currentUser.uid}/client-${Date.now()}`
-    );
-  }
-} catch (err) {
-  console.error("Signature upload failed:", err);
-}
-
-      const payload: InvoiceFirestoreMeta & InvoiceData = {
-        uid: currentUser.uid,
-        number: invoiceNumber,
-        status: form.status,
-        total: grandTotal,
-        createdAt: editingId ? createdAtFallback ?? serverTimestamp() : serverTimestamp(),
-        updatedAt: serverTimestamp(),
-        clientId: effectiveClientId,
-
-        businessName: form.businessName,
-        kvk: form.kvk,
-        iban: form.iban,
-        btw: form.btw,
-        email: form.email,
-        businessAddress: form.businessAddress,
-        businessPhone: form.businessPhone,
-
-        clientName: form.clientName,
-        clientEmail: form.clientEmail,
-        clientPhone: form.clientPhone,
-        clientAddress: form.clientAddress,
-
-        invoiceDate: form.invoiceDate,
-        dueDate: form.dueDate,
-        invoiceNumber,
-        note: form.note,
-
-        items: items.map((item) => ({
-          desc: item.desc,
-          qty: item.qty,
-          price: item.price,
-          vat: item.vat,
-        })),
-        subtotal,
-        totalVat,
-        grandTotal,
-        subtotalFormatted: formatEuro(subtotal),
-        totalVatFormatted: formatEuro(totalVat),
-        grandTotalFormatted: formatEuro(grandTotal),
-
-        signatures: {
-  business: businessSignatureUrl,
-  client: clientSignatureUrl,
-  businessDate: signatures.businessDate,
-  clientDate: signatures.clientDate,
-},
-      };
-
-      if (editingId) {
-        await setDoc(doc(db, "users", currentUser.uid, "invoices", editingId), payload, {
-          merge: true,
-        });
-        alert("✅ Invoice updated");
-      } else {
-        await addDoc(collection(db, "users", currentUser.uid, "invoices"), payload);
-        alert(`✅ Invoice saved as ${invoiceNumber}`);
-      }
-
-      try {
-        await addDoc(collection(db, "users", currentUser.uid, "events"), {
-          type: "Invoice",
-          message: editingId
-            ? `Invoice ${invoiceNumber} updated`
-            : `Invoice ${invoiceNumber} created`,
-          createdAt: serverTimestamp(),
-        });
-      } catch (error) {
-        console.warn("Event log failed:", error);
-      }
-
-      if (typeof window !== "undefined") {
-        localStorage.removeItem("editInvoiceId");
-        localStorage.removeItem("invoiceClientId");
-      }
-
-      router.push("/dashboard/invoices/list");
-    } finally {
+    if (!items.some((item) => item.qty > 0 && item.price > 0)) {
+      alert("Items must have quantity and price");
       setSaving(false);
+      return;
     }
-  };
+
+    if (!form.clientName.trim()) {
+      alert("Client name is required");
+      setSaving(false);
+      return;
+    }
+
+    if (!form.invoiceDate) {
+      alert("Invoice date is required");
+      setSaving(false);
+      return;
+    }
+
+    let invoiceNumber = form.invoiceNumber.trim();
+    if (!editingId && !invoiceNumber) {
+      invoiceNumber = await generateInvoiceNumber(currentUser.uid);
+    }
+
+    let businessSignatureUrl = signatures.business || "";
+    let clientSignatureUrl = signatures.client || "";
+
+    try {
+      if (signatures.business?.startsWith("data:image")) {
+        businessSignatureUrl = await uploadSignature(
+          signatures.business,
+          `signatures/${currentUser.uid}/business-${Date.now()}`
+        );
+      }
+
+      if (signatures.client?.startsWith("data:image")) {
+        clientSignatureUrl = await uploadSignature(
+          signatures.client,
+          `signatures/${currentUser.uid}/client-${Date.now()}`
+        );
+      }
+    } catch (err) {
+      console.error("Signature upload failed:", err);
+      alert("❌ Signature upload failed");
+      setSaving(false);
+      return;
+    }
+
+    const payload: InvoiceFirestoreMeta & InvoiceData = {
+      uid: currentUser.uid,
+      number: invoiceNumber,
+      status: form.status,
+      total: grandTotal,
+      createdAt: editingId
+        ? createdAtFallback ?? serverTimestamp()
+        : serverTimestamp(),
+      updatedAt: serverTimestamp(),
+      clientId: form.clientId,
+
+      businessName: form.businessName,
+      kvk: form.kvk,
+      iban: form.iban,
+      btw: form.btw,
+      email: form.email,
+      businessAddress: form.businessAddress,
+      businessPhone: form.businessPhone,
+
+      clientName: form.clientName,
+      clientEmail: form.clientEmail,
+      clientPhone: form.clientPhone,
+      clientAddress: form.clientAddress,
+
+      invoiceDate: form.invoiceDate,
+      dueDate: form.dueDate,
+      invoiceNumber,
+      note: form.note,
+
+      items: items.map((item) => ({
+        desc: item.desc,
+        qty: item.qty,
+        price: item.price,
+        vat: item.vat,
+      })),
+
+      subtotal,
+      totalVat,
+      grandTotal,
+      subtotalFormatted: formatEuro(subtotal),
+      totalVatFormatted: formatEuro(totalVat),
+      grandTotalFormatted: formatEuro(grandTotal),
+
+      signatures: {
+        business: businessSignatureUrl,
+        client: clientSignatureUrl,
+        businessDate: signatures.businessDate,
+        clientDate: signatures.clientDate,
+      },
+    };
+
+    if (editingId) {
+      await setDoc(
+        doc(db, "users", currentUser.uid, "invoices", editingId),
+        payload,
+        { merge: true }
+      );
+    } else {
+      await addDoc(
+        collection(db, "users", currentUser.uid, "invoices"),
+        payload
+      );
+    }
+
+    router.push("/dashboard/invoices/list");
+
+  } catch (error) {
+    console.error("Save failed:", error);
+    alert("❌ Failed to save invoice");
+  } finally {
+    setSaving(false);
+  }
+};
 
   if (loading) {
     return (
@@ -1079,7 +1082,7 @@ try {
                             type="number"
                             min="1"
                             value={item.qty}
-                            onChange={(e) => updateItem(item.id, "qty", e.target.value)}
+                            onChange={(e) => updateItem(item.id, "qty", Number(e.target.value))}
                           />
                         </td>
                         <td>
@@ -1087,13 +1090,13 @@ try {
                             type="number"
                             step="0.01"
                             value={item.price}
-                            onChange={(e) => updateItem(item.id, "price", e.target.value)}
+                            onChange={(e) => updateItem(item.id, "price", Number(e.target.value))}
                           />
                         </td>
                         <td>
                           <select
                             value={item.vat}
-                            onChange={(e) => updateItem(item.id, "vat", e.target.value)}
+                            onChange={(e) => updateItem(item.id, "vat", Number(e.target.value))}
                           >
                             <option value={0}>0</option>
                             <option value={9}>9</option>
