@@ -10,6 +10,7 @@ import {
   onSnapshot,
   orderBy,
   query,
+  type Timestamp,
 } from "firebase/firestore";
 
 import { auth, db } from "@/lib/firebase";
@@ -33,12 +34,15 @@ interface InvoiceItem {
 interface InvoiceSignatures {
   business?: string;
   client?: string;
-  businessDate?: string;
-  clientDate?: string;
+  businessDate?: string | null;
+  clientDate?: string | null;
 }
+
 type InvoiceStatus = "draft" | "sent" | "paid";
 
 interface InvoiceData {
+  uid?: string;
+
   businessName?: string;
   kvk?: string;
   iban?: string;
@@ -52,8 +56,8 @@ interface InvoiceData {
   clientPhone?: string;
   clientAddress?: string;
 
-  invoiceDate?: string; // yyyy-mm-dd
-  dueDate?: string; // yyyy-mm-dd
+  invoiceDate?: string;
+  dueDate?: string;
   invoiceNumber?: string;
   status?: InvoiceStatus;
   note?: string;
@@ -70,8 +74,8 @@ interface InvoiceData {
 
   signatures?: InvoiceSignatures;
 
-  userId?: string;
-  updatedAt?: string;
+  createdAt?: Timestamp | null;
+  updatedAt?: Timestamp | null;
 }
 
 type InvoiceWithId = InvoiceData & { id: string };
@@ -111,6 +115,8 @@ type InvoicesListI18n = {
     loading?: string;
     noInvoices?: string;
     confirmDelete?: string;
+    deleteFailed?: string;
+    pdfFailed?: string;
   };
 
   statusOptions?: {
@@ -118,7 +124,6 @@ type InvoicesListI18n = {
     draft?: string;
     sent?: string;
     paid?: string;
-    
   };
 
   sortOptions?: {
@@ -131,15 +136,37 @@ type InvoicesListI18n = {
   };
 };
 
-// helper for i18n
 const label = (value: string | undefined, fallback: string) => value ?? fallback;
 
-// jsPDF typings: safely read lastAutoTable.finalY without any
 type JsPdfWithAutoTable = InstanceType<typeof JsPdfCtor> & {
   lastAutoTable?: { finalY?: number };
 };
 
+async function imageUrlToDataUrl(url: string): Promise<string> {
+  const response = await fetch(url);
+  if (!response.ok) {
+    throw new Error(`Failed to fetch image: ${response.status}`);
+  }
 
+  const blob = await response.blob();
+
+  return await new Promise<string>((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      if (typeof reader.result === "string") {
+        resolve(reader.result);
+      } else {
+        reject(new Error("Failed to convert image to data URL"));
+      }
+    };
+    reader.onerror = () => reject(new Error("Failed to read image blob"));
+    reader.readAsDataURL(blob);
+  });
+}
+
+function isLikelyRemoteUrl(value?: string): value is string {
+  return !!value && /^https?:\/\//i.test(value);
+}
 
 export default function InvoiceListPage() {
   const router = useRouter();
@@ -147,30 +174,33 @@ export default function InvoiceListPage() {
   const [user, setUser] = useState<User | null>(null);
   const [invoices, setInvoices] = useState<InvoiceWithId[]>([]);
   const [loading, setLoading] = useState(true);
+  const [deletingId, setDeletingId] = useState<string | null>(null);
+  const [pdfLoadingId, setPdfLoadingId] = useState<string | null>(null);
 
-  /* ================= i18n ================= */
   const { language } = useLanguage();
-  const tRoot = useTranslation(language) as { invoicesList?: InvoicesListI18n } | null;
+  const tRoot = (useTranslation(language) as { invoicesList?: InvoicesListI18n } | null) ?? null;
   const tInvList: InvoicesListI18n = tRoot?.invoicesList ?? {};
 
-  /* ================= Filters ================= */
   const [fromDate, setFromDate] = useState("");
   const [toDate, setToDate] = useState("");
   const [statusFilter, setStatusFilter] = useState<string>("all");
   const [search, setSearch] = useState("");
   const [sortBy, setSortBy] = useState<string>("invoiceNumber_desc");
 
-  /* ================= AUTH + REALTIME INVOICES ================= */
   useEffect(() => {
     let unsubInvoices: (() => void) | null = null;
 
     const unsubAuth = onAuthStateChanged(auth, (firebaseUser) => {
       if (!firebaseUser) {
+        setUser(null);
+        setInvoices([]);
+        setLoading(false);
         router.push("/login");
         return;
       }
 
       setUser(firebaseUser);
+      setLoading(true);
 
       const colRef = collection(db, "users", firebaseUser.uid, "invoices");
       const q = query(colRef, orderBy("createdAt", "desc"));
@@ -178,19 +208,19 @@ export default function InvoiceListPage() {
       unsubInvoices = onSnapshot(
         q,
         (snap) => {
-       const data: InvoiceWithId[] = snap.docs.map((d) => {
-      const docData = d.data() as InvoiceData;
-      return { id: d.id, ...docData };
-      });
+          const data: InvoiceWithId[] = snap.docs.map((d) => {
+            const docData = d.data() as InvoiceData;
+            return { id: d.id, ...docData };
+          });
 
-      setInvoices(data);
-      setLoading(false);
-      },
-         (error) => {
-     console.error("Invoices listener error:", error);
-    setLoading(false);
-      }
-);
+          setInvoices(data);
+          setLoading(false);
+        },
+        (error) => {
+          console.error("Invoices listener error:", error);
+          setLoading(false);
+        }
+      );
     });
 
     return () => {
@@ -199,32 +229,26 @@ export default function InvoiceListPage() {
     };
   }, [router]);
 
-  /* ================= FILTER + SORT ================= */
   const filteredInvoices = useMemo(() => {
-    let result = [...invoices];
+    const normalizedSearch = search.trim().toLowerCase();
+    const result = [...invoices].filter((inv) => {
+      if (statusFilter !== "all" && (inv.status || "draft") !== statusFilter) {
+        return false;
 
-    result = result.filter((inv) => {
-      // status
-      if (statusFilter !== "all") {
-      if ((inv.status || "draft") !== statusFilter) return false;
       }
+      const invoiceDate = inv.invoiceDate || "";
+      if (fromDate && invoiceDate < fromDate) return false;
+      if (toDate && invoiceDate > toDate) return false;
 
-      // date range (yyyy-mm-dd string compare ok)
-      if (fromDate && (inv.invoiceDate || "") < fromDate) return false;
-      if (toDate && (inv.invoiceDate || "") > toDate) return false;
-
-      // search (IMPORTANT: parentheses around OR)
-      if (search.trim()) {
-        const q = search.toLowerCase();
-
+      if (normalizedSearch) {
         const totalStr = String(inv.grandTotal ?? inv.grandTotalFormatted ?? "")
           .toLowerCase()
           .replace(/[^\d.,-]/g, "");
 
         const match =
-          (inv.clientName || "").toLowerCase().includes(q) ||
-          (inv.invoiceNumber || "").toLowerCase().includes(q) ||
-          totalStr.includes(q);
+          (inv.clientName || "").toLowerCase().includes(normalizedSearch) ||
+          (inv.invoiceNumber || "").toLowerCase().includes(normalizedSearch) ||
+          totalStr.includes(normalizedSearch);
 
         if (!match) return false;
       }
@@ -232,7 +256,6 @@ export default function InvoiceListPage() {
       return true;
     });
 
-    // sort
     result.sort((a, b) => {
       const numA = parseInt((a.invoiceNumber || "").split("-").pop() || "0", 10) || 0;
       const numB = parseInt((b.invoiceNumber || "").split("-").pop() || "0", 10) || 0;
@@ -264,7 +287,6 @@ export default function InvoiceListPage() {
     return result;
   }, [invoices, fromDate, toDate, statusFilter, search, sortBy]);
 
-  /* ================= HELPERS ================= */
   const resetFilters = () => {
     setFromDate("");
     setToDate("");
@@ -274,166 +296,195 @@ export default function InvoiceListPage() {
   };
 
   const prettyStatus = (status?: string) => {
-  switch (status) {
-    case "draft":
-      return tInvList.statusOptions?.draft ?? "draft";
-    case "sent":
-      return tInvList.statusOptions?.sent ?? "sent";
-    case "paid":
-      return tInvList.statusOptions?.paid ?? "paid";
-    default:
-      return status ?? "draft";
-  }
-};
+    switch (status) {
+      case "draft":
+        return tInvList.statusOptions?.draft ?? "draft";
+      case "sent":
+        return tInvList.statusOptions?.sent ?? "sent";
+      case "paid":
+        return tInvList.statusOptions?.paid ?? "paid";
+      default:
+        return status ?? "draft";
+    }
+  };
 
-  /* ================= ACTIONS ================= */
+  const getStatusClass = (status?: string) => {
+    switch (status) {
+      case "sent":
+        return "status-sent";
+      case "paid":
+        return "status-paid";
+      case "draft":
+      default:
+        return "status-draft";
+    }
+  };
+
   const handleBackDashboard = () => router.push("/dashboard");
 
   const handleCreateInvoice = () => {
-    if (typeof window !== "undefined") localStorage.removeItem("editInvoiceId");
+    if (typeof window !== "undefined") {
+      localStorage.removeItem("editInvoiceId");
+      localStorage.removeItem("invoiceClientId");
+    }
     router.push("/dashboard/invoices/create");
   };
 
   const handleEdit = (id: string) => {
-    if (typeof window !== "undefined") localStorage.setItem("editInvoiceId", id);
+    if (typeof window !== "undefined") {
+      localStorage.setItem("editInvoiceId", id);
+    }
     router.push("/dashboard/invoices/create");
   };
 
   const handleDelete = async (id: string) => {
     const msg = tInvList.messages?.confirmDelete ?? "Delete this invoice?";
     if (!window.confirm(msg)) return;
-    if (!user) return;
+    if (!user || deletingId) return;
+
     try {
-    await deleteDoc(doc(db, "users", user.uid, "invoices", id));
+      setDeletingId(id);
+      await deleteDoc(doc(db, "users", user.uid, "invoices", id));
     } catch (e) {
-  console.error("Delete failed:", e);
-  alert("❌ Failed to delete invoice");
-}
+      console.error("Delete failed:", e);
+      alert(tInvList.messages?.deleteFailed ?? "❌ Failed to delete invoice");
+    } finally {
+      setDeletingId(null);
+    }
   };
 
   const handleDownloadPdf = async (id: string, withBranding: boolean) => {
     const inv = invoices.find((i) => i.id === id);
-    if (!inv) return;
+    if (!inv || pdfLoadingId) return;
 
-    const jsPDFModule = await import("jspdf");
-    const { default: autoTable } = await import("jspdf-autotable");
+    try {
+      setPdfLoadingId(id);
 
-    const docPDF = new jsPDFModule.jsPDF() as unknown as JsPdfWithAutoTable;
+      const jsPDFModule = await import("jspdf");
+      const { default: autoTable } = await import("jspdf-autotable");
 
-    docPDF.setFontSize(18);
-    docPDF.text("INVOICE", 105, 15, { align: "center" });
+      const docPDF = new jsPDFModule.jsPDF() as unknown as JsPdfWithAutoTable;
 
-    docPDF.setFontSize(12);
-    docPDF.text("From:", 14, 30);
-    docPDF.text(
-      [
-        inv.businessName || "",
-        inv.kvk ? `KvK: ${inv.kvk}` : "",
-        inv.iban ? `IBAN: ${inv.iban}` : "",
-        inv.email ? `Email: ${inv.email}` : "",
-        inv.btw ? `BTW: ${inv.btw}` : "",
-        inv.businessAddress ? `Address: ${inv.businessAddress}` : "",
-        inv.businessPhone ? `Phone: ${inv.businessPhone}` : "",
-      ].filter(Boolean),
-      14,
-      36
-    );
+      docPDF.setFontSize(18);
+      docPDF.text("INVOICE", 105, 15, { align: "center" });
 
-    docPDF.text("To:", 120, 30);
-    docPDF.text(
-      [
-        inv.clientName || "",
-        inv.clientEmail || "",
-        inv.clientAddress ? `Address: ${inv.clientAddress}` : "",
-        inv.clientPhone ? `Phone: ${inv.clientPhone}` : "",
-      ].filter(Boolean),
-      120,
-      36
-    );
-
-    docPDF.setDrawColor(200);
-    docPDF.line(14, 70, 195, 70);
-
-    autoTable(docPDF, {
-      startY: 80,
-      head: [["Invoice #", "Date Issued", "Due Date", "Status"]],
-      body: [
+      docPDF.setFontSize(12);
+      docPDF.text("From:", 14, 30);
+      docPDF.text(
         [
-          inv.invoiceNumber || "—",
-          inv.invoiceDate || "—",
-          inv.dueDate || "—",
-          inv.status || "draft",
-        ],
-      ],
-      theme: "grid",
-      styles: { fontSize: 11, cellPadding: 4, halign: "center", valign: "middle" },
-      headStyles: { fillColor: [37, 99, 235], textColor: 255, fontStyle: "bold" },
-      bodyStyles: { textColor: 50 },
-    } satisfies UserOptions);
+          inv.businessName || "",
+          inv.kvk ? `KvK: ${inv.kvk}` : "",
+          inv.iban ? `IBAN: ${inv.iban}` : "",
+          inv.email ? `Email: ${inv.email}` : "",
+          inv.btw ? `BTW: ${inv.btw}` : "",
+          inv.businessAddress ? `Address: ${inv.businessAddress}` : "",
+          inv.businessPhone ? `Phone: ${inv.businessPhone}` : "",
+        ].filter(Boolean),
+        14,
+        36
+      );
 
-    const items =
-      inv.items?.map((it) => [
-        it.desc,
-        String(it.qty),
-        `€${Number(it.price || 0).toFixed(2)}`,
-        `${it.vat}%`,
-        `€${(it.qty * it.price * (1 + it.vat / 100)).toFixed(2)}`,
-      ]) ?? [];
+      docPDF.text("To:", 120, 30);
+      docPDF.text(
+        [
+          inv.clientName || "",
+          inv.clientEmail || "",
+          inv.clientAddress ? `Address: ${inv.clientAddress}` : "",
+          inv.clientPhone ? `Phone: ${inv.clientPhone}` : "",
+        ].filter(Boolean),
+        120,
+        36
+      );
 
-    const startItemsY = (docPDF.lastAutoTable?.finalY ?? 80) + 10;
+      docPDF.setDrawColor(200);
+      docPDF.line(14, 70, 195, 70);
 
-    autoTable(docPDF, {
-      startY: startItemsY,
-      head: [["Description", "Qty", "Unit Price", "VAT", "Total"]],
-      body: items,
-      theme: "grid",
-      styles: { fontSize: 11, cellPadding: 4, halign: "center", valign: "middle" },
-      headStyles: { fillColor: [37, 99, 235], textColor: 255, fontStyle: "bold" },
-      bodyStyles: { textColor: 50 },
-    } satisfies UserOptions);
+      autoTable(docPDF, {
+        startY: 80,
+        head: [["Invoice #", "Date Issued", "Due Date", "Status"]],
+        body: [[inv.invoiceNumber || "—", inv.invoiceDate || "—", inv.dueDate || "—", inv.status || "draft"]],
+        theme: "grid",
+        styles: { fontSize: 11, cellPadding: 4, halign: "center", valign: "middle" },
+        headStyles: { fillColor: [37, 99, 235], textColor: 255, fontStyle: "bold" },
+        bodyStyles: { textColor: 50 },
+      } satisfies UserOptions);
 
-    const yTotals = (docPDF.lastAutoTable?.finalY ?? startItemsY) + 10;
+      const items =
+        inv.items?.map((it) => [
+          it.desc,
+          String(it.qty),
+          `€${Number(it.price || 0).toFixed(2)}`,
+          `${it.vat}%`,
+          `€${(it.qty * it.price * (1 + it.vat / 100)).toFixed(2)}`,
+        ]) ?? [];
 
-    docPDF.text(`Subtotal: ${inv.subtotalFormatted ?? "€0.00"}`, 150, yTotals);
-    docPDF.text(`VAT: ${inv.totalVatFormatted ?? "€0.00"}`, 150, yTotals + 6);
-    docPDF.text(`Total Due: ${inv.grandTotalFormatted ?? "€0.00"}`, 150, yTotals + 12);
+      const startItemsY = (docPDF.lastAutoTable?.finalY ?? 80) + 10;
 
-    let yCursor = yTotals + 20;
+      autoTable(docPDF, {
+        startY: startItemsY,
+        head: [["Description", "Qty", "Unit Price", "VAT", "Total"]],
+        body: items,
+        theme: "grid",
+        styles: { fontSize: 11, cellPadding: 4, halign: "center", valign: "middle" },
+        headStyles: { fillColor: [37, 99, 235], textColor: 255, fontStyle: "bold" },
+        bodyStyles: { textColor: 50 },
+      } satisfies UserOptions);
 
-    if (inv.note) {
-      docPDF.text("Note:", 14, yTotals);
-      docPDF.text(String(inv.note), 14, yTotals + 6, { maxWidth: 180 });
-      yCursor += 10;
-    }
+      const yTotals = (docPDF.lastAutoTable?.finalY ?? startItemsY) + 10;
 
-    if (inv.signatures?.business) {
-      docPDF.addImage(inv.signatures.business, "PNG", 14, yCursor, 60, 20);
-      docPDF.text("Business Signature", 14, yCursor + 32);
-      docPDF.text("_________________________", 14, yCursor + 25);
-      if (inv.signatures.businessDate) {
-        docPDF.text(`Date: ${inv.signatures.businessDate}`, 14, yCursor + 38);
+      docPDF.text(`Subtotal: ${inv.subtotalFormatted ?? "€0.00"}`, 150, yTotals);
+      docPDF.text(`VAT: ${inv.totalVatFormatted ?? "€0.00"}`, 150, yTotals + 6);
+      docPDF.text(`Total Due: ${inv.grandTotalFormatted ?? "€0.00"}`, 150, yTotals + 12);
+
+      let yCursor = yTotals + 20;
+
+      if (inv.note) {
+        docPDF.text("Note:", 14, yCursor);
+        docPDF.text(String(inv.note), 14, yCursor + 6, { maxWidth: 180 });
+        yCursor += 18;
       }
-    }
 
-    if (inv.signatures?.client) {
-      docPDF.addImage(inv.signatures.client, "PNG", 120, yCursor, 60, 20);
-      docPDF.text("Client Signature", 120, yCursor + 32);
-      docPDF.text("_________________________", 120, yCursor + 25);
-      if (inv.signatures.clientDate) {
-        docPDF.text(`Date: ${inv.signatures.clientDate}`, 120, yCursor + 38);
+      if (inv.signatures?.business) {
+        const businessImage = isLikelyRemoteUrl(inv.signatures.business)
+          ? await imageUrlToDataUrl(inv.signatures.business)
+          : inv.signatures.business;
+
+        docPDF.addImage(businessImage, "PNG", 14, yCursor, 60, 20);
+        docPDF.text("Business Signature", 14, yCursor + 32);
+        docPDF.text("_________________________", 14, yCursor + 25);
+        if (inv.signatures.businessDate) {
+          docPDF.text(`Date: ${inv.signatures.businessDate}`, 14, yCursor + 38);
+        }
       }
-    }
 
-    if (withBranding) {
-      docPDF.setFontSize(10);
-      docPDF.text("Generated with SmartWerk", 105, 290, { align: "center" });
-    }
+      if (inv.signatures?.client) {
+        const clientImage = isLikelyRemoteUrl(inv.signatures.client)
+          ? await imageUrlToDataUrl(inv.signatures.client)
+          : inv.signatures.client;
 
-    docPDF.save(`${inv.invoiceNumber || "invoice"}.pdf`);
+        docPDF.addImage(clientImage, "PNG", 120, yCursor, 60, 20);
+        docPDF.text("Client Signature", 120, yCursor + 32);
+        docPDF.text("_________________________", 120, yCursor + 25);
+        if (inv.signatures.clientDate) {
+          docPDF.text(`Date: ${inv.signatures.clientDate}`, 120, yCursor + 38);
+        }
+      }
+
+      if (withBranding) {
+        docPDF.setFontSize(10);
+        docPDF.text("Generated with SmartWerk", 105, 290, { align: "center" });
+      }
+
+      docPDF.save(`${inv.invoiceNumber || "invoice"}.pdf`);
+    } catch (e) {
+      console.error("PDF generation failed:", e);
+      alert(tInvList.messages?.pdfFailed ?? "❌ Failed to generate PDF");
+    } finally {
+      setPdfLoadingId(null);
+    }
   };
 
-  /* ================= RENDER ================= */
-  if (!user && loading) {
+  if (loading) {
     return (
       <div className="invoices-loading">
         <div className="invoices-loading-card">
@@ -446,9 +497,7 @@ export default function InvoiceListPage() {
   return (
     <>
       <header className="topbar">
-        <h1 className="invoice-title">
-          {label(tInvList.title, "Saved Invoices")}
-        </h1>
+        <h1 className="invoice-title">{label(tInvList.title, "Saved Invoices")}</h1>
 
         <div className="actions-right">
           <button className="btn" onClick={handleBackDashboard}>
@@ -463,51 +512,89 @@ export default function InvoiceListPage() {
 
       <main className="dash-main invoice-list-page">
         <div className="dash-content invoice-list-content">
-          <section className="filters">
-            <label>
-              <span>{label(tInvList.filters?.from, "From")}</span>
-              <input type="date" value={fromDate} onChange={(e) => setFromDate(e.target.value)} />
-            </label>
+       <section className="filters">
 
-            <label>
-              <span>{label(tInvList.filters?.to, "To")}</span>
-              <input type="date" value={toDate} onChange={(e) => setToDate(e.target.value)} />
-            </label>
+  <label htmlFor="fromDate">
+    <span>{label(tInvList.filters?.from, "From")}</span>
+    <input
+      id="fromDate"
+      name="fromDate"
+      type="date"
+      value={fromDate}
+      onChange={(e) => setFromDate(e.target.value)}
+    />
+  </label>
 
-            <label>
-              <span>{label(tInvList.filters?.status, "Status")}</span>
-              <select value={statusFilter} onChange={(e) => setStatusFilter(e.target.value)}>
-                <option value="all">{tInvList.statusOptions?.all ?? "all"}</option>
-                <option value="draft">{tInvList.statusOptions?.draft ?? "draft"}</option>
-                <option value="sent">{tInvList.statusOptions?.sent ?? "sent"}</option>
-                <option value="paid">{tInvList.statusOptions?.paid ?? "paid"}</option>
-               
-              </select>
-            </label>
+  <label htmlFor="toDate">
+    <span>{label(tInvList.filters?.to, "To")}</span>
+    <input
+      id="toDate"
+      name="toDate"
+      type="date"
+      value={toDate}
+      onChange={(e) => setToDate(e.target.value)}
+    />
+  </label>
 
-            <label className="filters-grow">
-              <span>{label(tInvList.filters?.search, "Search")}</span>
-              <input
-                type="text"
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-                placeholder={
-                  tInvList.filters?.searchPlaceholder ?? "Search client / Invoice # / amount"
-                }
-              />
-            </label>
+  <label htmlFor="statusFilter">
+    <span>{label(tInvList.filters?.status, "Status")}</span>
+    <select
+      id="statusFilter"
+      name="statusFilter"
+      value={statusFilter}
+      onChange={(e) => setStatusFilter(e.target.value)}
+    >
+      <option value="all">{tInvList.statusOptions?.all ?? "all"}</option>
+      <option value="draft">{tInvList.statusOptions?.draft ?? "draft"}</option>
+      <option value="sent">{tInvList.statusOptions?.sent ?? "sent"}</option>
+      <option value="paid">{tInvList.statusOptions?.paid ?? "paid"}</option>
+    </select>
+  </label>
 
-            <label>
-              <span>{label(tInvList.filters?.sortBy, "Sort by")}</span>
-              <select value={sortBy} onChange={(e) => setSortBy(e.target.value)}>
-                <option value="invoiceNumber_desc">{tInvList.sortOptions?.invoiceNumberDesc ?? "Invoice # (new)"}</option>
-                <option value="invoiceNumber_asc">{tInvList.sortOptions?.invoiceNumberAsc ?? "Invoice # (old)"}</option>
-                <option value="date_desc">{tInvList.sortOptions?.dateDesc ?? "Date (new)"}</option>
-                <option value="date_asc">{tInvList.sortOptions?.dateAsc ?? "Date (old)"}</option>
-                <option value="amount_desc">{tInvList.sortOptions?.amountDesc ?? "Amount ↓"}</option>
-                <option value="amount_asc">{tInvList.sortOptions?.amountAsc ?? "Amount ↑"}</option>
-              </select>
-            </label>
+  <label className="filters-grow" htmlFor="search">
+    <span>{label(tInvList.filters?.search, "Search")}</span>
+    <input
+      id="search"
+      name="search"
+      type="text"
+      value={search}
+      onChange={(e) => setSearch(e.target.value)}
+      placeholder={
+        tInvList.filters?.searchPlaceholder ??
+        "Search client / Invoice # / amount"
+      }
+    />
+  </label>
+
+  <label htmlFor="sortBy">
+    <span>{label(tInvList.filters?.sortBy, "Sort by")}</span>
+    <select
+      id="sortBy"
+      name="sortBy"
+      value={sortBy}
+      onChange={(e) => setSortBy(e.target.value)}
+    >
+      <option value="invoiceNumber_desc">
+        {tInvList.sortOptions?.invoiceNumberDesc ?? "Invoice # (new)"}
+      </option>
+      <option value="invoiceNumber_asc">
+        {tInvList.sortOptions?.invoiceNumberAsc ?? "Invoice # (old)"}
+      </option>
+      <option value="date_desc">
+        {tInvList.sortOptions?.dateDesc ?? "Date (new)"}
+      </option>
+      <option value="date_asc">
+        {tInvList.sortOptions?.dateAsc ?? "Date (old)"}
+      </option>
+      <option value="amount_desc">
+        {tInvList.sortOptions?.amountDesc ?? "Amount ↓"}
+      </option>
+      <option value="amount_asc">
+        {tInvList.sortOptions?.amountAsc ?? "Amount ↑"}
+      </option>
+    </select>
+  </label>
+
 
             <button type="button" className="btn filters-reset" onClick={resetFilters}>
               {label(tInvList.filters?.reset, "Reset filters")}
@@ -528,13 +615,7 @@ export default function InvoiceListPage() {
               </thead>
 
               <tbody>
-                {loading ? (
-                  <tr>
-                    <td colSpan={6} className="invoices-table-empty">
-                      {tInvList.messages?.loading ?? "Loading invoices…"}
-                    </td>
-                  </tr>
-                ) : filteredInvoices.length === 0 ? (
+                {filteredInvoices.length === 0 ? (
                   <tr>
                     <td colSpan={6} className="invoices-table-empty">
                       {tInvList.messages?.noInvoices ?? "No invoices found."}
@@ -543,29 +624,61 @@ export default function InvoiceListPage() {
                 ) : (
                   filteredInvoices.map((inv) => (
                     <tr key={inv.id}>
-                     <td data-label="Invoice">{inv.invoiceNumber || "—"}</td>
-                      <td data-label="Client">{inv.clientName || "—"}</td>
-                      <td data-label="Status">
-                        <span className={`status-badge status-${inv.status}`}>
-                           {prettyStatus(inv.status)}
-                            </span>
-                          </td>
-                       <td data-label="Date">{inv.invoiceDate || "—"}</td>
-                     <td data-label="Total">
+                      <td data-label={label(tInvList.table?.invoiceNumber, "Invoice #")}>
+                        {inv.invoiceNumber || "—"}
+                      </td>
+                      <td data-label={label(tInvList.table?.client, "Client")}>
+                        {inv.clientName || "—"}
+                      </td>
+                      <td data-label={label(tInvList.table?.status, "Status")}>
+                        <span className={`status-badge ${getStatusClass(inv.status)}`}>
+                          {prettyStatus(inv.status)}
+                        </span>
+                      </td>
+                      <td data-label={label(tInvList.table?.date, "Date")}>{inv.invoiceDate || "—"}</td>
+                      <td data-label={label(tInvList.table?.total, "Total")}>
                         €{(Number(inv.grandTotal ?? 0) || 0).toFixed(2)}
-                          </td>
-                      <td data-label="Actions" className="invoices-actions">
-                        <button type="button" className="btn btn-sm" onClick={() => handleEdit(inv.id)}>
+                      </td>
+                      <td
+                        data-label={label(tInvList.table?.actions, "Actions")}
+                        className="invoices-actions"
+                      >
+                        <button
+                          type="button"
+                          className="btn btn-sm"
+                          onClick={() => handleEdit(inv.id)}
+                        >
                           {tInvList.actions?.edit ?? "Edit"}
                         </button>
-                        <button type="button" className="btn btn-sm btn-danger" onClick={() => handleDelete(inv.id)}>
-                          {tInvList.actions?.delete ?? "Delete"}
+                        <button
+                          type="button"
+                          className="btn btn-sm btn-danger"
+                          onClick={() => handleDelete(inv.id)}
+                          disabled={deletingId === inv.id}
+                        >
+                          {deletingId === inv.id
+                            ? "Deleting..."
+                            : (tInvList.actions?.delete ?? "Delete")}
                         </button>
-                        <button type="button" className="btn btn-sm" onClick={() => handleDownloadPdf(inv.id, true)}>
-                          {tInvList.actions?.pdf ?? "PDF"}
+                        <button
+                          type="button"
+                          className="btn btn-sm"
+                          onClick={() => handleDownloadPdf(inv.id, true)}
+                          disabled={pdfLoadingId === inv.id}
+                        >
+                          {pdfLoadingId === inv.id
+                            ? "Preparing..."
+                            : (tInvList.actions?.pdf ?? "PDF")}
                         </button>
-                        <button type="button" className="btn btn-sm" onClick={() => handleDownloadPdf(inv.id, false)}>
-                          {tInvList.actions?.pdfPro ?? "PRO PDF without branding"}
+                        <button
+                          type="button"
+                          className="btn btn-sm"
+                          onClick={() => handleDownloadPdf(inv.id, false)}
+                          disabled={pdfLoadingId === inv.id}
+                        >
+                          {pdfLoadingId === inv.id
+                            ? "Preparing..."
+                            : (tInvList.actions?.pdfPro ?? "PRO PDF without branding")}
                         </button>
                       </td>
                     </tr>
