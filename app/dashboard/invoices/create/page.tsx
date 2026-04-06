@@ -1,8 +1,14 @@
 "use client";
 
-import React, { useCallback, useLayoutEffect, useState } from "react";
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { useRouter } from "next/navigation";
-import { onAuthStateChanged, type User } from "firebase/auth";
+import { onAuthStateChanged } from "firebase/auth";
 import {
   addDoc,
   collection,
@@ -10,30 +16,21 @@ import {
   getDoc,
   runTransaction,
   setDoc,
+  type FieldValue,
+  type Timestamp,
+  serverTimestamp,
 } from "firebase/firestore";
 
+import { ref, uploadString, getDownloadURL } from "firebase/storage";
+import { storage } from "@/lib/firebase";
+
 import { auth, db } from "@/lib/firebase";
-
-
-
-
 import { useLanguage } from "@/app/providers/LanguageProvider";
 import { useTranslation } from "@/app/i18n";
-import type { FieldValue, Timestamp } from "firebase/firestore";
-import { serverTimestamp } from "firebase/firestore";
 
 import "./invoice.css";
 
-
-
-/**
- * NOTE:
- * This page uses imperative DOM manipulation.
- * Do not refactor partially.
- * Either keep as-is or rewrite fully with React state.
- */
-
-// ===== TYPES =====
+type InvoiceStatus = "draft" | "sent" | "paid";
 
 interface InvoiceItem {
   id: string;
@@ -43,13 +40,12 @@ interface InvoiceItem {
   vat: number;
 }
 
-interface InvoiceSignatures {
+interface SignatureState {
   business?: string;
   client?: string;
   businessDate?: string;
   clientDate?: string;
 }
-type InvoiceStatus = "draft" | "sent" | "paid";
 
 interface InvoiceData {
   businessName?: string;
@@ -70,20 +66,18 @@ interface InvoiceData {
   invoiceNumber?: string;
   status?: InvoiceStatus;
   note?: string;
+
   subtotalFormatted?: string;
   totalVatFormatted?: string;
   grandTotalFormatted?: string;
-  clientId?: string | null;
-
-  items?: InvoiceItem[];
 
   subtotal?: number;
   totalVat?: number;
   grandTotal?: number;
 
-  signatures?: InvoiceSignatures;
-
-  
+  clientId?: string | null;
+  items?: Omit<InvoiceItem, "id">[];
+  signatures?: SignatureState;
 }
 
 interface UserProfileDoc {
@@ -97,229 +91,90 @@ interface UserProfileDoc {
   vatNumber?: string;
 }
 
-/**
- * IMPORTANT:
- * - InvoiceFormData is used ONLY for UI & form state
- * - Firestore invoice documents MUST also include:
- *   uid, number, status, total, createdAt, updatedAt
- *   to be compatible with dashboard & analytics
- */
 interface InvoiceFirestoreMeta {
   uid: string;
   number: string;
-  status: "draft" | "sent" | "paid";
+  status: InvoiceStatus;
   total: number;
   createdAt: Timestamp | FieldValue;
   updatedAt: Timestamp | FieldValue;
   clientId?: string | null;
-  
 }
-// невеликий хелпер для i18n
-const label = (value: string | undefined, fallback: string) =>
-  value ?? fallback;
 
-const useSignaturePad = (
-  canvasRef: React.RefObject<HTMLCanvasElement | null>,
-  onSave: (dataUrl: string) => void
-) => {
-  useLayoutEffect(() => {
-    let raf: number;
+interface FormState {
+  businessName: string;
+  kvk: string;
+  iban: string;
+  btw: string;
+  email: string;
+  businessAddress: string;
+  businessPhone: string;
 
-    const init = () => {
-      const canvas = canvasRef.current;
+  clientName: string;
+  clientEmail: string;
+  clientPhone: string;
+  clientAddress: string;
 
-      if (!canvas) {
-        raf = requestAnimationFrame(init);
-        return;
-      }
+  invoiceDate: string;
+  dueDate: string;
+  invoiceNumber: string;
+  status: InvoiceStatus;
+  note: string;
+  clientId: string | null;
+}
 
-      console.log("✅ canvas READY");
 
-      const ctx = canvas.getContext("2d");
-      if (!ctx) return;
+interface InvoiceTranslations {
+  title?: string;
+  back?: string;
+  list?: string;
+  btnSave?: string;
+  btnSaved?: string;
+  businessSection?: string;
+  businessName?: string;
+  kvk?: string;
+  iban?: string;
+  btw?: string;
+  email?: string;
+  phone?: string;
+  address?: string;
+  clientSection?: string;
+  clientName?: string;
+  clientEmail?: string;
+  clientPhone?: string;
+  clientAddress?: string;
+  invoiceDate?: string;
+  dueDate?: string;
+  invoiceNumber?: string;
+  status?: string;
+  statusdraft?: string;
+  statussent?: string;
+  statuspaid?: string;
+  itemsSection?: string;
+  addItem?: string;
+  desc?: string;
+  qty?: string;
+  price?: string;
+  vat?: string;
+  total?: string;
+  action?: string;
+  summarySection?: string;
+  subtotal?: string;
+  totalVat?: string;
+  grandTotal?: string;
+  note?: string;
+  signSection?: string;
+  business?: string;
+  client?: string;
+  date?: string;
+  clear?: string;
+}
 
-      // ✅ розмір
-      canvas.width = 320;
-      canvas.height = 150;
+interface TranslationRoot {
+  invoices?: InvoiceTranslations;
+}
 
-      canvas.style.width = "320px";
-      canvas.style.height = "150px";
-
-      // ✅ стиль
-      ctx.lineWidth = 2.2;
-      ctx.lineCap = "round";
-      ctx.lineJoin = "round";
-      ctx.strokeStyle = "#000";
-      ctx.globalAlpha = 0.8;
-
-      canvas.style.touchAction = "none";
-
-      let drawing = false;
-
-      // 🔥 координати
-      let lastX = 0;
-      let lastY = 0;
-
-      let smoothX = 0;
-      let smoothY = 0;
-
-      const SMOOTH = 0.2;
-
-      const getPos = (e: PointerEvent) => {
-        const rect = canvas.getBoundingClientRect();
-
-        return {
-          x: e.clientX - rect.left,
-          y: e.clientY - rect.top,
-        };
-      };
-
-      const down = (e: PointerEvent) => {
-        drawing = true;
-
-        const { x, y } = getPos(e);
-
-        lastX = x;
-        lastY = y;
-
-        smoothX = x;
-        smoothY = y;
-
-        ctx.beginPath();
-        ctx.moveTo(x, y);
-      };
-
-      let lastTime = 0;
-
-const move = (e: PointerEvent) => {
-  if (!drawing) return;
-
-  const now = Date.now();
-  const dt = now - lastTime || 16;
-  lastTime = now;
-
-  const { x, y } = getPos(e);
-
-  // 🔥 smoothing
-  smoothX += (x - smoothX) * 0.2;
-  smoothY += (y - smoothY) * 0.2;
-
-  // 🔥 швидкість
-  const dx = smoothX - lastX;
-  const dy = smoothY - lastY;
-  const distance = Math.sqrt(dx * dx + dy * dy);
-
-  const speed = distance / dt;
-
-  // 🔥 товщина як у ручки
-  const minWidth = 1.7;
-  const maxWidth = 3.2;
-
-  const lineWidth = Math.max(
-    maxWidth - speed * 13,
-    minWidth
-  );
-
-  ctx.lineWidth = lineWidth;
-
-  // 🔥 крива
-  const midX = (lastX + smoothX) / 2;
-  const midY = (lastY + smoothY) / 2;
-
-  ctx.quadraticCurveTo(lastX, lastY, midX, midY);
-  ctx.stroke();
-
-  lastX = smoothX;
-  lastY = smoothY;
-};
-
-      const up = () => {
-        if (!drawing) return;
-
-        drawing = false;
-        ctx.beginPath();
-
-        onSave(canvas.toDataURL());
-      };
-
-      // ✅ events
-      canvas.addEventListener("pointerdown", down);
-      canvas.addEventListener("pointermove", move);
-      window.addEventListener("pointerup", up);
-      window.addEventListener("pointercancel", up);
-      canvas.addEventListener("pointerleave", up);
-
-      return () => {
-        canvas.removeEventListener("pointerdown", down);
-        canvas.removeEventListener("pointermove", move);
-        window.removeEventListener("pointerup", up);
-        window.removeEventListener("pointercancel", up);
-        canvas.removeEventListener("pointerleave", up);
-      };
-    };
-
-    raf = requestAnimationFrame(init);
-
-    return () => cancelAnimationFrame(raf);
-  }, [canvasRef, onSave]);
-};
-
-export default function InvoiceCreatePage() {
-  const router = useRouter();
-  const [user, setUser] = useState<User | null>(null);
-  const [loading, setLoading] = useState(true);
-
-  const generateId = () =>
-  typeof crypto !== "undefined" && crypto.randomUUID
-    ? crypto.randomUUID()
-    : Math.random().toString(36).substring(2);
-
-  const [itemsState, setItemsState] = useState<InvoiceItem[]>([
-  { id: generateId(), desc: "", qty: 1, price: 0, vat: 21 }
-]);
-  const [saving, setSaving] = useState(false);
-
-  const { language } = useLanguage();
-
-  // tRoot може бути null → одразу даємо дефолт {}
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const tRoot: any = useTranslation(language) || {};
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const tInv: any = tRoot.invoices || {};
-
-  const [openSections, setOpenSections] = useState({
-  business: false,
-  client: false
-});
-
-const toggleSection = (key: "business" | "client") => {
-  setOpenSections((prev) => ({
-    ...prev,
-    [key]: !prev[key]
-  }));
-};
- 
-
-  const totals = React.useMemo(() => {
-  let subtotal = 0;
-  let totalVat = 0;
-
-  itemsState.forEach((i) => {
-    const line = i.qty * i.price;
-    const vat = (line * i.vat) / 100;
-
-    subtotal += line;
-    totalVat += vat;
-  });
-
-  return {
-    subtotal,
-    totalVat,
-    grandTotal: subtotal + totalVat,
-  };
-}, [itemsState]);
-
- const [form, setForm] = useState({
+const initialForm: FormState = {
   businessName: "",
   kvk: "",
   iban: "",
@@ -336,812 +191,868 @@ const toggleSection = (key: "business" | "client") => {
   invoiceDate: "",
   dueDate: "",
   invoiceNumber: "",
-  status: "draft" as InvoiceStatus,
-  note: ""
+  status: "draft",
+  note: "",
+  clientId: null,
+};
+
+
+
+const makeItem = (
+  partial?: Partial<Omit<InvoiceItem, "id">>
+): InvoiceItem => ({
+  id: `${Date.now()}-${Math.random().toString(36).slice(2)}`,
+  desc: partial?.desc ?? "",
+  qty: partial?.qty ?? 1,
+  price: partial?.price ?? 0,
+  vat: partial?.vat ?? 21,
 });
 
-const businessCanvasRef = React.useRef<HTMLCanvasElement | null>(null);
-const clientCanvasRef = React.useRef<HTMLCanvasElement | null>(null);
+const formatEuro = (value: number) => `€${value.toFixed(2)}`;
 
-const [signatures, setSignatures] = useState({
-  business: "",
-  client: "",
-  businessDate: "",
-  clientDate: ""
-});
+const label = (value: string | undefined, fallback: string) => value ?? fallback;
 
-  /* ========== ITEMS & TOTALS ========== */
+function toDateInputValue(date: Date) {
+  const y = date.getFullYear();
+  const m = `${date.getMonth() + 1}`.padStart(2, "0");
+  const d = `${date.getDate()}`.padStart(2, "0");
+  return `${y}-${m}-${d}`;
+}
 
-  
-
-const addItem = () => {
-  setItemsState((prev) => [
-    ...prev,
-    { id: generateId(), desc: "", qty: 1, price: 0, vat: 21 }
-  ]);
+type SignaturePadProps = {
+  title: string;
+  value?: string;
+  date?: string;
+  dateLabel: string;
+  clearLabel: string;
+  onChange: (dataUrl: string, date: string) => void;
+  onClear: () => void;
 };
 
-const removeItem = (index: number) => {
-  setItemsState((prev) => prev.filter((_, i) => i !== index));
-};
+function SignaturePad({
+  title,
+  value,
+  date,
+  dateLabel,
+  clearLabel,
+  onChange,
+  onClear,
+}: SignaturePadProps) {
+  const canvasRef = useRef<HTMLCanvasElement | null>(null);
+  const drawingRef = useRef(false);
+  const hasDrawnRef = useRef(false);
 
-const updateItem = (
-  index: number,
-  field: keyof InvoiceItem,
-  value: number | string
-) => {
-  setItemsState((prev) => {
-    const copy = [...prev];
-    copy[index] = {
-  ...copy[index],
-  [field]:
-  field === "desc"
-    ? value
-    : value === ""
-      ? 0
-      : Number(value)
-};
-    return copy;
-  });
-};
-  /* ========== SIGNATURES ========== */
+  const syncCanvasSize = useCallback(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ratio = window.devicePixelRatio || 1;
+    const rect = canvas.getBoundingClientRect();
+    canvas.width = Math.floor(rect.width * ratio);
+    canvas.height = Math.floor(rect.height * ratio);
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
+    ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
+    ctx.lineWidth = 2;
+    ctx.lineCap = "round";
+    ctx.lineJoin = "round";
+    ctx.strokeStyle = "#050816";
+  }, []);
 
-  
+  useEffect(() => {
+    syncCanvasSize();
+    const onResize = () => {
+      const prev = value;
+      syncCanvasSize();
+      if (prev) {
+        const canvas = canvasRef.current;
+        if (!canvas) return;
+        const ctx = canvas.getContext("2d");
+        if (!ctx) return;
+        const img = new Image();
+        img.onload = () => {
+          ctx.clearRect(0, 0, canvas.width, canvas.height);
+          const rect = canvas.getBoundingClientRect();
+          ctx.drawImage(img, 0, 0, rect.width, rect.height);
+        };
+        img.src = prev;
+      }
+    };
+    window.addEventListener("resize", onResize);
+    return () => window.removeEventListener("resize", onResize);
+  }, [syncCanvasSize, value]);
 
- 
+  useEffect(() => {
+    if (!value) return;
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
+    const img = new Image();
+    img.onload = () => {
+      const rect = canvas.getBoundingClientRect();
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.drawImage(img, 0, 0, rect.width, rect.height);
+      hasDrawnRef.current = true;
+    };
+    img.src = value;
+  }, [value]);
 
-  /* ========== DATES (без flatpickr) ========== */
+  const getPoint = (
+    event: React.PointerEvent<HTMLCanvasElement>
+  ): { x: number; y: number } => {
+    const canvas = canvasRef.current!;
+    const rect = canvas.getBoundingClientRect();
+    return {
+      x: event.clientX - rect.left,
+      y: event.clientY - rect.top,
+    };
+  };
 
-  
+  const start = (event: React.PointerEvent<HTMLCanvasElement>) => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    canvas.setPointerCapture(event.pointerId);
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
+    drawingRef.current = true;
+    hasDrawnRef.current = true;
+    const { x, y } = getPoint(event);
+    ctx.beginPath();
+    ctx.moveTo(x, y);
+  };
 
-  /* ========== FIRESTORE: номер інвойсу ========== */
+  const move = (event: React.PointerEvent<HTMLCanvasElement>) => {
+    if (!drawingRef.current) return;
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
+    const { x, y } = getPoint(event);
+    ctx.lineTo(x, y);
+    ctx.stroke();
+  };
 
-  async function previewNextInvoiceNumber(uid: string) {
+  const end = () => {
+    if (!drawingRef.current) return;
+    drawingRef.current = false;
+    const canvas = canvasRef.current;
+    if (!canvas || !hasDrawnRef.current) return;
+    onChange(canvas.toDataURL("image/png"), new Date().toLocaleDateString("nl-NL"));
+  };
+
+  const clear = () => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    hasDrawnRef.current = false;
+    onClear();
+  };
+
+  return (
+    <div className="sw-signature-card">
+      <div className="sw-signature-head">
+        <h3>{title}</h3>
+        <button type="button" className="sw-btn sw-btn-ghost" onClick={clear}>
+          {clearLabel}
+        </button>
+      </div>
+      <canvas
+        ref={canvasRef}
+        className="sw-signature"
+        onPointerDown={start}
+        onPointerMove={move}
+        onPointerUp={end}
+        onPointerLeave={end}
+      />
+      <p className="sw-signature-date">
+        {dateLabel}: <span>{date ?? "—"}</span>
+      </p>
+    </div>
+  );
+}
+
+export default function InvoiceCreatePage() {
+  const router = useRouter();
+  const { language } = useLanguage();
+  const tRoot = (useTranslation(language) || {}) as TranslationRoot;
+  const tInv: InvoiceTranslations = tRoot.invoices ?? {};
+
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
+
+  const [form, setForm] = useState<FormState>(initialForm);
+  const [items, setItems] = useState<InvoiceItem[]>([makeItem()]);
+  const [signatures, setSignatures] = useState<SignatureState>({});
+
+  const [businessOpen, setBusinessOpen] = useState(false);
+  const [clientOpen, setClientOpen] = useState(false);
+
+  const [editingId, setEditingId] = useState<string | null>(null);
+  const [createdAtFallback, setCreatedAtFallback] = useState<Timestamp | null>(null);
+
+  const subtotal = useMemo(
+    () => items.reduce((sum, item) => sum + item.qty * item.price, 0),
+    [items]
+  );
+
+  const totalVat = useMemo(
+    () =>
+      items.reduce(
+        (sum, item) => sum + (item.qty * item.price * item.vat) / 100,
+        0
+      ),
+    [items]
+  );
+
+  const grandTotal = useMemo(() => subtotal + totalVat, [subtotal, totalVat]);
+
+  const updateField = useCallback(
+    (field: keyof FormState, value: string | InvoiceStatus | null) => {
+      setForm((prev) => ({ ...prev, [field]: value as never }));
+    },
+    []
+  );
+
+  const updateItem = useCallback(
+    (id: string, field: keyof Omit<InvoiceItem, "id">, value: string | number) => {
+      setItems((prev) =>
+        prev.map((item) =>
+          item.id === id
+            ? {
+                ...item,
+                [field]:
+                  field === "desc"
+                    ? String(value)
+                    : Number.isFinite(Number(value))
+                    ? Number(value)
+                    : 0,
+              }
+            : item
+        )
+      );
+    },
+    []
+  );
+
+  const addItem = useCallback(() => {
+    setItems((prev) => [...prev, makeItem()]);
+  }, []);
+
+  const removeItem = useCallback((id: string) => {
+    setItems((prev) => (prev.length > 1 ? prev.filter((item) => item.id !== id) : prev));
+  }, []);
+
+  const previewNextInvoiceNumber = useCallback(async (uid: string) => {
     try {
       const ref = doc(db, "users", uid);
       const snap = await getDoc(ref);
-      const last = snap.exists()
-        ? ((snap.data().lastInvoiceNumber as number) || 0)
-        : 0;
+      const last = snap.exists() ? Number((snap.data() as { lastInvoiceNumber?: number }).lastInvoiceNumber ?? 0) : 0;
       const next = last + 1;
-      const preview = `INV-${new Date().getFullYear()}-${String(next).padStart(
-        3,
-        "0"
-      )}`;
-      
-
-      setForm((prev) => {
-  if (!prev.invoiceNumber) {
-    return { ...prev, invoiceNumber: preview };
-  }
-  return prev;
-});
+      return `INV-${new Date().getFullYear()}-${String(next).padStart(3, "0")}`;
     } catch {
-      // ігноруємо
+      return `INV-${new Date().getFullYear()}-001`;
     }
-  }
+  }, []);
 
-  async function generateInvoiceNumber(uid: string) {
+  const generateInvoiceNumber = useCallback(async (uid: string) => {
     const ref = doc(db, "users", uid);
     const year = new Date().getFullYear();
-    let final = "";
-
+    let finalNumber = "";
     await runTransaction(db, async (tx) => {
       const snap = await tx.get(ref);
-      const last = snap.exists()
-        ? ((snap.data().lastInvoiceNumber as number) || 0)
-        : 0;
+      const last = snap.exists() ? Number((snap.data() as { lastInvoiceNumber?: number }).lastInvoiceNumber ?? 0) : 0;
       const next = last + 1;
-      final = `INV-${year}-${String(next).padStart(3, "0")}`;
+      finalNumber = `INV-${year}-${String(next).padStart(3, "0")}`;
       tx.set(ref, { lastInvoiceNumber: next }, { merge: true });
     });
+    return finalNumber;
+  }, []);
 
-    return final;
-  }
+  const loadProfileData = useCallback(async (uid: string, userEmail?: string | null) => {
+    try {
+      const ref = doc(db, "users", uid);
+      const snap = await getDoc(ref);
+      if (!snap.exists()) return;
 
-  /* ========== PROFILE → авто-заповнення ========== */
+      const p = snap.data() as UserProfileDoc;
+      const addressParts = [p.city, p.country].filter(Boolean).join(", ");
 
-  async function loadProfileData(uid: string, userEmail?: string | null) {
-  try {
-    const ref = doc(db, "users", uid);
-    const snap = await getDoc(ref);
-    if (!snap.exists()) return;
+      setForm((prev) => ({
+        ...prev,
+        email: userEmail ?? prev.email,
+        businessName: p.companyName ?? prev.businessName,
+        kvk: p.kvk ?? prev.kvk,
+        iban: p.iban ?? prev.iban,
+        btw: p.vatNumber ?? prev.btw,
+        businessPhone: p.phone ?? prev.businessPhone,
+        businessAddress: addressParts || prev.businessAddress,
+      }));
+    } catch (error) {
+      console.error("Profile load error:", error);
+    }
+  }, []);
 
-    const p = snap.data() as UserProfileDoc;
-    const addressParts = [p.city, p.country].filter(Boolean).join(", ");
+  const loadSelectedClient = useCallback(() => {
+    if (typeof window === "undefined") return;
+    const savedClient = localStorage.getItem("selectedClient");
+    if (!savedClient) return;
 
-    setForm((prev) => ({
-      ...prev,
-      businessName: p.companyName ?? prev.businessName,
-      kvk: p.kvk ?? prev.kvk,
-      iban: p.iban ?? prev.iban,
-      btw: p.vatNumber ?? prev.btw,
-      email: userEmail ?? prev.email,
-      businessPhone: p.phone ?? prev.businessPhone,
-      businessAddress: addressParts || prev.businessAddress,
-    }));
-  } catch (e) {
-    console.error("Profile load error:", e);
-  }
-}
+    try {
+      const c = JSON.parse(savedClient);
+      if (c.clientId) {
+        localStorage.setItem("invoiceClientId", c.clientId);
+      }
 
-  /* ========== CLIENT → localStorage.selectedClient ========== */
+      setForm((prev) => ({
+        ...prev,
+        clientName: c.clientName ?? "",
+        clientEmail: c.email ?? "",
+        clientPhone: c.phone ?? "",
+        clientAddress: c.address ?? "",
+        clientId: c.clientId ?? null,
+      }));
+    } catch (error) {
+      console.error("Client parse error:", error);
+    } finally {
+      localStorage.removeItem("selectedClient");
+    }
+  }, []);
 
-  function autofillClientFromLocalStorage() {
-  const savedClient = localStorage.getItem("selectedClient");
-  if (!savedClient) return;
-
-  try {
-    const c = JSON.parse(savedClient);
-
-    // UI
-   setForm((prev) => ({
-  ...prev,
-  clientName: c.clientName ?? "",
-  clientEmail: c.email ?? "",
-  clientPhone: c.phone ?? "",
-  clientAddress: c.address ?? ""
-}));
-
-    // 🔑 ЗБЕРІГАЄМО clientId ДЛЯ FIRESTORE
-    localStorage.setItem("invoiceClientId", c.clientId);
-
-  } catch (e) {
-    console.error("Client parse error:", e);
-  } finally {
-    localStorage.removeItem("selectedClient");
-  }
-}
-
-  
-
-  
-
-  /* ========== LOAD FOR EDIT ========== */
-
-  async function loadForEdit(uid: string) {
+  const loadForEdit = useCallback(async (uid: string) => {
+    if (typeof window === "undefined") return;
     const id = localStorage.getItem("editInvoiceId");
     if (!id) return;
 
     const ref = doc(db, "users", uid, "invoices", id);
     const snap = await getDoc(ref);
     if (!snap.exists()) {
-      
-      localStorage.removeItem("invoiceClientId");
       localStorage.removeItem("editInvoiceId");
+      localStorage.removeItem("invoiceClientId");
       return;
     }
+
     const inv = snap.data() as InvoiceData & {
-      signatures?: InvoiceSignatures;
-      
+      signatures?: SignatureState;
+      createdAt?: Timestamp;
     };
+
+    setEditingId(id);
     if (inv.clientId) {
-  localStorage.setItem("invoiceClientId", inv.clientId);
-}
-    
-  setForm({
-  businessName: inv.businessName ?? "",
-  kvk: inv.kvk ?? "",
-  iban: inv.iban ?? "",
-  btw: inv.btw ?? "",
-  email: inv.email ?? "",
-  businessAddress: inv.businessAddress ?? "",
-  businessPhone: inv.businessPhone ?? "",
-
-  clientName: inv.clientName ?? "",
-  clientEmail: inv.clientEmail ?? "",
-  clientPhone: inv.clientPhone ?? "",
-  clientAddress: inv.clientAddress ?? "",
-
-  invoiceDate: inv.invoiceDate ?? "",
-  dueDate: inv.dueDate ?? "",
-  invoiceNumber: inv.invoiceNumber ?? "",
-  status: inv.status ?? "draft",
-  note: inv.note ?? ""
-});
-   
-    if (inv.items && inv.items.length > 0) {
-  setItemsState(
-  inv.items.map((item) => ({
-    ...item,
-    id: item.id || generateId()
-  }))
-);
-} else {
-  setItemsState([{ id: generateId(), desc: "", qty: 1, price: 0, vat: 21 }]);
-}
-
-   if (inv.signatures) {
-  setSignatures({
-    business: inv.signatures.business || "",
-    client: inv.signatures.client || "",
-    businessDate: inv.signatures.businessDate || "",
-    clientDate: inv.signatures.clientDate || ""
-  });
-}
-
-    
-  }
-
-
-  const updateForm = (field: string, value: string) => {
-  setForm((prev) => {
-    const next = { ...prev, [field]: value };
-
-    if (field === "invoiceDate" && value) {
-      const d = new Date(value);
-      if (!Number.isNaN(d.getTime())) {
-        d.setDate(d.getDate() + 14);
-        const y = d.getFullYear();
-        const m = String(d.getMonth() + 1).padStart(2, "0");
-        const dd = String(d.getDate()).padStart(2, "0");
-        next.dueDate = `${y}-${m}-${dd}`;
-      }
+      localStorage.setItem("invoiceClientId", inv.clientId);
     }
+    if (inv.createdAt) setCreatedAtFallback(inv.createdAt);
 
-    return next;
-  });
+    setForm((prev) => ({
+      ...prev,
+      businessName: inv.businessName ?? "",
+      kvk: inv.kvk ?? "",
+      iban: inv.iban ?? "",
+      btw: inv.btw ?? "",
+      email: inv.email ?? "",
+      businessAddress: inv.businessAddress ?? "",
+      businessPhone: inv.businessPhone ?? "",
+      clientName: inv.clientName ?? "",
+      clientEmail: inv.clientEmail ?? "",
+      clientPhone: inv.clientPhone ?? "",
+      clientAddress: inv.clientAddress ?? "",
+      invoiceDate: inv.invoiceDate ?? "",
+      dueDate: inv.dueDate ?? "",
+      invoiceNumber: inv.invoiceNumber ?? "",
+      status: inv.status ?? "draft",
+      note: inv.note ?? "",
+      clientId: inv.clientId ?? null,
+    }));
+
+    setItems(
+      inv.items?.length ? inv.items.map((item) => makeItem(item)) : [makeItem()]
+    );
+    setSignatures(inv.signatures ?? {});
+  }, []);
+
+  useEffect(() => {
+    const unsub = onAuthStateChanged(auth, async (firebaseUser) => {
+      if (!firebaseUser) {
+        router.push("/login");
+        return;
+      }
+
+      const today = new Date();
+      const due = new Date();
+      due.setDate(due.getDate() + 14);
+
+      setForm((prev) => ({
+        ...prev,
+        email: firebaseUser.email ?? prev.email,
+        invoiceDate: prev.invoiceDate || toDateInputValue(today),
+        dueDate: prev.dueDate || toDateInputValue(due),
+      }));
+
+      const preview = await previewNextInvoiceNumber(firebaseUser.uid);
+      setForm((prev) => ({
+        ...prev,
+        invoiceNumber: prev.invoiceNumber || preview,
+      }));
+
+      await loadProfileData(firebaseUser.uid, firebaseUser.email);
+      await loadForEdit(firebaseUser.uid);
+      loadSelectedClient();
+      setLoading(false);
+    });
+
+    return () => unsub();
+  }, [loadForEdit, loadProfileData, loadSelectedClient, previewNextInvoiceNumber, router]);
+
+  useEffect(() => {
+    if (!form.invoiceDate) return;
+    setForm((prev) => {
+      if (editingId && prev.dueDate) return prev;
+      const nextDue = new Date(prev.invoiceDate);
+      if (Number.isNaN(nextDue.getTime())) return prev;
+      nextDue.setDate(nextDue.getDate() + 14);
+      return { ...prev, dueDate: toDateInputValue(nextDue) };
+    });
+  }, [form.invoiceDate, editingId]);
+
+  const uploadSignature = async (
+  dataUrl: string,
+  path: string
+): Promise<string> => {
+  const storageRef = ref(storage, path);
+  await uploadString(storageRef, dataUrl, "data_url");
+  return await getDownloadURL(storageRef);
 };
 
-  /* ========== SAVE (create/update) ========== */
-  /**
- * saveInvoice()
- *
- * IMPORTANT:
- * - This function stores BOTH:
- *   1) UI/Form data (human readable)
- *   2) Dashboard contract fields:
- *      uid, number, status, total, createdAt, updatedAt
- *
- * Do NOT remove these fields – dashboard depends on them.
- */
-
-  async function saveInvoice() {
-  if (saving) return;
-  setSaving(true);
-
-  try {
-    
-
+  const saveInvoice = async () => {
     const currentUser = auth.currentUser;
     if (!currentUser) {
       router.push("/login");
       return;
     }
 
-    const uid = currentUser.uid;
+    try {
+      setSaving(true);
 
-    const clientId = localStorage.getItem("invoiceClientId") ?? null;
+      const effectiveClientId =
+        form.clientId ?? (typeof window !== "undefined" ? localStorage.getItem("invoiceClientId") : null);
 
-    const items = itemsState;
+      if (!items.length) {
+        alert("Add at least one item");
+        return;
+      }
 
-   
+      if (!items.some((item) => item.qty > 0 && item.price > 0)) {
+        alert("Items must have quantity and price");
+        return;
+      }
 
-    
+      if (!form.clientName.trim()) {
+        alert("Client name is required");
+        return;
+      }
 
-    // ✅ VALIDATION
-    if (!items.length) {
-  alert("Add at least one item");
-  setSaving(false);
-  return;
-}
+      if (!form.invoiceDate) {
+        alert("Invoice date is required");
+        return;
+      }
 
-    if (!items.some((i) => i.qty > 0 && i.price > 0)) {
-      alert("Items must have quantity and price");
-      setSaving(false);
-      return;
-    }
+      let invoiceNumber = form.invoiceNumber.trim();
+      if (!editingId && !invoiceNumber) {
+        invoiceNumber = await generateInvoiceNumber(currentUser.uid);
+      }
 
-    const clientName = form.clientName.trim();
+      let businessSignatureUrl = signatures.business || "";
+let clientSignatureUrl = signatures.client || "";
 
-if (!clientName) {
-  alert("Client name is required");
-  setSaving(false);
-  return;
-}
-
-const invoiceDate = form.invoiceDate;
-
-if (!invoiceDate) {
-  alert("Invoice date is required");
-  setSaving(false);
-  return;
-}
-
-    // 👇 ДАЛІ ТВОЙ КОД БЕЗ ЗМІН
-   
-    
-
-    let subtotal = 0;
-let totalVat = 0;
-
-items.forEach((i) => {
-  const line = i.qty * i.price;
-  const vat = (line * i.vat) / 100;
-
-  subtotal += line;
-  totalVat += vat;
-});
-
-const grandTotal = subtotal + totalVat;
-
-    
-
-    const businessSig = signatures.business;
-  const clientSig = signatures.client;
-    
-
-    const editingId = localStorage.getItem("editInvoiceId") || null;
-
-    let invoiceNumber = form.invoiceNumber.trim();
-
-    if (!editingId && !invoiceNumber) {
-  invoiceNumber = await generateInvoiceNumber(uid);
-  setForm((prev) => ({ ...prev, invoiceNumber }));
-}
-
-   const statusRaw = form.status;
-
-const normalizedStatus = (statusRaw || "draft").toLowerCase() as
-  | "draft"
-  | "sent"
-  | "paid";
-
-
-let createdAtValue: Timestamp | FieldValue = serverTimestamp();
-
-if (editingId) {
-  const existing = await getDoc(doc(db, "users", uid, "invoices", editingId));
-  if (existing.exists()) {
-    createdAtValue = existing.data().createdAt || serverTimestamp();
+try {
+  if (signatures.business?.startsWith("data:image")) {
+    businessSignatureUrl = await uploadSignature(
+      signatures.business,
+      `signatures/${currentUser.uid}/business-${Date.now()}`
+    );
   }
+
+  if (signatures.client?.startsWith("data:image")) {
+    clientSignatureUrl = await uploadSignature(
+      signatures.client,
+      `signatures/${currentUser.uid}/client-${Date.now()}`
+    );
+  }
+} catch (err) {
+  console.error("Signature upload failed:", err);
 }
-const data: InvoiceFirestoreMeta & InvoiceData = {
 
-  /* ================= DASHBOARD CONTRACT ================= */
-  uid,                             // 🔑 для useInvoices
-  number: invoiceNumber,          // 🔑
-  status: normalizedStatus,        // 🔑 lowercase
-  total: grandTotal,               // 🔑
-  createdAt: createdAtValue, // 🔑
-  updatedAt: serverTimestamp(),
-  clientId,               // 🔑
+      const payload: InvoiceFirestoreMeta & InvoiceData = {
+        uid: currentUser.uid,
+        number: invoiceNumber,
+        status: form.status,
+        total: grandTotal,
+        createdAt: editingId ? createdAtFallback ?? serverTimestamp() : serverTimestamp(),
+        updatedAt: serverTimestamp(),
+        clientId: effectiveClientId,
 
-  /* ================= FORM / UI DATA ================= */
-  businessName: form.businessName,
-kvk: form.kvk,
-iban: form.iban,
-btw: form.btw,
-email: form.email,
-businessAddress: form.businessAddress,
-businessPhone: form.businessPhone,
+        businessName: form.businessName,
+        kvk: form.kvk,
+        iban: form.iban,
+        btw: form.btw,
+        email: form.email,
+        businessAddress: form.businessAddress,
+        businessPhone: form.businessPhone,
 
-clientName: form.clientName,
-clientEmail: form.clientEmail,
-clientPhone: form.clientPhone,
-clientAddress: form.clientAddress,
+        clientName: form.clientName,
+        clientEmail: form.clientEmail,
+        clientPhone: form.clientPhone,
+        clientAddress: form.clientAddress,
 
-invoiceDate: form.invoiceDate,
-dueDate: form.dueDate,
-invoiceNumber,
-note: form.note,
+        invoiceDate: form.invoiceDate,
+        dueDate: form.dueDate,
+        invoiceNumber,
+        note: form.note,
 
-  items,
-  subtotal,
-  totalVat,
-  grandTotal,
-  subtotalFormatted: "€" + subtotal.toFixed(2),
-  totalVatFormatted: "€" + totalVat.toFixed(2),
-  grandTotalFormatted: "€" + grandTotal.toFixed(2),
+        items: items.map((item) => ({
+          desc: item.desc,
+          qty: item.qty,
+          price: item.price,
+          vat: item.vat,
+        })),
+        subtotal,
+        totalVat,
+        grandTotal,
+        subtotalFormatted: formatEuro(subtotal),
+        totalVatFormatted: formatEuro(totalVat),
+        grandTotalFormatted: formatEuro(grandTotal),
 
-  signatures: {
-  business: businessSig,
-  client: clientSig,
+        signatures: {
+  business: businessSignatureUrl,
+  client: clientSignatureUrl,
   businessDate: signatures.businessDate,
   clientDate: signatures.clientDate,
 },
-};
+      };
 
-    if (editingId) {
-      await setDoc(doc(db, "users", uid, "invoices", editingId), data, {
-        merge: true,
-      });
-      alert("✅ Invoice updated");
-    } else {
-      await addDoc(collection(db, "users", uid, "invoices"), data);
-      alert(
-        `✅ Invoice saved${invoiceNumber ? " as " + invoiceNumber : ""}`
-      );
-    }
-localStorage.removeItem("invoiceClientId");
-localStorage.removeItem("editInvoiceId");
-    
+      if (editingId) {
+        await setDoc(doc(db, "users", currentUser.uid, "invoices", editingId), payload, {
+          merge: true,
+        });
+        alert("✅ Invoice updated");
+      } else {
+        await addDoc(collection(db, "users", currentUser.uid, "invoices"), payload);
+        alert(`✅ Invoice saved as ${invoiceNumber}`);
+      }
 
-    try {
-      await addDoc(collection(db, "users", uid, "events"), {
-        
-        type: "Invoice",
-        message: editingId
-          ? `Invoice ${invoiceNumber} updated`
-          : `Invoice ${invoiceNumber} created`,
-       createdAt: serverTimestamp(),
-      });
-      
-    } catch (e) {
-      console.warn("Event log failed:", e);
-    }
-    router.push("/dashboard/invoices/list");
+      try {
+        await addDoc(collection(db, "users", currentUser.uid, "events"), {
+          type: "Invoice",
+          message: editingId
+            ? `Invoice ${invoiceNumber} updated`
+            : `Invoice ${invoiceNumber} created`,
+          createdAt: serverTimestamp(),
+        });
+      } catch (error) {
+        console.warn("Event log failed:", error);
+      }
 
-    } catch (e) {
-  console.error("Save invoice failed:", e);
-  alert("❌ Failed to save invoice");
+      if (typeof window !== "undefined") {
+        localStorage.removeItem("editInvoiceId");
+        localStorage.removeItem("invoiceClientId");
+      }
 
+      router.push("/dashboard/invoices/list");
     } finally {
-  setSaving(false);
-}
-    
-  }
-  
-  
-
-  /* ========== HOOKS ========== */
-
-  
-
-  // інит даних / форми
-  /* eslint-disable react-hooks/exhaustive-deps */
-useLayoutEffect(() => {
-  const unsub = onAuthStateChanged(auth, async (firebaseUser) => {
-    if (!firebaseUser) {
-      setLoading(false);
-      router.push("/login");
-      return;
+      setSaving(false);
     }
-
-    setUser(firebaseUser);
-
-   
-    
-      
-      const editInvoiceId = localStorage.getItem("editInvoiceId");
-
-      if (editInvoiceId) {
-       await loadForEdit(firebaseUser.uid);
-        }        else {
-         await previewNextInvoiceNumber(firebaseUser.uid);
-       autofillClientFromLocalStorage();
-        }
-
-await loadProfileData(firebaseUser.uid, firebaseUser.email);
-   
-
-    setLoading(false);
-  });
-
-  return () => unsub();
-}, []);
-/* eslint-enable react-hooks/exhaustive-deps */
-
-  // ініціалізація підписів після того, як DOM готовий
-
-  const handleBusinessSignatureSave = useCallback((dataUrl: string) => {
-  setSignatures((prev) => ({
-    ...prev,
-    business: dataUrl,
-    businessDate: new Date().toLocaleDateString("nl-NL"),
-  }));
-}, []);
-
-  useSignaturePad(businessCanvasRef, handleBusinessSignatureSave);
-
-const handleClientSignatureSave = useCallback((dataUrl: string) => {
-  setSignatures((prev) => ({
-    ...prev,
-    client: dataUrl,
-    clientDate: new Date().toLocaleDateString("nl-NL"),
-  }));
-}, []);
-
-useSignaturePad(clientCanvasRef, handleClientSignatureSave);
-  
-
-
-
-
-
-
-  /* ========== HANDLЕРИ ДЛЯ JSX ========== */
-
-  const handleAddItemClick = () => addItem();
-
-  const handleSaveClick = (e: React.MouseEvent<HTMLButtonElement>) => {
-    e.preventDefault();
-    void saveInvoice();
   };
-
-  
-
-
-  const clearBusinessSignature = () => {
-  const canvas = businessCanvasRef.current;
-  if (!canvas) return;
-
-  const ctx = canvas.getContext("2d");
-  if (!ctx) return;
-
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-  setSignatures((prev) => ({
-    ...prev,
-    business: "",
-    businessDate: ""
-  }));
-};
-  const clearClientSignature = () => {
-  const canvas = clientCanvasRef.current;
-  if (!canvas) return;
-
-  const ctx = canvas.getContext("2d");
-  if (!ctx) return;
-
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-  setSignatures((prev) => ({
-    ...prev,
-    client: "",
-    clientDate: ""
-  }));
-};
-
-  const handleBackDashboard = () => router.push("/dashboard");
-  const handleGoToList = () =>
-    router.push("/dashboard/invoices/list");
 
   if (loading) {
     return (
-      <div className="clients-loading">
-        <div className="clients-loading-card">Loading invoice…</div>
+      <div className="sw-loading-shell">
+        <div className="sw-loading-card">Loading invoice workspace…</div>
       </div>
     );
   }
 
   
 
-  /* ========== RENDER ========== */
-
   return (
-    <>
-      <header className="topbar">
-        <h1 className="invoice-title">{tInv.title ?? "Invoice"}</h1>
+    <div className="sw-page">
+      <div className="sw-bg-grid" />
+      <div className="sw-bg-glow sw-bg-glow-a" />
+      <div className="sw-bg-glow sw-bg-glow-b" />
 
-        <div className="actions-right">
-          <button 
-          type="button"
-          className="btn" 
-          onClick={handleBackDashboard}
-          > 
-           {tInv.back ?? "Back to Dashboard"}
-    
+      <header className="sw-topbar">
+        <div>
+          <p className="sw-kicker">SmartWerk • Invoice Studio</p>
+          <h1 className="sw-title">{tInv.title ?? "Invoice"}</h1>
+        </div>
+
+        <div className="sw-actions">
+          <button
+            type="button"
+            className="sw-btn sw-btn-ghost"
+            onClick={() => router.push("/dashboard")}
+          >
+            {tInv.back ?? "Back to Dashboard"}
           </button>
-
-          <button 
-          type="button"
-          className="btn" 
-          onClick={handleGoToList}>
+          <button
+            type="button"
+            className="sw-btn sw-btn-secondary"
+            onClick={() => router.push("/dashboard/invoices/list")}
+          >
             {tInv.list ?? "Saved Invoices"}
+          </button>
+          <button
+            type="button"
+            className="sw-btn sw-btn-primary"
+            onClick={saveInvoice}
+            disabled={saving}
+          >
+            {saving ? "Saving…" : label(tInv.btnSave, "Save Invoice")}
           </button>
         </div>
       </header>
 
-      <main className="dash-main invoice-page">
-        <div className="dash-content invoice-content">
-          <form id="invoiceForm" onSubmit={(e) => e.preventDefault()}>
-            {/* Business Info */}
-            <section className="collapsible">
-              <button
-  type="button"
-  className={`section-toggle ${openSections.business ? "open" : ""}`}
-             onClick={() => toggleSection("business")}
-                >
-                <span>
-                  {label(tInv.businessSection, "Business Info")}
-                </span>
-               <span className="toggle-icon">
-                 {openSections.business ? "🔽" : "▶️"}
-                </span>
-              </button>
-              <div className={`section-content ${openSections.business ? "open" : ""}`}>
-                <label htmlFor="businessName">
-                  {label(tInv.businessName, "Business Name")}
-                </label>
-                <input
-                 value={form.businessName}
-                   onChange={(e) => updateForm("businessName", e.target.value)}
-                  
-                  autoComplete="organization"
-                />
+      <main className="sw-main">
+        <section className="sw-panel sw-hero">
+          <div>
+            <p className="sw-hero-kicker">2030-ready finance interface</p>
+            <h2>{form.invoiceNumber || "New Invoice"}</h2>
+            <p className="sw-hero-text">
+              Fully React-based invoice flow with state-driven forms, signatures,
+              Firestore save logic, auto dates, and edit-mode support.
+            </p>
+          </div>
 
-                <label htmlFor="kvk">
-                  {label(tInv.kvk, "KvK Number")}
-                </label>
-                <input
-                  value={form.kvk}
-                 onChange={(e) => updateForm("kvk", e.target.value)}
-                  placeholder={label(tInv.kvk, "KvK Number")}
-                  autoComplete="off"
-                    />
+          <div className="sw-stat-group">
+            <div className="sw-stat-card">
+              <span>Subtotal</span>
+              <strong>{formatEuro(subtotal)}</strong>
+            </div>
+            <div className="sw-stat-card">
+              <span>VAT</span>
+              <strong>{formatEuro(totalVat)}</strong>
+            </div>
+            <div className="sw-stat-card">
+              <span>Total</span>
+              <strong>{formatEuro(grandTotal)}</strong>
+            </div>
+          </div>
+        </section>
 
-                <label htmlFor="iban">
-                  {label(tInv.iban, "IBAN")}
-                </label>
-                <input
-                  value={form.iban}
-                  onChange={(e) => updateForm("iban", e.target.value)}
-                   placeholder={label(tInv.iban, "IBAN")}
-                  autoComplete="iban"
-                      />
+        <form className="sw-form" onSubmit={(e) => e.preventDefault()}>
+          <section className={`sw-panel sw-panel-collapse ${businessOpen ? "active" : ""}`}>
+            <button
+              type="button"
+              className="sw-section-toggle"
+              onClick={() => setBusinessOpen((prev) => !prev)}
+            >
+              <span>{label(tInv.businessSection, "Business Info")}</span>
+              <span>{businessOpen ? "−" : "+"}</span>
+            </button>
 
-                <label htmlFor="btw">
-                  {label(tInv.btw, "VAT Number")}
-                </label>
-               <input
-                    value={form.btw}
-                    onChange={(e) => updateForm("btw", e.target.value)}
-                      placeholder={label(tInv.btw, "VAT Number")}
+            {businessOpen && (
+              <div className="sw-grid sw-grid-2">
+                <div className="sw-field">
+                  <label htmlFor="businessName">{label(tInv.businessName, "Business Name")}</label>
+                  <input
+                    id="businessName"
+                    value={form.businessName}
+                    onChange={(e) => updateField("businessName", e.target.value)}
+                    placeholder={label(tInv.businessName, "Full Name / Business Name")}
+                    autoComplete="organization"
+                  />
+                </div>
+
+                <div className="sw-field">
+                  <label htmlFor="kvk">{label(tInv.kvk, "KvK Number")}</label>
+                  <input
+                    id="kvk"
+                    value={form.kvk}
+                    onChange={(e) => updateField("kvk", e.target.value)}
+                    placeholder={label(tInv.kvk, "KvK Number")}
+                  />
+                </div>
+
+                <div className="sw-field">
+                  <label htmlFor="iban">{label(tInv.iban, "IBAN")}</label>
+                  <input
+                    id="iban"
+                    value={form.iban}
+                    onChange={(e) => updateField("iban", e.target.value)}
+                    placeholder={label(tInv.iban, "IBAN")}
                     autoComplete="off"
-                      />
+                  />
+                </div>
 
-                <label htmlFor="email">
-                  {label(tInv.email, "Email")}
-                </label>
-                <input
+                <div className="sw-field">
+                  <label htmlFor="btw">{label(tInv.btw, "VAT Number")}</label>
+                  <input
+                    id="btw"
+                    value={form.btw}
+                    onChange={(e) => updateField("btw", e.target.value)}
+                    placeholder={label(tInv.btw, "VAT Number")}
+                  />
+                </div>
+
+                <div className="sw-field">
+                  <label htmlFor="email">{label(tInv.email, "Email")}</label>
+                  <input
+                    id="email"
                     type="email"
-                 value={form.email}
-                 onChange={(e) => updateForm("email", e.target.value)}
-                  placeholder={label(tInv.email, "Business Email")}
-                   autoComplete="email"
+                    value={form.email}
+                    onChange={(e) => updateField("email", e.target.value)}
+                    placeholder={label(tInv.email, "Business Email")}
+                    autoComplete="email"
                   />
+                </div>
 
-                <label htmlFor="businessAddress">
-                  {label(tInv.address, "Business Address")}
-                </label>
-                <input
-                     value={form.businessAddress}
-                    onChange={(e) => updateForm("businessAddress", e.target.value)}
-                      placeholder={label(tInv.address, "Business Address")}
-                 autoComplete="street-address"
+                <div className="sw-field">
+                  <label htmlFor="businessPhone">{label(tInv.phone, "Business Phone")}</label>
+                  <input
+                    id="businessPhone"
+                    type="tel"
+                    value={form.businessPhone}
+                    onChange={(e) => updateField("businessPhone", e.target.value)}
+                    placeholder={label(tInv.phone, "Business Phone")}
+                    autoComplete="tel"
                   />
+                </div>
 
-                <label htmlFor="businessPhone">
-                  {label(tInv.phone, "Business Phone")}
-                </label>
-                <input
-                   type="tel"
-                     value={form.businessPhone}
-               onChange={(e) => updateForm("businessPhone", e.target.value)}
-                  placeholder={label(tInv.phone, "Business Phone")}
-               autoComplete="tel"
-                    />
+                <div className="sw-field sw-span-2">
+                  <label htmlFor="businessAddress">{label(tInv.address, "Business Address")}</label>
+                  <input
+                    id="businessAddress"
+                    value={form.businessAddress}
+                    onChange={(e) => updateField("businessAddress", e.target.value)}
+                    placeholder={label(tInv.address, "Business Address")}
+                    autoComplete="street-address"
+                  />
+                </div>
               </div>
-            </section>
+            )}
+          </section>
 
-            {/* Client Info */}
-            <section className="collapsible">
-             <button
-  type="button"
-  className={`section-toggle ${openSections.client ? "open" : ""}`}
-               onClick={() => toggleSection("client")}
-                  >
-                <span>
-                  {label(tInv.clientSection, "Client Info")}
-                </span>
-                <span className="toggle-icon">
-                        {openSections.client ? "🔽" : "▶️"}
-                            </span>
-              </button>
-              <div className={`section-content ${openSections.client ? "open" : ""}`}>
-                <label htmlFor="clientName">
-                  {label(tInv.clientName, "Client Name")}
-                </label>
-                <input
-                  value={form.clientName}
-                  onChange={(e) => updateForm("clientName", e.target.value)}        
-                  autoComplete="organization"
-                />
+         <section className={`sw-panel sw-panel-collapse ${clientOpen ? "active" : ""}`}>
+            <button
+              type="button"
+              className="sw-section-toggle"
+              onClick={() => setClientOpen((prev) => !prev)}
+            >
+              <span>{label(tInv.clientSection, "Client Info")}</span>
+              <span>{clientOpen ? "−" : "+"}</span>
+            </button>
 
-                <label htmlFor="clientEmail">
-                  {label(tInv.clientEmail, "Client Email")}
-                </label>
-                <input
+            {clientOpen && (
+              <div className="sw-grid sw-grid-2">
+                <div className="sw-field">
+                  <label htmlFor="clientName">{label(tInv.clientName, "Client Name")}</label>
+                  <input
+                    id="clientName"
+                    value={form.clientName}
+                    onChange={(e) => updateField("clientName", e.target.value)}
+                    placeholder={label(tInv.clientName, "Client Name")}
+                    autoComplete="organization"
+                  />
+                </div>
+
+                <div className="sw-field">
+                  <label htmlFor="clientEmail">{label(tInv.clientEmail, "Client Email")}</label>
+                  <input
+                    id="clientEmail"
+                    type="email"
                     value={form.clientEmail}
-                onChange={(e) => updateForm("clientEmail", e.target.value)}
-                  
-                  autoComplete="email"
-                />
+                    onChange={(e) => updateField("clientEmail", e.target.value)}
+                    placeholder={label(tInv.clientEmail, "Client Email")}
+                    autoComplete="email"
+                  />
+                </div>
 
-                <label htmlFor="clientPhone">
-                  {label(tInv.clientPhone, "Client Phone")}
-                </label>
-               <input
-              value={form.clientPhone}
-                onChange={(e) => updateForm("clientPhone", e.target.value)}
+                <div className="sw-field">
+                  <label htmlFor="clientPhone">{label(tInv.clientPhone, "Client Phone")}</label>
+                  <input
+                    id="clientPhone"
+                    type="tel"
+                    value={form.clientPhone}
+                    onChange={(e) => updateField("clientPhone", e.target.value)}
+                    placeholder="+31 6 12345678"
+                    autoComplete="tel"
+                  />
+                </div>
 
-                  autoComplete="tel"
-                />
+                <div className="sw-field">
+                  <label htmlFor="clientAddress">{label(tInv.clientAddress, "Client Address")}</label>
+                  <input
+                    id="clientAddress"
+                    value={form.clientAddress}
+                    onChange={(e) => updateField("clientAddress", e.target.value)}
+                    placeholder={label(tInv.clientAddress, "Client Address")}
+                    autoComplete="street-address"
+                  />
+                </div>
 
-                <label htmlFor="clientAddress">
-                  {label(tInv.clientAddress, "Client Address")}
-                </label>
-               <input
-                      value={form.clientAddress}
-                  onChange={(e) => updateForm("clientAddress", e.target.value)}
-                  autoComplete="street-address"
-                />
-
-                <label htmlFor="invoiceDate">
-                  {label(tInv.invoiceDate, "Invoice Date")}
-                </label>
-                <input type="date"
+                <div className="sw-field">
+                  <label htmlFor="invoiceDate">{label(tInv.invoiceDate, "Invoice Date")}</label>
+                  <input
+                    id="invoiceDate"
+                    type="date"
                     value={form.invoiceDate}
-                  onChange={(e) => updateForm("invoiceDate", e.target.value)}
-                        />
+                    onChange={(e) => updateField("invoiceDate", e.target.value)}
+                  />
+                </div>
 
-                <label htmlFor="dueDate">
-                  {label(tInv.dueDate, "Due Date")}
-                </label>
-                <input
-                type="date"
-                   value={form.dueDate}
-                     onChange={(e) => updateForm("dueDate", e.target.value)}
-                    />
+                <div className="sw-field">
+                  <label htmlFor="dueDate">{label(tInv.dueDate, "Due Date")}</label>
+                  <input
+                    id="dueDate"
+                    type="date"
+                    value={form.dueDate}
+                    onChange={(e) => updateField("dueDate", e.target.value)}
+                  />
+                </div>
 
-                <label htmlFor="invoiceNumber">
-                  {label(
-                    tInv.invoiceNumber,
-                    "Invoice Number"
-                  )}
-                </label>
-                <input
-                  value={form.invoiceNumber}
-  readOnly
-                    />
+                <div className="sw-field">
+                  <label htmlFor="invoiceNumber">{label(tInv.invoiceNumber, "Invoice Number")}</label>
+                  <input
+                    id="invoiceNumber"
+                    value={form.invoiceNumber}
+                    onChange={(e) => updateField("invoiceNumber", e.target.value)}
+                    placeholder={label(tInv.invoiceNumber, "Invoice Number")}
+                    readOnly
+                  />
+                </div>
 
-                <label htmlFor="status">
-                  {label(tInv.status, "status")}
-                </label>
-                <select
-                value={form.status}
-                  onChange={(e) =>
-  updateForm("status", e.target.value as InvoiceStatus)
-}
-
-                  autoComplete="off"
-                >
-                  <option value="draft">
-                    {tInv.statusdraft ?? "draft"}
-                  </option>
-                  <option value="sent">
-                    {tInv.statussent ?? "sent"}
-                  </option>
-                  <option value="paid">
-                    {tInv.statuspaid ?? "paid"}
-                  </option>
-                </select>
+                <div className="sw-field">
+                  <label htmlFor="status">{label(tInv.status, "Status")}</label>
+                  <select
+                    id="status"
+                    value={form.status}
+                    onChange={(e) => updateField("status", e.target.value as InvoiceStatus)}
+                  >
+                    <option value="draft">{tInv.statusdraft ?? "draft"}</option>
+                    <option value="sent">{tInv.statussent ?? "sent"}</option>
+                    <option value="paid">{tInv.statuspaid ?? "paid"}</option>
+                  </select>
+                </div>
               </div>
-            </section>
+            )}
+          </section>
 
-            {/* Items */}
-            <section>
-              <h2>{label(tInv.itemsSection, "Items")}</h2>
-              <table>
+          <section className="sw-panel">
+            <div className="sw-section-head">
+              <div>
+                <p className="sw-eyebrow">Services</p>
+                <h2>{label(tInv.itemsSection, "Items")}</h2>
+              </div>
+              <button type="button" className="sw-btn sw-btn-secondary" onClick={addItem}>
+                {label(tInv.addItem, "Add Item")}
+              </button>
+            </div>
+
+            <div className="sw-table-wrap">
+              <table className="sw-table">
                 <thead>
                   <tr>
-                    <th>
-                      {label(
-                        tInv.desc,
-                        "Description"
-                      )}
-                    </th>
+                    <th>{label(tInv.desc, "Description")}</th>
                     <th>{label(tInv.qty, "Qty")}</th>
                     <th>{label(tInv.price, "Price")}</th>
                     <th>{label(tInv.vat, "VAT %")}</th>
@@ -1150,175 +1061,179 @@ useSignaturePad(clientCanvasRef, handleClientSignatureSave);
                   </tr>
                 </thead>
                 <tbody>
-  {itemsState.map((item, i) => {
-    const line = item.qty * item.price;
-    const vat = (line * item.vat) / 100;
+                  {items.map((item) => {
+                    const line = item.qty * item.price;
+                    const total = line + (line * item.vat) / 100;
 
-    return (
-      <tr key={item.id}>
-        <td>
-          <input
-            value={item.desc}
-            onChange={(e) =>
-              updateItem(i, "desc", e.target.value)
-            }
-          />
-        </td>
-
-        <td>
-          <input
-            type="number"
-            value={item.qty}
-            onChange={(e) =>
-              updateItem(i, "qty", e.target.value === "" ? 0 : Number(e.target.value))
-            }
-          />
-        </td>
-
-        <td>
-          <input
-            type="number"
-            value={item.price}
-            onChange={(e) =>
-              updateItem(i, "price", e.target.value === "" ? 0 : Number(e.target.value)
-              )
-            }
-          />
-        </td>
-
-        <td>
-          <select
-            value={item.vat}
-            onChange={(e) =>
-              updateItem(i, "vat", Number(e.target.value))
-            }
-          >
-            <option value={0}>0</option>
-            <option value={9}>9</option>
-            <option value={21}>21</option>
-          </select>
-        </td>
-
-        <td>€{(line + vat).toFixed(2)}</td>
-
-        <td>
-          <button type="button" onClick={() => removeItem(i)}>
-            ❌
-          </button>
-        </td>
-      </tr>
-    );
-  })}
-</tbody>
+                    return (
+                      <tr key={item.id}>
+                        <td>
+                          <input
+                            value={item.desc}
+                            onChange={(e) => updateItem(item.id, "desc", e.target.value)}
+                            placeholder="Service / product"
+                          />
+                        </td>
+                        <td>
+                          <input
+                            type="number"
+                            min="1"
+                            value={item.qty}
+                            onChange={(e) => updateItem(item.id, "qty", e.target.value)}
+                          />
+                        </td>
+                        <td>
+                          <input
+                            type="number"
+                            step="0.01"
+                            value={item.price}
+                            onChange={(e) => updateItem(item.id, "price", e.target.value)}
+                          />
+                        </td>
+                        <td>
+                          <select
+                            value={item.vat}
+                            onChange={(e) => updateItem(item.id, "vat", e.target.value)}
+                          >
+                            <option value={0}>0</option>
+                            <option value={9}>9</option>
+                            <option value={21}>21</option>
+                          </select>
+                        </td>
+                        <td>
+                          <span className="sw-total-chip">{formatEuro(total)}</span>
+                        </td>
+                        <td>
+                          <button
+                            type="button"
+                            className="sw-btn sw-btn-danger"
+                            onClick={() => removeItem(item.id)}
+                            disabled={items.length === 1}
+                          >
+                            Remove
+                          </button>
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
               </table>
-              <button
-                type="button"
-                className="btn"
-                onClick={handleAddItemClick}
-              >
-                {label(tInv.addItem, "Add Item")}
-              </button>
-            </section>
+            </div>
+          </section>
 
-            {/* Summary */}
-            <section>
-              <h2>{label(tInv.summarySection, "Summary")}</h2>
-              <p>
-                {label(tInv.subtotal, "Subtotal")}:{" "}
-               <span>€{totals.subtotal.toFixed(2)}</span>
-              </p>
-              <p>
-                {label(tInv.totalVat, "Total VAT")}:{" "}
-                <span>€{totals.totalVat.toFixed(2)}</span>
-              </p>
-              <p>
-                {label(tInv.grandTotal, "Total")}:{" "}
-                <span>€{totals.grandTotal.toFixed(2)}</span>
-              </p>
-              <textarea
-            value={form.note}
-            onChange={(e) => updateForm("note", e.target.value)}
-             placeholder={label(tInv.note, "Note...")}
-              />
-            </section>
+          <section className="sw-grid sw-grid-summary">
+            <div className="sw-panel">
+              <div className="sw-section-head">
+                <div>
+                  <p className="sw-eyebrow">Summary</p>
+                  <h2>{label(tInv.summarySection, "Summary")}</h2>
+                </div>
+              </div>
 
-           
+              <div className="sw-summary-list">
+                <div className="sw-summary-row">
+                  <span>{label(tInv.subtotal, "Subtotal")}</span>
+                  <strong>{formatEuro(subtotal)}</strong>
+                </div>
+                <div className="sw-summary-row">
+                  <span>{label(tInv.totalVat, "Total VAT")}</span>
+                  <strong>{formatEuro(totalVat)}</strong>
+                </div>
+                <div className="sw-summary-row sw-summary-total">
+                  <span>{label(tInv.grandTotal, "Total")}</span>
+                  <strong>{formatEuro(grandTotal)}</strong>
+                </div>
+              </div>
 
-            {/* Signatures */}
-             <h2>{label(tInv.signSection, "Signatures")}</h2>
-            <section className="signatures-wrap">
-              
-              <div className="signature-box">
-                <h3>{label(tInv.business, "Business")}</h3>
-                <canvas
-                  ref={businessCanvasRef}
-                  width={320}
-                  height={150}
-                  className="signature"
+              <div className="sw-field">
+                <label htmlFor="note">{label(tInv.note, "Note")}</label>
+                <textarea
+                  id="note"
+                  value={form.note}
+                  onChange={(e) => updateField("note", e.target.value)}
+                  placeholder={label(tInv.note, "Note...")}
+                  rows={5}
                 />
-                <button
-                  type="button"
-                  onClick={clearBusinessSignature}
-                >
-                  {label(tInv.clear, "Clear")}
-                </button>
-                <p>
-                  {label(tInv.date, "Date")}:{" "}
-                 <span>{signatures.businessDate}</span>
-                </p>
+              </div>
+            </div>
+
+            <section className="sw-panel">
+              <div className="sw-section-head">
+                <div>
+                  <p className="sw-eyebrow">Signatures</p>
+                  <h2>{label(tInv.signSection, "Signatures")}</h2>
+                </div>
               </div>
 
-              <div className="signature-box">
-                <h3>{label(tInv.client, "Client")}</h3>
-                <canvas
-                  ref={clientCanvasRef}
-                    width={320}
+              <div className="sw-signatures-grid">
+                <SignaturePad
+                  title={label(tInv.business, "Business")}
+                  value={signatures.business}
+                  date={signatures.businessDate}
+                  dateLabel={label(tInv.date, "Date")}
+                  clearLabel={label(tInv.clear, "Clear")}
+                  onChange={(dataUrl, date) =>
+                    setSignatures((prev) => ({
+                      ...prev,
+                      business: dataUrl,
+                      businessDate: date,
+                    }))
+                  }
+                  onClear={() =>
+                    setSignatures((prev) => ({
+                      ...prev,
+                      business: "",
+                      businessDate: "",
+                    }))
+                  }
+                />
 
-                  height={150}
-                 className="signature"
-                    />
-                <button
-                  type="button"
-                  onClick={clearClientSignature}
-                >
-                  {label(tInv.clear, "Clear")}
-                </button>
-                <p>
-                  {label(tInv.date, "Date")}:{" "}
-                 <span>{signatures.clientDate}</span>
-                </p>
+                <SignaturePad
+                  title={label(tInv.client, "Client")}
+                  value={signatures.client}
+                  date={signatures.clientDate}
+                  dateLabel={label(tInv.date, "Date")}
+                  clearLabel={label(tInv.clear, "Clear")}
+                  onChange={(dataUrl, date) =>
+                    setSignatures((prev) => ({
+                      ...prev,
+                      client: dataUrl,
+                      clientDate: date,
+                    }))
+                  }
+                  onClear={() =>
+                    setSignatures((prev) => ({
+                      ...prev,
+                      client: "",
+                      clientDate: "",
+                    }))
+                  }
+                />
               </div>
             </section>
+          </section>
 
-            {/* Actions */}
-            <section className="step actions">
-              <button
-                type="button"
-                id="saveBtn"
-                className="btn btn-primary"
-                onClick={handleSaveClick}
-                disabled={saving}
-              >
-                {label(tInv.btnSave, "Save Invoice")}
-              </button>
-              <button
-                type="button"
-                className="btn"
-                onClick={handleGoToList}
-              >
-                {label(tInv.btnSaved, "Saved Invoices")}
-              </button>
-            </section>
-          </form>
-        </div>
+          <section className="sw-bottom-actions">
+            <button
+              type="button"
+              className="sw-btn sw-btn-primary"
+              onClick={saveInvoice}
+              disabled={saving}
+            >
+              {saving ? "Saving…" : label(tInv.btnSave, "Save Invoice")}
+            </button>
+            <button
+              type="button"
+              className="sw-btn sw-btn-secondary"
+              onClick={() => router.push("/dashboard/invoices/list")}
+            >
+              {label(tInv.btnSaved, "Saved Invoices")}
+            </button>
+          </section>
+        </form>
       </main>
 
-      <footer>
-        <p>© 2025 SmartWerk</p>
-      </footer>
-    </>
+      <footer className="sw-footer">© 2025 SmartWerk</footer>
+    </div>
   );
 }
-
-
-

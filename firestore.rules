@@ -49,7 +49,7 @@ service cloud.firestore {
         allow update, delete: if false;
       }
     }
-
+  
     match /publicContracts/{token} {
       allow read: if true;
 
