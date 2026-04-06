@@ -1072,6 +1072,8 @@ export default function InvoiceCreatePage() {
                       <tr key={item.id}>
                         <td>
                           <input
+                          name={`desc-${item.id}`}
+                          id={`desc-${item.id}`}
                             value={item.desc}
                             onChange={(e) => updateItem(item.id, "desc", e.target.value)}
                             placeholder="Service / product"
@@ -1079,6 +1081,8 @@ export default function InvoiceCreatePage() {
                         </td>
                         <td>
                           <input
+                          name={`qty-${item.id}`}
+                          id={`qty-${item.id}`}
                             type="number"
                             min="1"
                             value={item.qty}
@@ -1087,6 +1091,8 @@ export default function InvoiceCreatePage() {
                         </td>
                         <td>
                           <input
+                          name={`price-${item.id}`}
+                          id={`price-${item.id}`}
                             type="number"
                             step="0.01"
                             value={item.price}
@@ -1095,6 +1101,8 @@ export default function InvoiceCreatePage() {
                         </td>
                         <td>
                           <select
+                          name={`vat-${item.id}`}
+                          id={`vat-${item.id}`}
                             value={item.vat}
                             onChange={(e) => updateItem(item.id, "vat", Number(e.target.value))}
                           >
