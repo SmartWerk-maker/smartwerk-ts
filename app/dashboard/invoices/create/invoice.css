@@ -674,3 +674,94 @@ body {
 .sw-field input {
   transition: all 0.25s ease;
 }
+@media (max-width: 640px) {
+
+  /* 🔹 PAGE */
+  .sw-page {
+    padding: 10px;
+  }
+
+  /* 🔹 TOPBAR */
+  .sw-topbar {
+    padding: 14px;
+    gap: 12px;
+  }
+
+  .sw-title {
+    font-size: 1.6rem;
+  }
+
+  /* 🔹 BUTTONS */
+  .sw-actions,
+  .sw-bottom-actions {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .sw-btn {
+    width: 100%;
+    padding: 12px;
+    font-size: 14px;
+  }
+
+  /* 🔹 PANELS */
+  .sw-panel {
+    padding: 14px;
+    border-radius: 18px;
+  }
+
+  /* 🔹 INPUTS */
+  .sw-field input,
+  .sw-field select,
+  .sw-field textarea {
+    padding: 12px;
+    font-size: 14px;
+  }
+
+  /* 🔹 TABLE → MOBILE CARD MODE 🔥 */
+  .sw-table {
+    min-width: 100%;
+  }
+
+  .sw-table thead {
+    display: none;
+  }
+
+  .sw-table tr {
+    display: block;
+    margin-bottom: 14px;
+    border: 1px solid var(--sw-border);
+    border-radius: 16px;
+    padding: 12px;
+    background: var(--sw-surface);
+  }
+
+  .sw-table td {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    border: none;
+    padding: 6px 0;
+  }
+
+  .sw-table td::before {
+    content: attr(data-label);
+    font-size: 12px;
+    color: var(--sw-text-soft);
+    font-weight: 600;
+  }
+
+  /* 🔹 SUMMARY */
+  .sw-summary-row {
+    padding: 12px;
+  }
+
+  /* 🔹 SIGNATURES */
+  .sw-signatures-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .sw-signature {
+    height: 120px;
+  }
+}

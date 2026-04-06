@@ -1070,7 +1070,7 @@ export default function InvoiceCreatePage() {
 
                     return (
                       <tr key={item.id}>
-                        <td>
+                        <td data-label="Description">
                           <input
                           name={`desc-${item.id}`}
                           id={`desc-${item.id}`}
@@ -1079,7 +1079,7 @@ export default function InvoiceCreatePage() {
                             placeholder="Service / product"
                           />
                         </td>
-                        <td>
+                        <td data-label="Qty">
                           <input
                           name={`qty-${item.id}`}
                           id={`qty-${item.id}`}
@@ -1089,7 +1089,7 @@ export default function InvoiceCreatePage() {
                             onChange={(e) => updateItem(item.id, "qty", Number(e.target.value))}
                           />
                         </td>
-                        <td>
+                        <td data-label="Price">
                           <input
                           name={`price-${item.id}`}
                           id={`price-${item.id}`}
@@ -1099,7 +1099,7 @@ export default function InvoiceCreatePage() {
                             onChange={(e) => updateItem(item.id, "price", Number(e.target.value))}
                           />
                         </td>
-                        <td>
+                        <td data-label="VAT">
                           <select
                           name={`vat-${item.id}`}
                           id={`vat-${item.id}`}
@@ -1111,10 +1111,10 @@ export default function InvoiceCreatePage() {
                             <option value={21}>21</option>
                           </select>
                         </td>
-                        <td>
+                        <td data-label="Total">
                           <span className="sw-total-chip">{formatEuro(total)}</span>
                         </td>
-                        <td>
+                        <td data-label="Action">
                           <button
                             type="button"
                             className="sw-btn sw-btn-danger"
